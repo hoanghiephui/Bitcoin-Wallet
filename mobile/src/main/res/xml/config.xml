@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+            android:title="Dark mode"
+            android:summary="Select the theme to be used throughout the app"
+            android:key="dark_preference"
+            android:defaultValue="false"
+            android:icon="@drawable/ic_style_grey_600_24dp"/>
+
+    <ListPreference
+            android:defaultValue="usd"
+            android:entries="@array/pref_currency_entries"
+            android:entryValues="@array/pref_currency_values"
+            android:key="currency_preference"
+            android:summary="Set default currency"
+            android:title="Currency"
+            android:enabled="false"
+            android:icon="@drawable/ic_euro_symbol_grey_600_24dp"/>
+
+    <ListPreference
+            android:defaultValue="2/3"
+            android:entries="@array/preferences_precision_labels"
+            android:entryValues="@array/preferences_precision_values"
+            android:key="btc_precision"
+            android:summary="@string/precision_summary"
+            android:title="@string/precision_title"
+            android:icon="@drawable/ic_account_balance_wallet_24dp"/>
+
+    <EditTextPreference
+            android:key="own_name"
+            android:summary="@string/own_name_summary"
+            android:title="@string/own_name_title"
+            android:icon="@drawable/ic_account_circle_black_24dp"/>
+
+    <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="send_coins_autoclose"
+            android:summary="@string/autoclose_summary"
+            android:title="@string/autoclose_title"
+            android:icon="@drawable/ic_clear_all_black_24dp"
+            android:visibility="gone"/>
+    <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="connectivity_notification"
+            android:summary="@string/connectivity_notification_summary"
+            android:title="@string/connectivity_notification_title"
+            android:icon="@drawable/ic_baseline_signal_cellular_alt_24px"/>
+
+    <EditTextPreference
+            android:key="trusted_peer"
+            android:summary="@string/trusted_peer_summary"
+            android:title="@string/trusted_peer_title"
+            android:singleLine="true"
+            android:icon="@drawable/ic_track_changes_black_24dp"/>
+
+    <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="trusted_peer_only"
+            android:summary="@string/trusted_peer_only_summary"
+            android:title="@string/trusted_peer_only"
+            android:icon="@drawable/ic_verified_user_black_24dp"/>
+
+    <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="remind_balance"
+            android:summary="@string/remind_balance_summary"
+            android:title="@string/remind_balance"
+            android:icon="@drawable/ic_receipt_black_24dp"/>
+
+    <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="disclaimer"
+            android:summary="@string/disclaimer_summary"
+            android:title="@string/show_disclaimer"
+            android:icon="@drawable/ic_explore_black_24dp"/>
+
+    <Preference
+            android:key="extended_public_key"
+            android:summary="@string/extended_public_key_summary"
+            android:title="@string/extended_public_key"
+            android:icon="@drawable/ic_vpn_key_black_24dp"/>
+
+    <Preference
+            android:key="initiate_reset"
+            android:summary="@string/initiate_reset_summary"
+            android:title="@string/initiate_reset"
+            android:icon="@drawable/ic_restore"/>
+</PreferenceScreen>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="price_array">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+    </string-array>
+
+    <string-array name="coin">
+        <item>BTC</item>
+        <item>ETH</item>
+        <item>BCH</item>
+        <item>XRP</item>
+        <item>LTC</item>
+        <item>EOS</item>
+        <item>USDT</item>
+        <item>TRX</item>
+        <item>XLM</item>
+        <item>BNB</item>
+    </string-array>
+    <string-array name="pref_currency_entries">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+    </string-array>
+    <string-array name="pref_currency_values">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+    </string-array>
+</resources>

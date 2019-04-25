@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/menu_home"
+                android:title="@string/menu_dashboard"
+                android:icon="@drawable/ic_dashboard"
+                android:checkable="true"
+                android:checked="true"/>
+    </group>
+
+    <item android:title="More">
+        <menu>
+            <item
+                    android:id="@+id/menu_exchange"
+                    android:title="@string/exchange_rates"
+                    android:icon="@drawable/ic_store"/>
+            <item
+                    android:id="@+id/menu_address"
+                    android:title="@string/edit_address_label"
+                    android:icon="@drawable/ic_explorer"/>
+            <item
+                    android:id="@+id/menu_transaction"
+                    android:icon="@drawable/ic_transform_black_24dp"
+                    android:title="@string/transactions"/>
+
+            <item
+                    android:id="@+id/menu_network"
+                    android:icon="@drawable/ic_lan_connect"
+                    android:title="@string/network_monitor"/>
+
+            <item
+                    android:id="@+id/action_settings"
+                    android:title="@string/action_settings"
+                    android:icon="@drawable/ic_settings_black_24dp"/>
+        </menu>
+    </item>
+
+</menu>

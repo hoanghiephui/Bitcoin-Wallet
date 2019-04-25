@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/list_entry_padding_horizontal_lax"
+        android:background="@drawable/bottom_sheet_background"
+        android:id="@+id/linearLayout2">
+
+    <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/export"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+            android:id="@+id/border"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="16dp"
+            android:background="?attr/colorCardActive"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtTitle"/>
+
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_mes"
+            android:id="@+id/textView14"
+            app:layout_constraintTop_toBottomOf="@+id/border"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="6dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/pass"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/export_password"
+            app:layout_constraintTop_toBottomOf="@+id/passwordStrengthView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="?colorAccent">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textSize="13sp"
+                android:imeOptions="actionGo"/>
+        <requestFocus/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+            android:id="@+id/passwordStrengthView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@tools:sample/full_names"
+            tools:visibility="visible"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView14"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/backup_password_again"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="?colorAccent"
+            app:layout_constraintTop_toBottomOf="@+id/passwordMismatchView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordAgainView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textSize="13sp"
+                android:imeOptions="actionDone"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+            android:id="@+id/passwordMismatchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_password_mismatch"
+            android:textColor="@color/fg_error"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pass"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"/>
+
+
+    <TextView
+            android:id="@+id/warningView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_warning_encrypted"
+            android:textSize="@dimen/font_size_small"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/viewGo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/warningView"
+            app:backgroundTint="@color/color_btc"
+            android:textColor="@color/white"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:enabled="false"
+            android:layout_marginTop="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/viewCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Canncel"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toStartOf="@id/viewGo"
+            app:layout_constraintBottom_toBottomOf="@+id/viewGo"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            app:layout_constraintTop_toTopOf="@+id/viewGo"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

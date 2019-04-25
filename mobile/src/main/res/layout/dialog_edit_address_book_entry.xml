@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none" >
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/list_entry_padding_horizontal_lax"
+            android:layout_marginRight="@dimen/list_entry_padding_horizontal_lax"
+            android:orientation="vertical" >
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/edit_address_label"
+                android:textSize="@dimen/font_size_small"
+                android:textStyle="bold" />
+
+        <EditText
+                android:id="@+id/edit_address_book_entry_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:focusable="false"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="none"
+                android:textColor="@color/fg_less_significant" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/address_label_"
+                android:textSize="@dimen/font_size_small"
+                android:textStyle="bold" />
+
+        <EditText
+                android:id="@+id/edit_address_book_entry_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textPersonName"
+                android:singleLine="true" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="url_image_coin" translatable="false">https://www.cryptocompare.com%1$s</string>
+
+    <string name="symbol_to">→</string>
+    <string name="symbol_from">←</string>
+    <string name="symbol_internal">⇄</string>
+
+    <string-array name="preferences_precision_values">
+        <item>8</item>
+        <item>6</item>
+        <item>4</item>
+        <item>2/3</item>
+        <item>0/6</item>
+    </string-array>
+    <string-array name="preferences_precision_labels">
+        <item>@string/precision_labels_8</item>
+        <item>@string/precision_labels_6</item>
+        <item>@string/precision_labels_4</item>
+        <item>@string/precision_labels_2_3</item>
+        <item>@string/precision_labels_0_6</item>
+    </string-array>
+    <string-array name="preferences_block_explorer_values">
+        <item>https://blockexplorer.com/</item>
+        <item>https://live.blockcypher.com/btc-testnet/</item>
+    </string-array>
+    <string-array name="preferences_block_explorer_labels">
+        <item>blockchain.info</item>
+        <item>live.blockcypher.com</item>
+    </string-array>
+
+    <string name="app_id">ca-app-pub-1123669775508473~3095923439</string>
+    <string name="admob_home">ca-app-pub-1123669775508473/9401956262</string>
+    <string name="admob_request">ca-app-pub-1123669775508473/3929211694</string>
+    <string name="admob_send">ca-app-pub-1123669775508473/1880443486</string>
+    <string name="admob_address">ca-app-pub-1123669775508473/7135234622</string>
+    <string name="admob_network">ca-app-pub-1123669775508473/5439009579</string>
+</resources>

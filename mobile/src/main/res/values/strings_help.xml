@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+
+    <string name="help_request_coins">
+<![CDATA[
+		<br>
+			Using this dialog, you can request coins from a payer. The payer should already have installed a Bitcoin wallet.
+		</br>
+		<p>
+			First, you can enter an amount of Bitcoins to request.
+		</p>
+		<br>
+			Then, you either have the generated QR code scanned by the payer. Or, you can send your request to a remote person with the share button in the action bar.
+		</br>
+		<p>
+			Either way, the payer will be presented a dialog for sending coins with all fields pre-populated. If the payer agrees, he or she can execute the payment easily.
+		</p>
+	]]>
+    </string>
+    <string name="help_send_coins">
+<![CDATA[
+		<p>
+			You have initiated the process of sending coins.
+		</p>
+		<p>
+			First, you enter the Bitcoin address to pay to.
+			The address will autocomplete from known entries in your address book.
+			You can also scan a QR code being presented by the payee by pressing the camera button.
+		</p>
+		<p>
+			Next, you enter the amount to pay.
+		</p>
+		<p>
+			Last, the spending PIN must be entered if one was set up beforehand.
+		</p>
+		<p>
+			You can enter a payment while being offline.
+			It will be sent on next restart of Bitcoin Wallet.
+			If you want a payment to be processed as fast as possible, make sure you are well connected (i.e. on a WLAN).
+		</p>
+		<p>
+			Note:
+			Payments are irreversible!
+			Always check the receiving address.
+		</p>
+	]]>
+    </string>
+
+    <string name="help_wallet">
+<![CDATA[
+		<p>
+			The upper left part of the screen displays your balance in Bitcoins and one selected national currency.
+			Tap to go to the list of national currencies, and tap on one of the currencies to select it as default.
+		</p>
+		<p>
+			The QR code in the upper right contains your current bitcoin address and can be used for scanning by a payer.
+			Tap on the QR code to get a larger version of it.
+		</p>
+		<p>
+			The bottom of the screen is covered by your transactions list.
+			It is empty at the beginning and will fill up as you receive and send payments.
+			Received payments will be marked in green and sent payments in red.
+		</p>
+		<p>
+			You can send or request coins by tapping the buttons in the action bar.
+			More options are available in the options menu.
+		</p>
+	]]>
+    </string>
+
+    <string name="help_safety">
+<![CDATA[
+		<p>
+			<b>Important safety notes:</b>
+		</p>
+		<br>
+			Bitcoins are stored on the device.<b>If you lose it, you\'ll lose your Bitcoins.</b>
+		</br>
+		<p>
+			This means you need to <b>back up your wallet</b>! Use the in-app backup facility for this, rather than a third party backup app. Keep your backup safe and remember the password.
+		</p>
+		<br>
+			<b>Before uninstalling</b> (or clearing app data/wiping your device), <b>transfer your Bitcoins to another wallet</b>. Remaining Bitcoins will be lost.
+		</br>
+		<p>
+			<b>Payments are irreversible</b>. If you send your Bitcoins into the void, there is almost no way to get them back.
+		</p>
+		<br>
+			<b>Keep your mobile device safe!</b> Do not root your device. Do only install apps you fully trust. Malicious apps could be trying to steal your wallet.
+		</br>
+		<p>
+			Keep the risk low! <b>Store only a reasonable amount</b> for day use.
+		</p>
+	]]>
+    </string>
+    <string name="help_technical_notes">
+<![CDATA[
+        <p>
+            <b>Technical notes:</b>
+        </p>
+        <p>
+            As an SPV/light wallet, Bitcoin Wallet follows the chain of the most proof-of-work (sometimes also called the \"longest chain\", the \"winning chain\" or the \"Bitcoin blockchain\").
+            You will only receive incoming payments and be able to pay on that chain.
+            No guarantees can be made about Bitcoins on minority chains, that is chains with less proof-of-work.
+        </p>
+        <p>
+            In the past, minority chains have always become irrelevant very quickly.
+            If you desire to follow a minority chain anyway, you are advised to use the \"trusted peer\" feature to exclusively connect to a bitcoind implementation which enforces your desired chain.
+            If the network between your wallet and the trusted peer is not to be trusted, use a VPN to authenticate that connection.
+        </p>
+    ]]>
+    </string>
+
+</resources>

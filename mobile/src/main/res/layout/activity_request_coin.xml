@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        android:background="?attr/colorPrimary">
+
+    <include
+            layout="@layout/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <ProgressBar
+            android:id="@+id/progressBar5"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/initiateRequestView"
+            app:layout_constraintEnd_toEndOf="@+id/cartQr"
+            app:layout_constraintStart_toStartOf="@+id/cartQr"
+            app:layout_constraintTop_toTopOf="@+id/cartQr"/>
+
+    <androidx.cardview.widget.CardView
+            android:id="@+id/cartQr"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTap">
+
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/request_coins_qr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"/>
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/initiateRequestView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:maxLines="3"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+            android:textColor="@color/colorAccent"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cartQr"
+            tools:text="aaaa"/>
+
+
+    <TextView
+            android:id="@+id/tvTap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:text="@string/address_book_context_copy_to_clipboard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBar"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_marginTop="16dp"/>
+
+    <TextView
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:drawableEnd="@drawable/ic_help_outline_grey_600_24dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/request_amount_label"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="?selectableItemBackgroundBorderless"
+            app:layout_constraintTop_toBottomOf="@+id/initiateRequestView"/>
+
+    <com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView
+            android:id="@+id/btcAmountView"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/radius_line_small"
+            app:layout_constraintEnd_toStartOf="@+id/localAmountView"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/help">
+
+        <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/request_coins_amount_btc_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:maxLines="1"
+                android:hint="Amount BTC"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="noExcludeDescendants"
+                android:background="@null"
+                android:textSize="16sp"
+                android:padding="4dp"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"/>
+    </com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView>
+
+    <com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView
+            android:id="@+id/localAmountView"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/radius_line_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btcAmountView"
+            app:layout_constraintTop_toBottomOf="@+id/help">
+
+        <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/request_coins_amount_local_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="Amount Coin"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                android:importantForAutofill="noExcludeDescendants"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:background="@null"
+                android:padding="4dp"
+                tools:targetApi="o"/>
+    </com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView>
+
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRequest"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:text="@string/request_coins"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/localAmountView"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"/>
+
+    <include
+            layout="@layout/init_ads"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

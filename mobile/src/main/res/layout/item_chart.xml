@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+    <LinearLayout
+            android:id="@+id/layout_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/chart_marker"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/textview_marker_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                tools:text="Wednesday, Oct 2, 01:00"/>
+
+        <TextView
+                android:id="@+id/textview_marker_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                tools:text="Price (USD): 824.5"/>
+
+    </LinearLayout>
+
+    <View
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/layout_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-1.5dp"
+            android:background="@drawable/chart_marker_triangle"
+            android:rotation="180"/>
+
+</RelativeLayout>

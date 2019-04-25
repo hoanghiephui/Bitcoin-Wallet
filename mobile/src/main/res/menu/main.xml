@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/action_settings"
+            android:title="@string/action_settings"
+            android:orderInCategory="100"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_report"
+            app:showAsAction="never"
+            android:visible="false"
+            android:title="@string/report_issue_title"/>
+    <item
+            android:id="@+id/menu_encrypt"
+            android:title="@string/encrypt_keys"
+            android:visible="false"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_legacy"
+            android:title="@string/request_legacy"
+            android:visible="false"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/menu_sweep"
+            android:title="@string/sweep_wallet"
+            android:visible="false"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/nav_share"
+            android:orderInCategory="101"
+            app:showAsAction="never"
+            android:visible="false"
+            android:title="Share"/>
+
+    <item
+            android:id="@+id/menu_address"
+            app:showAsAction="never"
+            android:title="@string/edit_address_label"/>
+
+    <item
+            android:id="@+id/menu_transaction"
+            android:icon="@drawable/ic_transform_black_24dp"
+            app:showAsAction="always"
+            android:title="@string/transactions"/>
+
+    <item
+            android:id="@+id/menu_network"
+            android:icon="@drawable/ic_lan_connect"
+            app:showAsAction="always"
+            android:title="@string/network_monitor"/>
+
+    <item
+            android:id="@+id/menu_backup"
+            app:showAsAction="always"
+            android:icon="@drawable/ic_backup_black_24dp"
+            android:title="Backup"/>
+
+    <item
+            android:id="@+id/menu_restore"
+            app:showAsAction="always"
+            android:icon="@drawable/ic_restore"
+            android:title="Restore"/>
+
+
+</menu>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/menu_edit"
+            android:title="@string/address_edit"/>
+
+    <item
+            android:id="@+id/menu_copy"
+            android:title="@string/address_copy_to_clipboard"/>
+
+    <item
+            android:title="@string/browse"
+            android:visible="false"
+            android:id="@+id/menu_browse"/>
+
+    <item
+            android:id="@+id/menu_qr"
+            android:title="@string/show_qr"/>
+    <item
+            android:id="@+id/menu_send"
+            android:title="@string/address_send"/>
+    <item
+            android:id="@+id/menu_remove"
+            android:title="@string/address_remove"/>
+</menu>

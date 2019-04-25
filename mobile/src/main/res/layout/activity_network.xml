@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:colorBackground"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include
+            layout="@layout/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <info.hoang8f.android.segmented.SegmentedGroup
+            android:id="@+id/segmented"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBar"
+            app:sc_border_width="1dp"
+            app:sc_checked_text_color="@android:color/white"
+            app:sc_corner_radius="4dp"
+            app:sc_tint_color="@color/colorAccent">
+
+        <RadioButton
+                android:id="@+id/btnOne"
+                style="@style/RadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="YOUR ADDRESS"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:textStyle="normal"/>
+
+        <RadioButton
+                android:id="@+id/btnTwo"
+                style="@style/RadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="SENDING ADDESS"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:textStyle="normal"/>
+    </info.hoang8f.android.segmented.SegmentedGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/segmented"
+            app:layout_constraintBottom_toTopOf="@+id/adViewContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"/>
+
+    <include layout="@layout/item_network_state"/>
+
+    <include
+            layout="@layout/init_ads"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

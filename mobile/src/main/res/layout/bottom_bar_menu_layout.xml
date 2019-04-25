@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?colorPrimaryDark"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="?actionBarSize"
+        app:layout_behavior="com.bitcoin.wallet.mobile.ui.widget.BottomNavigationBehavior"
+        tools:visibility="gone"
+        android:elevation="8dp">
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:backgroundTint="?colorPrimaryDark"
+            app:buttonGravity="bottom"
+            app:navigationContentDescription="@string/menu_label"
+            app:navigationIcon="@drawable/ic_menu"
+            app:hideOnScroll="true"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:elevation="8dp"/>
+
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?actionBarSize"
+            app:itemBackground="@drawable/nav_item_background"
+            app:itemTextColor="@color/nav_state_list"
+            app:itemIconTint="@color/nav_state_list"
+            app:insetForeground="@android:color/transparent"
+            android:background="?android:colorBackground"
+            app:menu="@menu/activity_main_drawer"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

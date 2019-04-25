@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+            android:id="@+id/send_coins_options_scan"
+            android:icon="@drawable/ic_qrcode_scan"
+            android:title="@string/btn_scan"
+            android:visible="false"
+            app:showAsAction="always|withText"/>
+    <item
+            android:id="@+id/send_coins_options_fee_category"
+            android:title="@string/fee_category"
+            app:showAsAction="never">
+        <menu>
+            <group android:checkableBehavior="single" >
+                <item
+                        android:id="@+id/send_coins_options_fee_category_economic"
+                        android:title="@string/fee_economic_"/>
+                <item
+                        android:id="@+id/send_coins_options_fee_category_normal"
+                        android:title="@string/fee_category_normal"/>
+                <item
+                        android:id="@+id/send_coins_options_fee_category_priority"
+                        android:title="@string/fee_category_priority"/>
+            </group>
+        </menu>
+    </item>
+    <item
+            android:id="@+id/send_coins_options_empty"
+            android:title="@string/option_empty"
+            app:showAsAction="never"/>
+
+</menu>

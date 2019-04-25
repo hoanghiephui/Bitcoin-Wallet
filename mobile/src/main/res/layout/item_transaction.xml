@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/transaction_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_arrow_bottom_left_thick"
+            android:id="@+id/imgType"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            android:tint="?attr/colorMenu"
+            tools:tint="@color/bg_action_bar"/>
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/timeView"
+            app:layout_constraintStart_toEndOf="@+id/imgType"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/imgType"
+            app:layout_constraintBottom_toBottomOf="@+id/imgType"
+            app:layout_constraintEnd_toStartOf="@+id/valueView"
+            android:layout_marginEnd="8dp"/>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/ic_more_vert_grey_600_18dp"
+            android:id="@+id/transaction_row_menu"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:padding="12dp"
+            app:layout_constraintTop_toTopOf="@+id/timeView"
+            app:layout_constraintBottom_toBottomOf="@+id/timeView"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
+
+    <TextView
+            tools:text="373 CONFIRMATIONS"
+            android:text="PENDING"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnConfirm"
+            android:background="@drawable/bg_confirm"
+            android:textColor="@android:color/white"
+            android:textAllCaps="true"
+            style="@style/TextAppearance.Subtitle1.Medium"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@+id/fiatView"
+            app:layout_constraintStart_toStartOf="@+id/timeView"
+            android:layout_marginTop="4dp"/>
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/addressView"
+            app:layout_constraintTop_toBottomOf="@+id/btnConfirm"
+            app:layout_constraintStart_toStartOf="@+id/timeView"
+            android:ellipsize="end"
+            tools:text="@tools:sample/full_names"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/transaction_row_menu"
+            android:layout_marginEnd="22dp"
+            />
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/valueView"
+            app:layout_constraintTop_toTopOf="@+id/transaction_row_menu"
+            app:layout_constraintEnd_toStartOf="@+id/transaction_row_menu"
+            app:layout_constraintBottom_toBottomOf="@+id/transaction_row_menu"/>
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/fiatView"
+            app:layout_constraintEnd_toEndOf="@+id/valueView"
+            android:maxLines="2"
+            tools:text="@tools:sample/us_phones"
+            app:layout_constraintTop_toBottomOf="@+id/valueView"/>
+
+    <TextView
+            android:text="@string/transaction_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7"
+            app:layout_constraintStart_toStartOf="@+id/addressView"
+            android:layout_marginTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/addressView"
+            />
+
+    <com.bitcoin.wallet.mobile.ui.widget.CurrencyTextView
+            tools:text="222"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/feeView"
+            app:layout_constraintEnd_toEndOf="@+id/transaction_row_menu"
+            android:layout_marginEnd="22dp"
+            app:layout_constraintTop_toTopOf="@+id/textView7"
+            app:layout_constraintBottom_toBottomOf="@+id/textView7"/>
+
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/viewFee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="feeView,textView7"/>
+
+    <TextView
+            tools:text="TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/messageView"
+            app:layout_constraintStart_toStartOf="@+id/textView7"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            app:layout_constraintEnd_toEndOf="@+id/transaction_row_menu"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:singleLine="true"
+            android:textColor="@color/fg_error"
+            android:textSize="@dimen/font_size_small"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

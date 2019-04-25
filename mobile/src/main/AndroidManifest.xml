@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.bitcoin.wallet.mobile">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <!-- dangerous permissions -->
+    <uses-permission android:name="android.permission.CAMERA"/> <!-- group: CAMERA -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- group: STORAGE -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> <!-- group: STORAGE -->
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <uses-feature
+            android:name="android.hardware.touchscreen"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.camera.front"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.camera.autofocus"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.camera.flash"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.screen.landscape"
+            android:required="false"/>
+
+    <application
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:name=".BitcoinApplication"
+            android:supportsRtl="true"
+            tools:ignore="GoogleAppIndexingWarning">
+        <activity
+                android:name=".ui.activitys.MainActivity"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.Dark">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".ui.activitys.ExchangeRatesActivity"
+                android:theme="@style/AppTheme.Light"/>
+
+        <activity
+                android:name=".ui.activitys.WalletTransactionsActivity"
+                android:theme="@style/AppTheme.Light"/>
+
+        <activity
+                android:name=".ui.activitys.NetworkActivity"
+                android:theme="@style/AppTheme.Light"/>
+
+        <activity
+                android:name=".ui.activitys.AddressActivity"
+                android:theme="@style/AppTheme.Light"/>
+
+        <activity
+                android:name=".ui.activitys.ScanActivity"
+                android:theme="@style/AppTheme.Light"/>
+
+        <activity
+                android:name=".ui.activitys.SendCoinActivity"
+                android:theme="@style/AppTheme.Light">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <data android:scheme="bitcoin"/>
+                <data
+                        android:scheme="BITCOIN"
+                        tools:ignore="AppLinkUrlError"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <data android:mimeType="application/bitcoin-paymentrequest"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".ui.activitys.RequestCoinActivity"
+                android:theme="@style/AppTheme.Light"/>
+
+        <activity
+                android:name=".ui.activitys.SettingActivity"
+                android:theme="@style/AppTheme.Light"/>
+
+        <provider
+                android:name=".data.ExchangeRatesProvider"
+                android:authorities="com.bitcoin.wallet.mobile.exchange_rates"
+                android:exported="false"/>
+
+        <service
+                android:name=".service.BlockchainService"
+                android:exported="false"/>
+
+        <service
+                android:name=".service.NotificationService"
+                android:exported="false"/>
+        <service
+                android:name=".service.UpgradeWalletService"
+                android:exported="false"/>
+
+        <receiver android:name=".service.BitcoinReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

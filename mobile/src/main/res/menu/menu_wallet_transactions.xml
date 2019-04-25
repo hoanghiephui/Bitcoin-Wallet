@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+            android:id="@+id/wallet_transactions_context_edit_address"
+            android:icon="@drawable/ic_create_white_24dp"
+            android:title="@null"
+            android:titleCondensed="@string/btn_edit"
+            app:showAsAction="ifRoom|withText"/>
+    <item
+            android:id="@+id/wallet_transactions_context_show_qr"
+            android:icon="@drawable/ic_qrcode_scan"
+            android:title="@string/show_qr"
+            app:showAsAction="ifRoom|withText"/>
+    <item
+            android:id="@+id/wallet_transactions_context_raise_fee"
+            android:title="@string/raise_fee"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/wallet_transactions_context_report_issue"
+            android:title="@string/report_issue"
+            android:visible="false"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/wallet_transactions_context_browse"
+            android:title="@string/browse"
+            app:showAsAction="never"/>
+
+</menu>

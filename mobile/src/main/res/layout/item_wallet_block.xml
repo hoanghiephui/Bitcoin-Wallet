@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?selectableItemBackgroundBorderless"
+              android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/block_list_row_mining_reward_adjustment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_less_bright"
+            android:paddingLeft="@dimen/list_entry_padding_horizontal"
+            android:paddingTop="@dimen/list_entry_padding_vertical_cram"
+            android:paddingRight="@dimen/list_entry_padding_horizontal"
+            android:paddingBottom="@dimen/list_entry_padding_vertical_cram"
+            android:text="@string/block_mining_reward"
+            android:textColor="@color/fg_less_significant"
+            android:textSize="@dimen/font_size_small"/>
+
+    <TextView
+            android:id="@+id/block_list_row_mining_difficulty_adjustment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_less_bright"
+            android:paddingLeft="@dimen/list_entry_padding_horizontal"
+            android:paddingTop="@dimen/list_entry_padding_vertical_cram"
+            android:paddingRight="@dimen/list_entry_padding_horizontal"
+            android:paddingBottom="@dimen/list_entry_padding_vertical_cram"
+            android:text="@string/block_mining_difficulty"
+            android:textColor="@color/fg_less_significant"
+            android:textSize="@dimen/font_size_small"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:id="@+id/block_list_row_transactions_group"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/list_entry_padding_horizontal"
+                android:paddingTop="@dimen/list_entry_padding_vertical"
+                android:paddingRight="@dimen/list_entry_padding_horizontal"
+                android:paddingBottom="@dimen/list_entry_padding_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/block_list_row_menu"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="true"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp">
+
+                <TextView
+                        android:id="@+id/block_list_row_height"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"/>
+
+                <TextView
+                        android:id="@+id/block_list_row_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <Space
+                        android:layout_width="24dp"
+                        android:layout_height="0px"/>
+            </LinearLayout>
+
+            <TextView
+                    android:id="@+id/block_list_row_hash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/product_green_medium"
+                    android:paddingTop="2dp"/>
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/block_list_row_menu"
+                style="@style/My.Widget.Button.Borderless.Small"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:padding="14dp"
+                android:background="?selectableItemBackgroundBorderless"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_more_vert_grey_600_18dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/transaction_row_warning_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/list_entry_padding_vertical_lax"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/list_entry_padding_vertical_lax"
+        android:paddingLeft="@dimen/list_entry_padding_horizontal_lax"
+        android:paddingRight="@dimen/list_entry_padding_horizontal_lax"
+        android:paddingTop="@dimen/list_entry_padding_vertical_lax"
+        android:textAllCaps="false"
+        android:textSize="@dimen/font_size_small"
+        style="@style/TextAppearance.Subtitle1.Medium"
+        tools:text="sfsdfdf"/>

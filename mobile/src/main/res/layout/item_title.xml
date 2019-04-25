@@ -1,0 +1,11 @@
+<TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:text="@string/summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="8dp"
+        style="@style/TextAppearance.Subtitle1.Medium"
+        android:textSize="18sp"/>
