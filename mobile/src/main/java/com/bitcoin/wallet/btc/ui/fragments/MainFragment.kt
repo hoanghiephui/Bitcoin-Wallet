@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.graphics.PorterDuff
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -19,7 +18,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
@@ -454,23 +452,13 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
 
     private fun initViewModelAddress() {
         viewModel.qrCode.observeNotNull(viewLifecycleOwner) {
-            try {
-                val qrDrawable = BitmapDrawable(resources, it)
-                qrDrawable.isFilterBitmap = true
-                currentAddressQrView.setImageDrawable(qrDrawable)
-
-            } catch (ex: Exception) {
-                Toast.makeText(baseActivity(), "Error show address, please try again!", Toast.LENGTH_SHORT).show()
-            }
             currentAddressQrCardView.setOnClickListener {
-                currentAddressQrView.isEnabled = false
                 viewModel.showWalletAddressDialog.setValue(Event.simple())
             }
         }
 
         viewModel.showWalletAddressDialog.observeNotNull(viewLifecycleOwner) {
             val address = viewModel.currentAddress.value
-            currentAddressQrView.isEnabled = true
             WalletAddressBottomDialog.show(baseActivity(), address, viewModel.ownName.value)
         }
         viewModel.showEncryptKeysDialog.observeNotNull(viewLifecycleOwner) {
