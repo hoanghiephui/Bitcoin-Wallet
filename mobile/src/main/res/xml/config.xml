@@ -69,13 +69,6 @@
             android:title="@string/remind_balance"
             android:icon="@drawable/ic_receipt_black_24dp"/>
 
-    <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="disclaimer"
-            android:summary="@string/disclaimer_summary"
-            android:title="@string/show_disclaimer"
-            android:icon="@drawable/ic_explore_black_24dp"/>
-
     <Preference
             android:key="extended_public_key"
             android:summary="@string/extended_public_key_summary"

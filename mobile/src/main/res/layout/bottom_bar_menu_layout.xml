@@ -10,7 +10,7 @@
         android:background="?colorPrimaryDark"
         app:behavior_hideable="false"
         app:behavior_peekHeight="?actionBarSize"
-        app:layout_behavior="com.bitcoin.wallet.mobile.ui.widget.BottomNavigationBehavior"
+        app:layout_behavior="com.bitcoin.wallet.btc.ui.widget.BottomNavigationBehavior"
         tools:visibility="gone"
         android:elevation="8dp">
 

@@ -105,7 +105,7 @@
             app:layout_constraintTop_toBottomOf="@+id/addressView"
             />
 
-    <com.bitcoin.wallet.mobile.ui.widget.CurrencyTextView
+    <com.bitcoin.wallet.btc.ui.widget.CurrencyTextView
             tools:text="222"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

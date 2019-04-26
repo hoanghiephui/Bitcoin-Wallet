@@ -256,7 +256,7 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginTop="8dp"/>
 
-                    <com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView
+                    <com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView
                             android:id="@+id/btcAmountView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -281,9 +281,9 @@
                                 android:gravity="center_vertical"
                                 android:textColor="@color/white"
                                 tools:targetApi="o"/>
-                    </com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView>
+                    </com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView>
 
-                    <com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView
+                    <com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView
                             android:id="@+id/localAmountView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -307,7 +307,7 @@
                                 android:layout_gravity="center"
                                 android:gravity="center_vertical"
                                 tools:targetApi="o"/>
-                    </com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView>
+                    </com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView>
 
                     <TextView
                             android:id="@+id/hintView"

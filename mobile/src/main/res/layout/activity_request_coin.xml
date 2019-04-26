@@ -95,7 +95,7 @@
             android:background="?selectableItemBackgroundBorderless"
             app:layout_constraintTop_toBottomOf="@+id/initiateRequestView"/>
 
-    <com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView
+    <com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView
             android:id="@+id/btcAmountView"
             android:layout_width="0px"
             android:layout_height="wrap_content"
@@ -121,9 +121,9 @@
                 android:padding="4dp"
                 android:layout_gravity="center"
                 android:gravity="center_vertical"/>
-    </com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView>
+    </com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView>
 
-    <com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView
+    <com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView
             android:id="@+id/localAmountView"
             android:layout_width="0px"
             android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                 android:background="@null"
                 android:padding="4dp"
                 tools:targetApi="o"/>
-    </com.bitcoin.wallet.mobile.ui.widget.CurrencyAmountView>
+    </com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView>
 
 
     <com.google.android.material.button.MaterialButton

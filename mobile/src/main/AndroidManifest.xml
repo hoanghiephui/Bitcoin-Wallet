@@ -2,7 +2,7 @@
 <manifest
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        package="com.bitcoin.wallet.mobile">
+        package="com.bitcoin.wallet.btc">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -10,10 +10,9 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <!-- dangerous permissions -->
-    <uses-permission android:name="android.permission.CAMERA"/> <!-- group: CAMERA -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- group: STORAGE -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> <!-- group: STORAGE -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
@@ -41,11 +40,11 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:name=".BitcoinApplication"
+            android:name="com.bitcoin.wallet.btc.BitcoinApplication"
             android:supportsRtl="true"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name=".ui.activitys.MainActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.Dark">
             <intent-filter>
@@ -56,27 +55,27 @@
         </activity>
 
         <activity
-                android:name=".ui.activitys.ExchangeRatesActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.ExchangeRatesActivity"
                 android:theme="@style/AppTheme.Light"/>
 
         <activity
-                android:name=".ui.activitys.WalletTransactionsActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.WalletTransactionsActivity"
                 android:theme="@style/AppTheme.Light"/>
 
         <activity
-                android:name=".ui.activitys.NetworkActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.NetworkActivity"
                 android:theme="@style/AppTheme.Light"/>
 
         <activity
-                android:name=".ui.activitys.AddressActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.AddressActivity"
                 android:theme="@style/AppTheme.Light"/>
 
         <activity
-                android:name=".ui.activitys.ScanActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.ScanActivity"
                 android:theme="@style/AppTheme.Light"/>
 
         <activity
-                android:name=".ui.activitys.SendCoinActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.SendCoinActivity"
                 android:theme="@style/AppTheme.Light">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -100,30 +99,30 @@
         </activity>
 
         <activity
-                android:name=".ui.activitys.RequestCoinActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.RequestCoinActivity"
                 android:theme="@style/AppTheme.Light"/>
 
         <activity
-                android:name=".ui.activitys.SettingActivity"
+                android:name="com.bitcoin.wallet.btc.ui.activitys.SettingActivity"
                 android:theme="@style/AppTheme.Light"/>
 
         <provider
-                android:name=".data.ExchangeRatesProvider"
-                android:authorities="com.bitcoin.wallet.mobile.exchange_rates"
+                android:name="com.bitcoin.wallet.btc.data.ExchangeRatesProvider"
+                android:authorities="com.bitcoin.wallet.btc.exchange_rates"
                 android:exported="false"/>
 
         <service
-                android:name=".service.BlockchainService"
+                android:name="com.bitcoin.wallet.btc.service.BlockchainService"
                 android:exported="false"/>
 
         <service
-                android:name=".service.NotificationService"
+                android:name="com.bitcoin.wallet.btc.service.NotificationService"
                 android:exported="false"/>
         <service
-                android:name=".service.UpgradeWalletService"
+                android:name="com.bitcoin.wallet.btc.service.UpgradeWalletService"
                 android:exported="false"/>
 
-        <receiver android:name=".service.BitcoinReceiver">
+        <receiver android:name="com.bitcoin.wallet.btc.service.BitcoinReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

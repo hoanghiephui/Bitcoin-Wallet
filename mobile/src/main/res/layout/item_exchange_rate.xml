@@ -58,7 +58,7 @@
                     android:singleLine="true"
                     android:text="@string/rate"/>
 
-            <com.bitcoin.wallet.mobile.ui.widget.CurrencyTextView
+            <com.bitcoin.wallet.btc.ui.widget.CurrencyTextView
                     android:id="@+id/exchange_rate_row_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                     android:text="@string/balance"
                     android:textColor="@color/fg_less_significant"/>
 
-            <com.bitcoin.wallet.mobile.ui.widget.CurrencyTextView
+            <com.bitcoin.wallet.btc.ui.widget.CurrencyTextView
                     android:id="@+id/exchange_rate_row_balance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

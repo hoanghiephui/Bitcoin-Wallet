@@ -65,7 +65,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"/>
 
-    <com.bitcoin.wallet.mobile.ui.widget.AddressView
+    <com.bitcoin.wallet.btc.ui.widget.AddressView
             android:id="@+id/addressView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

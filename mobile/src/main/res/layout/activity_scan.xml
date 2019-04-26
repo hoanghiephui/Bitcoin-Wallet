@@ -12,7 +12,7 @@
             android:layout_height="match_parent"
             android:keepScreenOn="true"/>
 
-    <com.bitcoin.wallet.mobile.ui.widget.ScannerView
+    <com.bitcoin.wallet.btc.ui.widget.ScannerView
             android:id="@+id/scannerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

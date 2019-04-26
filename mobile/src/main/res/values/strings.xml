@@ -95,7 +95,6 @@
     <string name="empty_text_received">Oops, we couldn\'t find any transactions!</string>
     <string name="empty_text_sent">No Bitcoins sent.</string>
     <string name="empty_text_how">Trade for traditional money,\nor transfer bitcoin from any wallet.</string>
-    <string name="empty_remind_backup">Please back up your wallet\nbefore receiving any Bitcoins!</string>
     <string name="warning_backup">Congratulations, you received your first payment! Have you already &lt;u&gt;backed up your wallet&lt;/u&gt;, to protect against loss?</string>
     <string name="warning_storage_encryption">Hint: to increase the safety of your wallet, you can &lt;u&gt;encrypt your device&lt;/u&gt;. This also protects data of other apps.</string>
     <string name="warning_chain_forking">The Bitcoin network is undergoing maintenance. You\'re advised to not send or receive any coins until maintenance is finished. &lt;u&gt;More information.&lt;/u&gt;</string>
@@ -106,8 +105,8 @@
     <string name="filter_received">Received payments</string>
     <string name="filter_sent">Sent payments</string>
     <string name="request_legacy">Request to legacy address</string>
-    <string name="encrypt_keys_set">Set spending PIN</string>
-    <string name="encrypt_change">Change spending PIN</string>
+    <string name="encrypt_keys_set">Set PIN code</string>
+    <string name="encrypt_change">Change PIN code</string>
     <string name="wallet_safety">Safety notes</string>
     <string name="technical_notes_title">Technical notes</string>
     <string name="insecure_bluetooth_title">Security alert</string>
@@ -199,8 +198,7 @@
     <string name="request_coins">Request Bitcoins</string>
     <string name="request_amount_label">Requested amount (optional)</string>
     <string name="bluetooth_payment">Accept payment via Bluetooth for more reliable processing</string>
-    <string name="initiate_request_qr">Have this code scanned by the sender.</string>
-    <string name="initiate_request_nfc">Or tap an NFC enabled device.</string>
+    <string name="initiate_request_qr">Scan this QR code with any Bitcoin Wallet, to send Bitcoin to your wallet.</string>
     <string name="clipboard_msg_request">Bitcoin request copied to clipboard</string>
     <string name="request_coins_share">Share request for Bitcoins…</string>
     <string name="local_app_msg">No other Bitcoin app found</string>

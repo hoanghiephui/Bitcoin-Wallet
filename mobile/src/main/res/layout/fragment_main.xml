@@ -60,7 +60,7 @@
                         app:layout_constraintStart_toEndOf="@+id/currentAddressQrCardView"
                         android:layout_marginStart="8dp"/>
 
-                <com.bitcoin.wallet.mobile.ui.widget.CurrencyTextView
+                <com.bitcoin.wallet.btc.ui.widget.CurrencyTextView
                         android:id="@+id/walletBalanceBtc"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView3"/>
 
-                <com.bitcoin.wallet.mobile.ui.widget.CurrencyTextView
+                <com.bitcoin.wallet.btc.ui.widget.CurrencyTextView
                         android:id="@+id/wallet_balance_local"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
