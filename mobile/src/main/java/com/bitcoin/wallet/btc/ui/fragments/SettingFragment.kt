@@ -18,8 +18,8 @@ import com.bitcoin.wallet.btc.service.BlockchainService
 import com.bitcoin.wallet.btc.ui.activitys.SettingActivity
 import com.bitcoin.wallet.btc.ui.widget.DialogBuilder
 import com.bitcoin.wallet.btc.utils.Configuration
-import com.bitcoin.wallet.btc.utils.Configuration.PREFS_KEY_TRUSTED_PEER
-import com.bitcoin.wallet.btc.utils.Configuration.PREFS_KEY_TRUSTED_PEER_ONLY
+import com.bitcoin.wallet.btc.utils.Configuration.Companion.PREFS_KEY_TRUSTED_PEER
+import com.bitcoin.wallet.btc.utils.Configuration.Companion.PREFS_KEY_TRUSTED_PEER_ONLY
 import com.bitcoin.wallet.btc.utils.Qr
 import com.bitcoin.wallet.btc.utils.ResolveDnsTask
 import java.net.InetAddress

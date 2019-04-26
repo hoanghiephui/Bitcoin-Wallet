@@ -13,6 +13,7 @@ import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.data.AddressBookEntry
 import com.bitcoin.wallet.btc.extension.gone
+import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.ui.adapter.BlockListAdapter
 import com.bitcoin.wallet.btc.ui.adapter.PeerListAdapter
 import com.bitcoin.wallet.btc.ui.widget.TopLinearLayoutManager
@@ -40,6 +41,7 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
     override fun layoutRes(): Int {
         return R.layout.activity_network
     }
+    private var isPeer = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar(getString(R.string.network_monitor))
@@ -83,11 +85,16 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
             R.id.btnOne -> {
                 recyclerView.adapter = blockAdapter
                 errorMessageTextView.gone()
+                recyclerView.visible()
+                isPeer = false
             }
             R.id.btnTwo -> {
                 recyclerView.adapter = peerAdapter
                 errorMessageTextView.visibility =
-                    if (peerAdapter.itemCount == 0 && segmented.checkedRadioButtonId == R.id.btnTwo) View.VISIBLE else View.GONE
+                    if (peerAdapter.itemCount == 0) View.VISIBLE else View.GONE
+                recyclerView.visibility =
+                    if (peerAdapter.itemCount != 0) View.VISIBLE else View.GONE
+                isPeer = true
             }
         }
     }
@@ -107,8 +114,6 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
                 )
             )
         }
-        //val directions = HomeFragmentDirections.actionNavDashboardToNavDetailExplorer(blockHash.toString())
-        //view.findNavController().navigate(directions)
     }
 
     private fun maybeSubmitList() {
@@ -140,8 +145,8 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
                     it
                 )
             })
-
+        errorMessageTextView.text = getString(R.string.peer_empty)
         errorMessageTextView.visibility =
-            if ((peerAdapter.itemCount == 0 || peers == null) && segmented.checkedRadioButtonId == R.id.btnTwo) View.VISIBLE else View.GONE
+            if ((peerAdapter.itemCount == 0 || peers == null) && isPeer) View.VISIBLE else View.GONE
     }
 }

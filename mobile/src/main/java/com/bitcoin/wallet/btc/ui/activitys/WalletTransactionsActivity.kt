@@ -100,7 +100,6 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                 viewGroup.visible()
 
                 val direction = viewModel.direction.value
-                val warning = viewModel.warning.value
                 val emptyText = SpannableStringBuilder(
                     getString(
                         if (direction == WalletTransactionsViewModel.Direction.SENT)
@@ -274,9 +273,6 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                                 )
                             }
                             //log.info("Viewing transaction {} on {}", tx.txId, blockExplorerUri) todo
-                            /*val directions =
-                                HomeFragmentDirections.actionNavDashboardToNavDetailExplorer(tx.txId.toString())
-                            view?.findNavController()?.navigate(directions)*/
                         }
                         return true
                     }

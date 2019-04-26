@@ -38,6 +38,7 @@ import java.io.IOException
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class BitcoinApplication : DaggerApplication() {
     private val appComponent by lazy { AppComponent.getComponent(this) }
@@ -48,8 +49,7 @@ class BitcoinApplication : DaggerApplication() {
     private var walletFiles: WalletFiles? = null
     val config: Configuration by lazy {
         Configuration(
-            PreferenceManager.getDefaultSharedPreferences(this),
-            resources
+            PreferenceManager.getDefaultSharedPreferences(this)
         )
     }
     val packageInfo: PackageInfo by lazy {
