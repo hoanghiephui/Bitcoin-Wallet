@@ -276,7 +276,7 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
                     true
                 }
                 R.id.menu_send -> {
-                    //SendCoinActivity.start(this, PaymentIntent.fromAddress(address?.address, address?.label))
+                    SendCoinActivity.start(this, PaymentIntent.fromAddress(address?.address, address?.label))
                     true
                 }
                 R.id.menu_remove -> {

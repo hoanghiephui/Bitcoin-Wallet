@@ -8,7 +8,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
-import android.nfc.NfcAdapter
 import android.os.*
 import android.text.Editable
 import android.text.TextWatcher
@@ -26,6 +25,7 @@ import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.data.*
 import com.bitcoin.wallet.btc.extension.gone
+import com.bitcoin.wallet.btc.extension.hideKeyboard
 import com.bitcoin.wallet.btc.extension.invisible
 import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.service.BlockchainService
@@ -66,7 +66,9 @@ class SendCoinActivity : BaseActivity() {
         application.contentResolver
     }
 
-    private var receivingAddressViewAdapter: ReceivingAddressViewAdapter? = null
+    private val receivingAddressViewAdapter: ReceivingAddressViewAdapter by lazy {
+        ReceivingAddressViewAdapter(this, viewModel, addressBookDao)
+    }
     private var amountCalculatorLink: CurrencyCalculatorLink? = null
     private val handler = Handler()
     private var backgroundThread: HandlerThread? = null
@@ -90,7 +92,7 @@ class SendCoinActivity : BaseActivity() {
             val scheme = intentUri?.scheme
             val mimeType = intent.type
 
-            if ((Intent.ACTION_VIEW == action || NfcAdapter.ACTION_NDEF_DISCOVERED == action)
+            if ((Intent.ACTION_VIEW == action)
                 && intentUri != null && "bitcoin" == scheme
             ) {
                 initStateFromBitcoinUri(intentUri)
@@ -197,6 +199,14 @@ class SendCoinActivity : BaseActivity() {
 
         viewFee()
         btnMore.invisible()
+        btnClear.setOnClickListener {
+            updateStateFrom(PaymentIntent.blank())
+            payeeGroup.visible()
+            receivingStaticLabelView.gone()
+            receivingStaticAddressView.gone()
+            btnClear.gone()
+            viewAddress.visible()
+        }
     }
 
     private fun viewFee() {
@@ -761,13 +771,14 @@ class SendCoinActivity : BaseActivity() {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
         override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-            val entry = receivingAddressViewAdapter?.getItem(position)
+            val entry = receivingAddressViewAdapter.getItem(position)
             try {
                 viewModel.validatedAddress = AddressAndLabel(
                     Constants.NETWORK_PARAMETERS, entry?.address,
                     entry?.label
                 )
                 receivingAddressView.text = null
+                receivingAddressView.hideKeyboard()
             } catch (x: AddressFormatException) {
                 // swallow
             }
@@ -901,7 +912,7 @@ class SendCoinActivity : BaseActivity() {
 
             if (payment.hasOutputs()) {
                 payeeGroup.visible()
-                receivingAddressView.gone()
+                viewAddress.gone()
                 receivingStaticLabelView.visibility =
                     if (!payment.hasPayee() || payment.payeeVerifiedBy == null)
                         View.VISIBLE
@@ -912,25 +923,30 @@ class SendCoinActivity : BaseActivity() {
                         View.VISIBLE
                     else
                         View.GONE
+                btnClear.visibility =
+                    if (!payment.hasPayee() || payment.payeeVerifiedBy == null)
+                        View.VISIBLE
+                    else
+                        View.GONE
 
                 receivingStaticLabelView.text = payment.memo
 
                 if (payment.hasAddress())
                     receivingStaticAddressView.text = WalletUtils.formatAddress(
                         payment.address,
-                        Constants.ADDRESS_FORMAT_GROUP_SIZE, Constants.ADDRESS_FORMAT_LINE_SIZE, true
+                        Constants.ADDRESS_FORMAT_GROUP_SIZE, Constants.ADDRESS_FORMAT_LINE_SIZE, false
                     )
                 else
                     receivingStaticAddressView.setText(R.string.send_coins_address_complex)
             } else if (viewModel.validatedAddress != null) {
                 payeeGroup.visibility = View.VISIBLE
-                receivingAddressView.visibility = View.GONE
+                viewAddress.gone()
                 receivingStaticLabelView.visible()
                 receivingStaticAddressView.visible()
-
+                btnClear.visible()
                 receivingStaticAddressView.text = WalletUtils.formatAddress(
                     viewModel.validatedAddress!!.address,
-                    Constants.ADDRESS_FORMAT_GROUP_SIZE, Constants.ADDRESS_FORMAT_LINE_SIZE, true
+                    Constants.ADDRESS_FORMAT_GROUP_SIZE, Constants.ADDRESS_FORMAT_LINE_SIZE, false
                 )
                 val addressBookLabel = addressBookDao
                     .resolveLabel(viewModel.validatedAddress!!.address.toString())
@@ -951,7 +967,8 @@ class SendCoinActivity : BaseActivity() {
                 payeeGroup.visible()
                 receivingStaticLabelView.gone()
                 receivingStaticAddressView.gone()
-                receivingAddressView.visible()
+                btnClear.gone()
+                viewAddress.visible()
             } else {
                 payeeGroup.gone()
             }
@@ -974,17 +991,17 @@ class SendCoinActivity : BaseActivity() {
             viewModel.state?.let { state ->
                 if (state == SendViewModel.State.INPUT) {
                     if (blockchainState != null && blockchainState.replaying) {
-                        hintView.setTextColor(resources.getColor(R.color.fg_error))
+                        hintView.setTextColor(ContextCompat.getColor(this, R.color.fg_error))
                         hintView.visibility = View.VISIBLE
                         hintView.setText(R.string.replaying)
                     } else if (payment.mayEditAddress() && viewModel.validatedAddress == null
-                        && !receivingAddressView.text.toString().trim().isEmpty()
+                        && receivingAddressView.text.toString().trim().isNotEmpty()
                     ) {
-                        hintView.setTextColor(resources.getColor(R.color.fg_error))
+                        hintView.setTextColor(ContextCompat.getColor(this, R.color.fg_error))
                         hintView.visibility = View.VISIBLE
                         hintView.setText(R.string.send_coins_error)
                     } else if (viewModel.dryrunException != null) {
-                        hintView.setTextColor(resources.getColor(R.color.fg_error))
+                        hintView.setTextColor(ContextCompat.getColor(this, R.color.fg_error))
                         hintView.visibility = View.VISIBLE
                         when {
                             viewModel.dryrunException is Wallet.DustySendRequested -> hintView.text =
@@ -1015,12 +1032,12 @@ class SendCoinActivity : BaseActivity() {
                                 colorResId = R.color.fg_insignificant
                             }
                         }
-                        hintView.setTextColor(resources.getColor(colorResId))
+                        hintView.setTextColor(ContextCompat.getColor(this, colorResId))
                         hintView.text = getString(hintResId, btcFormat.format(viewModel.dryrunTransaction?.fee))
                     } else if (payment.mayEditAddress() && viewModel.validatedAddress != null
                         && wallet != null && wallet.isAddressMine(viewModel.validatedAddress!!.address)
                     ) {
-                        hintView.setTextColor(resources.getColor(R.color.fg_insignificant))
+                        hintView.setTextColor(ContextCompat.getColor(this, R.color.fg_insignificant))
                         hintView.visibility = View.VISIBLE
                         hintView.setText(R.string.send_coins_address_own)
                     }
@@ -1055,18 +1072,23 @@ class SendCoinActivity : BaseActivity() {
             } else if (viewModel.state == SendViewModel.State.DECRYPTING) {
                 viewCancel.setText(R.string.btn_cancel)
                 viewGo.setText(R.string.state_decrypting)
+                btnClear.gone()
             } else if (viewModel.state == SendViewModel.State.SIGNING) {
                 viewCancel.setText(R.string.btn_cancel)
                 viewGo.setText(R.string.preparation_msg)
+                btnClear.gone()
             } else if (viewModel.state == SendViewModel.State.SENDING) {
                 viewCancel.setText(R.string.btn_back)
                 viewGo.setText(R.string.sending_msg)
+                btnClear.gone()
             } else if (viewModel.state == SendViewModel.State.SENT) {
                 viewCancel.setText(R.string.btn_back)
                 viewGo.setText(R.string.sent_msg)
+                btnClear.gone()
             } else if (viewModel.state == SendViewModel.State.FAILED) {
                 viewCancel.setText(R.string.btn_back)
                 viewGo.setText(R.string.failed_msg)
+                btnClear.gone()
             }
 
             val privateKeyPasswordViewVisible =
