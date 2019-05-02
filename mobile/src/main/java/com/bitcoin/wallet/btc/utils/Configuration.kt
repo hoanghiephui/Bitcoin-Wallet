@@ -77,7 +77,7 @@ class Configuration constructor(private val prefs: SharedPreferences) {
         get() = prefs.getBoolean(PREFS_KEY_CONNECTIVITY_NOTIFICATION, false)
 
     val trustedPeerHost: String?
-        get() = Strings.emptyToNull(prefs.getString(PREFS_KEY_TRUSTED_PEER, "")!!.trim { it <= ' ' })
+        get() = Strings.emptyToNull(prefs.getString(PREFS_KEY_TRUSTED_PEER, "")?.trim { it <= ' ' })
 
     val trustedPeerOnly: Boolean
         get() = prefs.getBoolean(PREFS_KEY_TRUSTED_PEER_ONLY, false)
@@ -171,9 +171,9 @@ class Configuration constructor(private val prefs: SharedPreferences) {
         prefs.edit().putLong(PREFS_KEY_LAST_USED, now).apply()
     }
 
-    fun maybeIncrementBestChainHeightEver(bestChainHeightEver: Int) {
-        if (bestChainHeightEver > onGetBestChainHeightEver())
-            prefs.edit().putInt(PREFS_KEY_BEST_CHAIN_HEIGHT_EVER, bestChainHeightEver).apply()
+    fun maybeIncrementBestChainHeightEver(mBestChainHeightEver: Int) {
+        if (mBestChainHeightEver > bestChainHeightEver)
+            prefs.edit().putInt(PREFS_KEY_BEST_CHAIN_HEIGHT_EVER, mBestChainHeightEver).apply()
     }
 
     fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
@@ -182,10 +182,6 @@ class Configuration constructor(private val prefs: SharedPreferences) {
 
     fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         prefs.unregisterOnSharedPreferenceChangeListener(listener)
-    }
-
-    fun onGetBestChainHeightEver(): Int {
-        return prefs.getInt(PREFS_KEY_BEST_CHAIN_HEIGHT_EVER, 0)
     }
 
     companion object {
