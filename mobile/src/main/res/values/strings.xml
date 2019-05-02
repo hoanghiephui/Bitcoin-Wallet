@@ -400,4 +400,6 @@
     <string name="address_book_options_scan_title">Scan address</string>
     <string name="address_book_options_scan_invalid">Scanned data is unrecognizable</string>
     <string name="address_book_options_scan_own_address">The scanned address is your own.</string>
+    <string name="balance_failed_connection">You\\\'ve got a bad connection to the Electrum network.</string>
+    <string name="balance_empty">The paper wallet is empty.</string>
 </resources>

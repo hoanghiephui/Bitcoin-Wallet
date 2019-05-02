@@ -58,6 +58,10 @@ public class Constants {
     public static final String MIMETYPE_TRANSACTION = "application/x-btctx";
     public static final long LAST_USAGE_THRESHOLD_INACTIVE_MS = 4 * DateUtils.WEEK_IN_MILLIS;
     public static final String MIMETYPE_WALLET_BACKUP = "application/x-bitcoin-wallet-backup";
+    public static final int ELECTRUM_SERVER_DEFAULT_PORT_TCP = NETWORK_PARAMETERS.getId()
+            .equals(NetworkParameters.ID_MAINNET) ? 50001 : 51001;
+    public static final int ELECTRUM_SERVER_DEFAULT_PORT_TLS = NETWORK_PARAMETERS.getId()
+            .equals(NetworkParameters.ID_MAINNET) ? 50002 : 51002;
 
     static {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
