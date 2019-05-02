@@ -83,7 +83,6 @@ public class BlockchainService extends LifecycleService {
     private Coin notificationAccumulatedAmount = Coin.ZERO;
     private final List<Address> notificationAddresses = new LinkedList<Address>();
     private AtomicInteger transactionsReceived = new AtomicInteger();
-    private long serviceCreatedAt;
     private boolean resetBlockchainOnShutdown = false;
 
     private static final int MIN_COLLECT_HISTORY = 2;
@@ -416,8 +415,6 @@ public class BlockchainService extends LifecycleService {
 
     @Override
     public void onCreate() {
-        serviceCreatedAt = System.currentTimeMillis();
-
         super.onCreate();
         nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);

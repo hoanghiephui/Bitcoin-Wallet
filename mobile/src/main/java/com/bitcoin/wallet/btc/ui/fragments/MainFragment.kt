@@ -367,7 +367,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
 
         val showProgress: Boolean
 
-        if (blockchainState?.bestChainDate != null) {
+        if (blockchainState != null && blockchainState.bestChainDate != null) {
             val blockchainLag = System.currentTimeMillis() - blockchainState.bestChainDate.time
             val blockchainUptodate = blockchainLag < BLOCKCHAIN_UPTODATE_THRESHOLD_MS
             val noImpediments = blockchainState.impediments.isEmpty()

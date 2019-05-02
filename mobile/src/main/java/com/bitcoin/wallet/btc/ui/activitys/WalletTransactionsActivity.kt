@@ -102,10 +102,7 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                 val direction = viewModel.direction.value
                 val emptyText = SpannableStringBuilder(
                     getString(
-                        if (direction == WalletTransactionsViewModel.Direction.SENT)
-                            R.string.empty_text_sent
-                        else
-                            R.string.empty_text_received
+                        R.string.empty_text_received
                     )
                 )
                 emptyText.setSpan(
