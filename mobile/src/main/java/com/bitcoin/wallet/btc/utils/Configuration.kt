@@ -1,6 +1,7 @@
 package com.bitcoin.wallet.btc.utils
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.bitcoin.wallet.btc.data.ExchangeRate
 import com.google.common.base.Strings
 import org.bitcoinj.core.Coin
@@ -151,8 +152,10 @@ class Configuration constructor(private val prefs: SharedPreferences) {
     }
 
     fun disarmBackupReminder() {
-        prefs.edit().putBoolean(PREFS_KEY_REMIND_BACKUP, false)
-            .putLong(PREFS_KEY_LAST_BACKUP, System.currentTimeMillis()).apply()
+        prefs.edit {
+            putBoolean(PREFS_KEY_REMIND_BACKUP, false)
+            putLong(PREFS_KEY_LAST_BACKUP, System.currentTimeMillis())
+        }
     }
 
     fun updateLastVersionCode(currentVersionCode: Long) {
@@ -169,7 +172,7 @@ class Configuration constructor(private val prefs: SharedPreferences) {
     }
 
     fun maybeIncrementBestChainHeightEver(bestChainHeightEver: Int) {
-        if (bestChainHeightEver > bestChainHeightEver)
+        if (bestChainHeightEver > onGetBestChainHeightEver())
             prefs.edit().putInt(PREFS_KEY_BEST_CHAIN_HEIGHT_EVER, bestChainHeightEver).apply()
     }
 
@@ -179,6 +182,10 @@ class Configuration constructor(private val prefs: SharedPreferences) {
 
     fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         prefs.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun onGetBestChainHeightEver(): Int {
+        return prefs.getInt(PREFS_KEY_BEST_CHAIN_HEIGHT_EVER, 0)
     }
 
     companion object {
