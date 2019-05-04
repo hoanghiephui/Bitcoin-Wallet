@@ -42,4 +42,8 @@ abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector
     abstract fun settingActivity(): SettingActivity
+
+    @PerActivity
+    @ContributesAndroidInjector
+    abstract fun aboutActivity(): AboutActivity
 }

@@ -218,6 +218,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
                 startActivity(Intent(requireActivity(), SettingActivity::class.java))
 
             }
+            R.id.menu_about -> {
+                startActivity(Intent(requireActivity(), AboutActivity::class.java))
+
+            }
             R.id.nav_share -> {
             }
             R.id.menu_backup -> {

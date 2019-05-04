@@ -3,16 +3,13 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:elevation="0dp">
+            android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
@@ -20,7 +17,6 @@
                 app:toolbarId="@+id/toolbar"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
                 app:titleEnabled="false"
-                android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary">
 
             <androidx.appcompat.widget.AppCompatImageView

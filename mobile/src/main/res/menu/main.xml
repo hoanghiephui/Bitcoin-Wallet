@@ -7,6 +7,11 @@
             android:orderInCategory="100"
             app:showAsAction="never"/>
     <item
+            android:id="@+id/menu_about"
+            android:title="About"
+            android:orderInCategory="101"
+            app:showAsAction="never"/>
+    <item
             android:id="@+id/menu_report"
             app:showAsAction="never"
             android:visible="false"
