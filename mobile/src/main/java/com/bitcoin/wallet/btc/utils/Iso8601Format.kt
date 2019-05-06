@@ -5,7 +5,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Iso8601Format constructor(formatString: String) : SimpleDateFormat(formatString, Locale.getDefault()) {
+class Iso8601Format constructor(formatString: String) : SimpleDateFormat(formatString, Locale.US) {
 
     init {
         timeZone = UTC

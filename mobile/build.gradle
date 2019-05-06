@@ -121,10 +121,10 @@ dependencies {
     //implementation 'com.facebook.android:audience-network-sdk:5.2.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'info.hoang8f:android-segmented:1.0.6'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
 
     //wallet
-    implementation 'org.bitcoinj:bitcoinj-core:0.15.1'
+    implementation 'org.bitcoinj:bitcoinj-core:0.15.2'
     implementation 'com.google.protobuf:protobuf-java:3.6.1'
     implementation 'com.google.guava:guava:27.0.1-android'
     implementation 'com.google.zxing:core:3.3.3'
