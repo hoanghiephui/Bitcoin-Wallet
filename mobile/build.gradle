@@ -5,7 +5,7 @@ apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
-
+    //wallet/1caigithe
 
 
     defaultConfig {
