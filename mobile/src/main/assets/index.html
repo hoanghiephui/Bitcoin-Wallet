@@ -1,0 +1,699 @@
+﻿
+<html>
+<head>
+
+<link href="https://fonts.googleapis.com/css?family=Arvo|Nunito|Oxygen|Exo+2|Source+Code+Pro" rel="stylesheet"/>
+
+<link href="https://cdn.flycricket.com/templates/main-ltr/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.flycricket.com/templates/main-ltr/css/intlTelInput.min.css" rel="stylesheet"/>
+<link href="https://cdn.flycricket.com/templates/main-ltr/css/owl.carousel.min.css" rel="stylesheet"/>
+
+
+<style>/* these are overridden inline in the mustache compilation */
+:root {
+  --background-color: #ffffff;
+  --poweredbybg-color: #f0f0f0;
+  --text-color: #000000;
+  --link-color: #008DD5;
+  --linkhover-color: #005A88;
+  --main-font: 'Arvo'; }
+
+* {
+  font-family: var(--main-font);
+  font-weight: 400;
+  color: var(--text-color); }
+
+body {
+  padding: 0;
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: "pnum";
+  font-feature-settings: "pnum";
+  font-variant-numeric: proportional-nums;
+  position: relative;
+  background: #fff; }
+
+a {
+  color: var(--link-color);
+  transition: all 0.2s linear; }
+  a:focus, a:hover {
+    color: var(--linkhover-color); }
+  a.nohover:hover {
+    text-decoration: none; }
+
+.claim-bar {
+  padding: 12px 0;
+  background: #fff;
+  color: #555;
+  font-family: 'Oxygen', Helvetica, sans-serif;
+  transition: all 0.3s ease-in-out; }
+  .claim-bar * {
+    font-family: 'Oxygen', Helvetica, sans-serif; }
+  .claim-bar div {
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    font-size: 0.9em;
+    cursor: pointer;
+    color: #555; }
+    .claim-bar div span {
+      transition: all 0.3s ease-in-out;
+      color: #008DD5; }
+  .claim-bar:hover {
+    text-decoration: none;
+    text-decoration: none;
+    background: #008DD5;
+    color: white; }
+    .claim-bar:hover div {
+      color: white; }
+      .claim-bar:hover div span {
+        color: white; }
+
+.whitelabel-badge-mobile {
+  background: white;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  border-radius: 4px;
+  text-align: center;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: 0.2s all ease-in-out; }
+  .whitelabel-badge-mobile .wl-label {
+    font-size: 0.8em;
+    color: #777; }
+  .whitelabel-badge-mobile * {
+    transition: 0.2s all ease-in-out; }
+  .whitelabel-badge-mobile .st0 {
+    fill: #1FAF84; }
+  .whitelabel-badge-mobile:hover {
+    background: #1FAF84; }
+    .whitelabel-badge-mobile:hover * {
+      color: white; }
+    .whitelabel-badge-mobile:hover .st0 {
+      fill: #ffffff; }
+  @media (min-width: 491px) {
+    .whitelabel-badge-mobile {
+      display: none; } }
+
+.whitelabel-badge {
+  position: fixed;
+  z-index: 999999999;
+  top: 10px;
+  right: 10px;
+  background: white;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  border-radius: 4px;
+  text-align: center;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: 0.2s all ease-in-out;
+  display: none; }
+  .whitelabel-badge .wl-label {
+    font-family: 'Oxygen', Helvetica, sans-serif;
+    font-size: 0.8em;
+    color: #777; }
+  .whitelabel-badge * {
+    transition: 0.2s all ease-in-out; }
+  .whitelabel-badge .st0 {
+    fill: #1FAF84; }
+  .whitelabel-badge:hover {
+    background: #1FAF84; }
+    .whitelabel-badge:hover * {
+      color: white; }
+    .whitelabel-badge:hover .st0 {
+      fill: #ffffff; }
+  @media (min-width: 491px) {
+    .whitelabel-badge {
+      display: block; } }
+
+footer {
+  background: #222; }
+  footer p {
+    color: #777 !important; }
+  footer #social-icons {
+    background: #222;
+    padding: 0;
+    width: 100%; }
+    footer #social-icons .social-icon {
+      transition: opacity 0.2s ease-in-out;
+      display: inline-block;
+      width: 32px;
+      margin-right: 12px;
+      opacity: 0.5;
+      padding-top: 30px; }
+      footer #social-icons .social-icon path, footer #social-icons .social-icon polygon {
+        transition: all 0.2s linear;
+        fill: white; }
+      footer #social-icons .social-icon:hover {
+        opacity: 1; }
+  footer .footer-store-button-container {
+    text-align: right;
+    margin: auto;
+    vertical-align: middle; }
+    @media (max-width: 767px) {
+      footer .footer-store-button-container {
+        text-align: center; } }
+    footer .footer-store-button-container .footer-store-button {
+      padding-top: 2em;
+      padding-bottom: 2em;
+      display: inline-block; }
+      footer .footer-store-button-container .footer-store-button .store-button {
+        height: auto !important;
+        margin: 0 6px; }
+        footer .footer-store-button-container .footer-store-button .store-button svg {
+          height: 46px !important; }
+
+.store-button.ios .st0 {
+  fill: #A6A6A6; }
+
+.store-button.ios .st1 {
+  fill: #FFFFFF; }
+
+.store-button.android .st0 {
+  fill: none; }
+
+.store-button.android .st1 {
+  clip-path: url(#SVGID_2_); }
+
+.store-button.android .st2 {
+  clip-path: url(#SVGID_4_); }
+
+.store-button.android .st3 {
+  clip-path: url(#SVGID_6_); }
+
+.store-button.android .st4 {
+  clip-path: url(#SVGID_8_); }
+
+.store-button.android .st5 {
+  fill: #FFFFFF; }
+
+.store-button.android .st6 {
+  fill: #A6A6A6; }
+
+.store-button.android .st7 {
+  fill: #FFFFFF;
+  stroke: #FFFFFF;
+  stroke-width: 0.16;
+  stroke-miterlimit: 10; }
+
+.store-button.android .st8 {
+  fill: url(#path64_1_); }
+
+.store-button.android .st9 {
+  fill: url(#path78_1_); }
+
+.store-button.android .st10 {
+  fill: url(#path88_1_); }
+
+.store-button.android .st11 {
+  fill: url(#path104_1_); }
+
+.store-button.android .st12 {
+  filter: url(#Adobe_OpacityMaskFilter); }
+
+.store-button.android .st13 {
+  clip-path: url(#SVGID_10_);
+  fill-opacity: 0.2; }
+
+.store-button.android .st14 {
+  mask: url(#mask114_1_); }
+
+.store-button.android .st15 {
+  clip-path: url(#SVGID_12_); }
+
+.store-button.android .st16 {
+  fill: url(#path152_1_); }
+
+.store-button.android .st17 {
+  filter: url(#Adobe_OpacityMaskFilter_1_); }
+
+.store-button.android .st18 {
+  clip-path: url(#SVGID_14_);
+  fill-opacity: 0.12; }
+
+.store-button.android .st19 {
+  mask: url(#mask162_1_); }
+
+.store-button.android .st20 {
+  clip-path: url(#SVGID_16_); }
+
+.store-button.android .st21 {
+  fill: url(#path200_1_); }
+
+.store-button.android .st22 {
+  filter: url(#Adobe_OpacityMaskFilter_2_); }
+
+.store-button.android .st23 {
+  clip-path: url(#SVGID_18_);
+  fill-opacity: 0.12; }
+
+.store-button.android .st24 {
+  mask: url(#mask210_1_); }
+
+.store-button.android .st25 {
+  clip-path: url(#SVGID_20_); }
+
+.store-button.android .st26 {
+  fill: url(#path248_1_); }
+
+.store-button.android .st27 {
+  filter: url(#Adobe_OpacityMaskFilter_3_); }
+
+.store-button.android .st28 {
+  clip-path: url(#SVGID_22_);
+  fill-opacity: 0.25; }
+
+.store-button.android .st29 {
+  mask: url(#mask258_1_); }
+
+.store-button.android .st30 {
+  clip-path: url(#SVGID_24_); }
+
+.store-button.android .st31 {
+  fill: url(#path296_1_); }
+
+#attribution {
+  transition: all 0.2s ease-in-out;
+  padding: 2em 0;
+  font-size: 0.8em;
+  color: #888 !important; }
+  #attribution p {
+    margin-bottom: 0.45em;
+    font-size: 1.1em; }
+  #attribution a {
+    color: #aaa !important;
+    text-decoration: none; }
+    #attribution a:hover {
+      color: #007bff !important; }
+
+h1 {
+  font-size: 3.2em;
+  margin-bottom: 0;
+  font-weight: bold;
+  letter-spacing: 0.05em; }
+
+h2 {
+  margin-top: 0.2em;
+  margin-bottom: 0.3em;
+  font-size: 1.8em; }
+
+h3 {
+  font-weight: normal;
+  font-size: 16px; }
+
+html {
+  height: 100%; }
+
+body {
+  height: 100%;
+  color: var(--text-color);
+  text-align: center; }
+
+.cover-container {
+  margin-right: auto;
+  margin-left: auto; }
+
+.cover {
+  padding: 0 1.5rem; }
+  .cover .btn-lg {
+    padding: .75rem 1.25rem;
+    font-weight: 700; }
+
+p[id='text.line2'] {
+  margin-bottom: 0 !important; }
+
+.site-wrapper {
+  position: relative;
+  background-size: cover;
+  min-height: 100vh; }
+  .site-wrapper .site-wrapper-background {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0.9;
+    background-color: var(--background-color); }
+  .site-wrapper .site-wrapper-inner {
+    padding-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh; }
+    @media (min-width: 767px) {
+      .site-wrapper .site-wrapper-inner {
+        padding-top: 0; } }
+    .site-wrapper .site-wrapper-inner .arrows {
+      width: 60px;
+      height: 32px;
+      position: absolute;
+      left: 50%;
+      margin-left: -30px;
+      bottom: 15px;
+      opacity: 0.5; }
+      @media (max-width: 786px) {
+        .site-wrapper .site-wrapper-inner .arrows {
+          display: none; } }
+      .site-wrapper .site-wrapper-inner .arrows path {
+        stroke: var(--text-color);
+        fill: transparent;
+        stroke-width: 2px; }
+
+@media (min-width: 40em) {
+  .cover-container {
+    width: 100%; } }
+
+@media (max-width: 786px) {
+  * {
+    text-align: center; } }
+
+#header {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: auto;
+  align-items: center;
+  justify-content: center; }
+  #header .text-container {
+    text-align: left;
+    position: relative;
+    display: block;
+    padding-left: 2em;
+    padding-right: 2em;
+    flex: 1;
+    max-width: 800px; }
+    #header .text-container .tc-table {
+      width: 100%;
+      display: table;
+      height: auto;
+      padding-bottom: 5em;
+      padding-top: 2em; }
+      @media (min-width: 787px) {
+        #header .text-container .tc-table {
+          height: 100%;
+          padding-bottom: 0; } }
+    #header .text-container h1 {
+      font-size: 2em;
+      margin-bottom: 0.25em;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      line-height: 1.1em; }
+      @media (min-width: 787px) {
+        #header .text-container h1 {
+          font-size: 3.2em; } }
+    #header .text-container h2 {
+      margin-top: 0.2em;
+      margin-bottom: 0.3em;
+      font-size: 1.3em; }
+      @media (min-width: 787px) {
+        #header .text-container h2 {
+          font-size: 1.8em; } }
+  #header .device-container {
+    padding-bottom: 2em;
+    width: 100%; }
+    #header .device-container img {
+      max-height: 70vh;
+      max-width: 90%;
+      position: relative;
+      margin-top: 5em; }
+    @media (min-width: 787px) {
+      #header .device-container {
+        width: auto;
+        padding-bottom: 0; }
+        #header .device-container img {
+          margin-top: 0; } }
+
+.store-button {
+  height: 56px;
+  width: auto;
+  display: inline-block; }
+  @media (min-width: 440px) {
+    .store-button:first-of-type {
+      margin-right: 12px; } }
+  .store-button:hover {
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.05); }
+  .store-button svg {
+    width: auto;
+    height: 100%;
+    display: block;
+    position: relative; }
+  @media (max-width: 768px) {
+    .store-button {
+      margin: auto; } }
+
+@media (max-width: 491px) {
+  .text-to-phone:not(.email-subscribe) {
+    display: none !important; } }
+
+.text-to-phone input[type='tel'], .text-to-phone input[type='email'] {
+  transition: all 0.2s linear;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  outline: none;
+  color: #333 !important;
+  text-align: left; }
+  .text-to-phone input[type='tel']:focus, .text-to-phone input[type='email']:focus {
+    border-color: var(--link-color); }
+
+.text-to-phone input[type='email'] {
+  padding-left: 12px;
+  width: 230px; }
+
+.text-to-phone button, .text-to-phone input[type='submit'] {
+  border-radius: 4px;
+  background: var(--link-color);
+  color: white;
+  font-size: 14px;
+  border: 0;
+  padding: 6px 8px;
+  padding-top: 7px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  outline: none;
+  cursor: pointer; }
+
+section {
+  padding: 5em 0;
+  background: white; }
+  section * {
+    color: #333; }
+  section h2 {
+    font-size: 2.5em;
+    color: #333;
+    padding-bottom: 0.25em;
+    margin-bottom: 0; }
+
+#screenshots .owl-nav {
+  padding-top: 3em; }
+  #screenshots .owl-nav button {
+    outline: none; }
+  #screenshots .owl-nav .owl-next, #screenshots .owl-nav .owl-prev {
+    font-size: 2em; }
+    #screenshots .owl-nav .owl-next *, #screenshots .owl-nav .owl-prev * {
+      color: rgba(0, 0, 0, 0.25); }
+  #screenshots .owl-nav .owl-prev {
+    margin-right: 1em; }
+
+#screenshots img {
+  border-radius: 0.5em;
+  -webkit-box-shadow: 2px 2px 10px -2px rgba(0, 0, 0, 0.49);
+  -moz-box-shadow: 2px 2px 10px -2px rgba(0, 0, 0, 0.49);
+  box-shadow: 2px 2px 5px -2px rgba(0, 0, 0, 0.49); }
+
+#screenshots h2 {
+  padding-bottom: 0.5em;
+  margin-bottom: 2em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  padding-left: 2em;
+  padding-right: 2em; }
+
+@media (max-width: 767px) {
+  #screenshots h2 {
+    padding-left: 0;
+    padding-right: 0;
+    display: block; } }
+
+#features p {
+  font-size: 1.4em; }
+
+#features ul {
+  padding-left: 1em;
+  padding-top: 0.75em; }
+  #features ul li {
+    list-style-type: circle;
+    font-size: 1.2em;
+    padding-bottom: 0.5em; }
+
+#features button {
+  transition: transform 0.2s ease-in-out;
+  padding: 0.75em 1.5em;
+  border: 0;
+  border-radius: 4px;
+  margin-top: 1em;
+  background-color: var(--background-color);
+  color: white;
+  cursor: pointer; }
+  #features button:hover {
+    transform: scale(1.1); }
+
+#features .feature-right {
+  text-align: left;
+  padding-top: 2em; }
+
+#features .feature-left {
+  text-align: center; }
+  #features .feature-left img {
+    max-width: 100%;
+    max-height: 575px; }
+
+@media (max-width: 767px) {
+  #features .feature-right {
+    padding-top: 4em; }
+  #features ul {
+    padding-left: 0; }
+    #features ul li {
+      list-style: none; } }
+
+#reviews .stars {
+  width: 100%;
+  padding-bottom: 1.5em; }
+  #reviews .stars svg {
+    color: #eec643;
+    height: 34px;
+    width: 34px; }
+    #reviews .stars svg path {
+      fill: #eec643; }
+
+#reviews #quote-carousel {
+  padding: 0 80px; }
+  #reviews #quote-carousel .carousel-control svg {
+    width: 14px; }
+  #reviews #quote-carousel .carousel-control path {
+    fill: #999; }
+  #reviews #quote-carousel .carousel-indicators {
+    margin-bottom: -1em; }
+    #reviews #quote-carousel .carousel-indicators li {
+      background: #c0c0c0; }
+    #reviews #quote-carousel .carousel-indicators .active {
+      background: #666; }
+
+#reviews blockquote {
+  position: relative;
+  font-size: 1em;
+  font-style: italic;
+  color: #666;
+  padding: 0 5%;
+  margin-bottom: 0; }
+  @media (min-width: 768px) {
+    #reviews blockquote {
+      font-size: 1.6em;
+      line-height: 1.5em;
+      padding: 0 10%; } }
+  #reviews blockquote footer {
+    background: none !important;
+    font-size: 0.6em;
+    font-weight: 700;
+    color: #c7c6c1; }
+    #reviews blockquote footer:before {
+      content: '\2015'; }
+
+a.contact {
+  color: #999; }
+
+a.contact:hover {
+  color: #fff;
+  text-decoration: none; }
+
+@media (max-width: 767px) {
+  * {
+    text-align: center; } }
+</style>
+<script src="https://cdn.flycricket.com/templates/main-ltr/js/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdn.flycricket.com/templates/main-ltr/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdn.flycricket.com/templates/main-ltr/js/bowser.min.js" type="text/javascript"></script>
+<script src="https://cdn.flycricket.com/templates/main-ltr/js/popper.min.js" type="text/javascript"></script>
+<script src="https://cdn.flycricket.com/templates/main-ltr/js/intlTelInput-jquery.min.js" type="text/javascript"></script>
+<script src="https://cdn.flycricket.com/templates/main-ltr/js/tinycolor.min.js" type="text/javascript"></script>
+<script src="https://cdn.flycricket.com/templates/main-ltr/js/owl.carousel.min.js" type="text/javascript"></script>
+<style>
+			.main-container {
+				color:#222;
+				padding:2em 0;
+				padding-bottom:4em;
+				text-align: left;
+			}
+			.main-container *:not(a) {
+				color:#222;
+			}
+	
+			a {
+				color: #009c9c;
+			}
+	
+			a:hover {
+				color: #007bff;
+			}
+	
+			h2 {
+				font-size: 1.5em;
+			}
+	
+			.main-container {
+				padding:2em;
+				background:white;
+				min-height:400px;
+				-webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.25);
+				-moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.25);
+				box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.25);
+			}
+		</style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<meta content="https://bitcoin-wallet.flycricket.io" property="og:url">
+<meta content="website" property="og:type">
+<meta content="Bitcoin Wallet" property="og:title"/>
+<!-- <meta property="og:image" content="" /> -->
+<meta content="" property="og:description"/>
+<meta content="" name="description"/>
+<title>Bitcoin Wallet</title>
+</meta></meta></head>
+<body style="background:#222;">
+<style id="global_style">:root {
+	--background-color: #E17A00;
+	--text-color: #ffffff;
+	--link-color: #2B9EB3;
+	--linkhover-color: #005A88;
+	--main-font: 'Oxygen';
+	--backgroundgradient: True;
+}
+</style>
+<div style="background:#eee;">
+<div class="container main-container">
+<hr/>
+<div id="content"><p> Living Solutions built the Bitcoin Wallet app as an Open Source app. And comply with the license <a href="https://github.com/hoanghiephui/Bitcoin-Wallet/blob/master/LICENSE" rel="nofollow" target="_blank">GPLv3</a>. This SERVICE is provided by                     Living Solutions at no cost and is intended for use as is.</p> <p>This page is used to inform visitors regarding our policies with the collection, use, and disclosure                     of Personal Information if anyone decided to use our Service.                   </p> <p>If you choose to use our Service, then you agree to the collection and use of information in                     relation to this policy. The Personal Information that we collect is used for providing and improving                     the Service. We will not use or share your information with anyone except as described                     in this Privacy Policy.                   </p> <p>The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is                     accessible at Bitcoin Wallet unless otherwise defined in this Privacy Policy.                   </p><p><b>Open Source</b></p><p>Github link: <a href="https://github.com/hoanghiephui/Bitcoin-Wallet" rel="nofollow" target="_blank">https://github.com/hoanghiephui/Bitcoin-Wallet</a></p> <p><strong>Information Collection and Use</strong></p> <p>For a better experience, while using our Service, we may require you to provide us with certain                     personally identifiable information. The information that we request will be retained by us and used as described in this privacy policy.                   </p> <p>The app does use third party services that may collect information used to identify you.</p> <div><p>Link to privacy policy of third party service providers used by the app</p> <ul><li><a href="https://www.google.com/policies/privacy/" rel="nofollow" target="_blank">Google Play Services</a></li><li><a href="https://support.google.com/admob/answer/6128543?hl=en" rel="nofollow" target="_blank">AdMob</a></li><li><a href="https://firebase.google.com/policies/analytics" rel="nofollow" target="_blank">Firebase Analytics</a></li><li><a href="https://www.facebook.com/about/privacy" rel="nofollow" target="_blank">Facebook</a></li><li><a href="https://fabric.io/privacy" rel="nofollow" target="_blank">Fabric</a></li><li><a href="http://try.crashlytics.com/terms/privacy-policy.pdf" rel="nofollow" target="_blank">Crashlytics</a></li></ul></div> <p><b>Requested permissions</b></p><ul><li>Camera allows for scanning QR codes. Immediately after parsing the QR code, the image is deleted from memory.</li><li>External storage to be able to keep wallet backups and restore from backups. No other file types are accessed.</li><li>Full network access enables the app to connect to the Bitcoin network and fetch data like exchange rates.</li></ul><p>Bitcoin Wallet is decentralized and peer-to-peer. There is no server that would hold any of your private data.</p><p><strong>Log Data</strong></p> <p> We want to inform you that whenever you use our Service, in a case of                     an error in the app we collect data and information (through third party products) on your phone                     called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address,                     device name, operating system version, the configuration of the app when utilizing our Service,                     the time and date of your use of the Service, and other statistics.                   </p> <p><strong>Cookies</strong></p> <p>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers.                     These are sent to your browser from the websites that you visit and are stored on your device's internal                     memory.                   </p> <p>This Service does not use these “cookies” explicitly. However, the app may use third party code and                     libraries that use “cookies” to collect information and improve their services. You have the option to                     either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose                     to refuse our cookies, you may not be able to use some portions of this Service.                   </p> <p><strong>Service Providers</strong></p> <p> We may employ third-party companies and individuals due to the following reasons:</p> <ul><li>To facilitate our Service;</li> <li>To provide the Service on our behalf;</li> <li>To perform Service-related services; or</li> <li>To assist us in analyzing how our Service is used.</li></ul> <p> We want to inform users of this Service that these third parties have access to                     your Personal Information. The reason is to perform the tasks assigned to them on our behalf. However,                     they are obligated not to disclose or use the information for any other purpose.                   </p> <p><strong>Security</strong></p> <p> We value your trust in providing us your Personal Information, thus we are striving                     to use commercially acceptable means of protecting it. But remember that no method of transmission over                     the internet, or method of electronic storage is 100% secure and reliable, and we cannot guarantee                     its absolute security.                   </p> <p><strong>Links to Other Sites</strong></p> <p>This Service may contain links to other sites. If you click on a third-party link, you will be directed                     to that site. Note that these external sites are not operated by us. Therefore, we strongly                     advise you to review the Privacy Policy of these websites. We have no control over                     and assume no responsibility for the content, privacy policies, or practices of any third-party sites                     or services.                   </p> <p><strong>Children’s Privacy</strong></p> <p>These Services do not address anyone under the age of 13. We do not knowingly collect                     personally identifiable information from children under 13. In the case we discover that a child                     under 13 has provided us with personal information, we immediately delete this from                     our servers. If you are a parent or guardian and you are aware that your child has provided us with personal                     information, please contact us so that we will be able to do necessary actions.                   </p> <p><strong>Changes to This Privacy Policy</strong></p> <p> We may update our Privacy Policy from time to time. Thus, you are advised to review                     this page periodically for any changes. We will notify you of any changes by posting                     the new Privacy Policy on this page. These changes are effective immediately after they are posted on                     this page.                   </p> <p><strong>Contact Us</strong></p> <p>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact                     us at living.solutions.vn@gmail.com.</p></div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+</a>
+</div>
+
+</body>
+</html>

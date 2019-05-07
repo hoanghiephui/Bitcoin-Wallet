@@ -5,6 +5,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Html
 import android.view.Menu
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProviders
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
@@ -79,6 +83,34 @@ class MainActivity : BaseActivity() {
         }
         viewModel.walletEncrypted.observeNotNull(this) {
             invalidateOptionsMenu()
+        }
+        if (!sharedPreferences.getBoolean("policy", false)) {
+            val wv = WebView(this)
+            wv.loadUrl("file:///android_asset/index.html")
+            wv.webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                    view.loadUrl(url)
+
+                    return true
+                }
+            }
+            handler.postDelayed({
+                AlertDialog.Builder(this).apply {
+                    setTitle("Privacy Policy")
+                    setView(wv)
+                    setCancelable(false)
+                    setPositiveButton("Accept") { dialog, _ ->
+                        sharedPreferences.edit {
+                            putBoolean("policy", true)
+                        }
+                        dialog.dismiss()
+                    }
+                    setNegativeButton("Cancel") { _, _ ->
+                        finish()
+                    }
+                    create()
+                }.show()
+            }, 2300)
         }
     }
 
