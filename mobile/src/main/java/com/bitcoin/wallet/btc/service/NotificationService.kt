@@ -80,7 +80,14 @@ class NotificationService : IntentService(NotificationService::class.java.name) 
             notification.setContentTitle(title)
             notification.setContentText(text)
             notification
-                .setContentIntent(PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), 0))
+                .setContentIntent(
+                    PendingIntent.getActivity(
+                        this, 0, Intent(this, MainActivity::class.java).setFlags(
+                            Intent.FLAG_ACTIVITY_NEW_TASK or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        ), 0
+                    )
+                )
             notification.setAutoCancel(true)
             notification.addAction(
                 NotificationCompat.Action.Builder(

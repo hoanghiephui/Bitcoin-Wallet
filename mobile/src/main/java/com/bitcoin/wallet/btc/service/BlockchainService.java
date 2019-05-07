@@ -222,7 +222,8 @@ public class BlockchainService extends LifecycleService {
             summaryNotification.setContentText(text);
         }
         summaryNotification
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0));
+                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK), 0));
         nm.notify(Constants.NOTIFICATION_ID_COINS_RECEIVED, summaryNotification.build());
 
         // child notification
@@ -244,7 +245,9 @@ public class BlockchainService extends LifecycleService {
                 childNotification.setContentText(addressStr);
         }
         childNotification
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0));
+                .setContentIntent(PendingIntent.getActivity(this, 0,
+                        new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK), 0));
         childNotification.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.coins_received));
         nm.notify(transactionHash.toString(), Constants.NOTIFICATION_ID_COINS_RECEIVED, childNotification.build());
     }
@@ -302,7 +305,8 @@ public class BlockchainService extends LifecycleService {
                         notification.setContentTitle(getString(R.string.app_name));
                         notification.setContentText(getString(R.string.connected_msg, numPeers));
                         notification.setContentIntent(PendingIntent.getActivity(BlockchainService.this, 0,
-                                new Intent(BlockchainService.this, MainActivity.class), 0));
+                                new Intent(BlockchainService.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK), 0));
                         notification.setWhen(System.currentTimeMillis());
                         notification.setOngoing(true);
                         startForeground(Constants.NOTIFICATION_ID_CONNECTED, notification.build());
