@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.preference.PreferenceManager
 import android.widget.Toast
+import androidx.work.WorkManager
 import com.bitcoin.wallet.btc.di.components.AppComponent
 import com.bitcoin.wallet.btc.service.BlockchainService
 import com.bitcoin.wallet.btc.utils.Configuration
@@ -95,13 +96,11 @@ class BitcoinApplication : DaggerApplication() {
 
         cleanupFiles()
         initNotificationManager()
-        /*WorkManager.initialize(
-            this, Configuration.Builder()
+        WorkManager.initialize(
+            this, androidx.work.Configuration.Builder()
                 .setWorkerFactory(appComponent.daggerWorkerFactory())
                 .build()
-        )*/
-        //FabricProvider.initFabric(this)
-        //StateSaver.setEnabledForAllActivitiesAndSupportFragments(this, true)
+        )
     }
 
     private fun cleanupFiles() {

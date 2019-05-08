@@ -20,6 +20,7 @@ import com.bitcoin.wallet.btc.ui.fragments.BackupDialog
 import com.bitcoin.wallet.btc.ui.fragments.MainFragment
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.viewmodel.MainViewModel
+import com.bitcoin.wallet.btc.works.NotifyWorker
 
 
 class MainActivity : BaseActivity() {
@@ -112,6 +113,7 @@ class MainActivity : BaseActivity() {
                 }.show()
             }, 2300)
         }
+        NotifyWorker.enqueue("BTC", "")
     }
 
     override fun onResume() {
