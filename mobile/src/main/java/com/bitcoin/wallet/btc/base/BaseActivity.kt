@@ -1,9 +1,11 @@
 package com.bitcoin.wallet.btc.base
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
@@ -85,5 +87,14 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
 
     interface CallbackSnack {
         fun onOke()
+    }
+
+    override fun setShowWhenLocked(showWhenLocked: Boolean) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
+            super.setShowWhenLocked(showWhenLocked)
+        else if (showWhenLocked)
+            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
+        else
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
     }
 }
