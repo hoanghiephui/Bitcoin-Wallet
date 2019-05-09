@@ -134,6 +134,9 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
     }
 
     private fun updateView() {
+        if (passwordView == null) {
+            return
+        }
         val hasOldPassword = passwordView.text.toString().trim { it <= ' ' }.isNotEmpty()
         val hasPassword = passwordAgainView.text.toString().trim { it <= ' ' }.isNotEmpty()
         pass.visibility = if (wallet.isEncrypted) View.VISIBLE else View.GONE
