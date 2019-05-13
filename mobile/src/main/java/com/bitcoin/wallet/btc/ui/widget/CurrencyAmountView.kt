@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.utils.GenericUtils
@@ -71,10 +72,10 @@ class CurrencyAmountView : FrameLayout {
 
     private fun init(context: Context) {
         val resources = context.resources
-        significantColor = resources.getColor(R.color.fg_significant)
-        lessSignificantColor = resources.getColor(R.color.fg_less_significant)
-        errorColor = resources.getColor(R.color.fg_error)
-        deleteButtonDrawable = resources.getDrawable(R.drawable.ic_clear_grey_600_24dp)
+        significantColor = ContextCompat.getColor(context, R.color.fg_significant)
+        lessSignificantColor = ContextCompat.getColor(context, R.color.fg_less_significant)
+        errorColor = ContextCompat.getColor(context, R.color.fg_error)
+        deleteButtonDrawable = ContextCompat.getColor(context, R.drawable.ic_clear_grey_600_24dp)
     }
 
     fun setColor(significantColor: Int, lessSignificantColor: Int) {
@@ -127,7 +128,7 @@ class CurrencyAmountView : FrameLayout {
                     lessSignificantColor, offset
                 )
             else
-                currencySymbolDrawable = resources.getDrawable(R.drawable.currency_symbol_btc)
+                currencySymbolDrawable = ContextCompat.getDrawable(context, R.drawable.currency_symbol_btc)
             localCurrencyCode = null
         } else if (MonetaryFormat.CODE_MBTC == currencyCode) {
             if (hasBitcoinSymbol)
@@ -136,7 +137,7 @@ class CurrencyAmountView : FrameLayout {
                     lessSignificantColor, offset
                 )
             else
-                currencySymbolDrawable = resources.getDrawable(R.drawable.currency_symbol_mbtc)
+                currencySymbolDrawable = ContextCompat.getDrawable(context, R.drawable.currency_symbol_mbtc)
             localCurrencyCode = null
         } else if (MonetaryFormat.CODE_UBTC == currencyCode) {
             if (hasBitcoinSymbol)
@@ -145,7 +146,7 @@ class CurrencyAmountView : FrameLayout {
                     lessSignificantColor, offset
                 )
             else
-                currencySymbolDrawable = resources.getDrawable(R.drawable.currency_symbol_ubtc)
+                currencySymbolDrawable = ContextCompat.getDrawable(context, R.drawable.currency_symbol_ubtc)
             localCurrencyCode = null
         } else if (currencyCode != null) {
             currencySymbolDrawable = CurrencySymbolDrawable(

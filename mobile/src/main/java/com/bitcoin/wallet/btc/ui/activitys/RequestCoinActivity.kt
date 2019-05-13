@@ -94,7 +94,7 @@ class RequestCoinActivity : BaseActivity() {
         viewModel.bitcoinUri.observe(this, Observer {
             invalidateOptionsMenu()
         })
-        viewModel.paymentRequest.observe(this, Observer { paymentRequest ->
+        viewModel.paymentRequest.observe(this, Observer { _ ->
             val initiateText = SpannableStringBuilder(
                 getString(R.string.initiate_request_qr)
             )

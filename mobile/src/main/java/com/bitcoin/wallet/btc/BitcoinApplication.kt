@@ -79,7 +79,7 @@ class BitcoinApplication : DaggerApplication() {
             e.printStackTrace()
             //log.info("bitcoinj uncaught exception", e) todo log
         }
-        Threading.uncaughtExceptionHandler = Thread.UncaughtExceptionHandler { _, throwable ->
+        Threading.uncaughtExceptionHandler = Thread.UncaughtExceptionHandler { _, _ ->
             //log.info("bitcoinj uncaught exception", throwable) todo log
         }
         try {
@@ -119,7 +119,6 @@ class BitcoinApplication : DaggerApplication() {
     private fun initNotificationManager() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val watch = Stopwatch.createStarted()
                 val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
                 val received = NotificationChannel(

@@ -71,7 +71,7 @@ class EditAddressBookEntryFragment : DialogFragment() {
         )
 
         val viewLabel = view.findViewById<TextView>(R.id.edit_address_book_entry_label)
-        viewLabel.text = label ?: suggestedAddressLabel
+        viewLabel.text = label
 
         dialog.setView(view)
         val onClickListener = DialogInterface.OnClickListener { _, which ->

@@ -108,7 +108,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
                 val contentView = findViewById<View>(android.R.id.content)
                 contentView?.alpha = 0f
                 window
-                    .setBackgroundDrawable(ColorDrawable(resources.getColor(android.R.color.transparent)))
+                    .setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, android.R.color.transparent)))
                 OnFirstPreDraw.listen(contentView) {
                     val finalRadius = Math.max(contentView.width, contentView.height).toFloat()
                     val duration = resources.getInteger(android.R.integer.config_mediumAnimTime)
@@ -129,7 +129,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
             sceneTransition?.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     window
-                        .setBackgroundDrawable(ColorDrawable(resources.getColor(android.R.color.black)))
+                        .setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@ScanActivity, android.R.color.black)))
                 }
             })
             sceneTransition?.start()
@@ -286,7 +286,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
 
     private inner class AutoFocusRunnable(private val camera: Camera) : Runnable {
 
-        private val autoFocusCallback = Camera.AutoFocusCallback { success, camera ->
+        private val autoFocusCallback = Camera.AutoFocusCallback { _, _ ->
             // schedule again
             cameraHandler?.postDelayed(this@AutoFocusRunnable, AUTO_FOCUS_INTERVAL_MS)
         }
@@ -305,7 +305,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
         private val hints = EnumMap<DecodeHintType, Any>(DecodeHintType::class.java)
 
         override fun run() {
-            cameraManager.requestPreviewFrame { data, camera -> decode(data) }
+            cameraManager.requestPreviewFrame { data, _ -> decode(data) }
         }
 
         private fun decode(data: ByteArray) {

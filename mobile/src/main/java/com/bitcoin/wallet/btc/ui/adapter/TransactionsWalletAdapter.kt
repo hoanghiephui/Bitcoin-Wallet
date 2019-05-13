@@ -483,12 +483,12 @@ open class ListItem {
             this.transactionHash = tx.txId
             this.transaction = tx
             val res = context.resources
-            val colorSignificant = res.getColor(R.color.fg_significant)
-            val colorLessSignificant = res.getColor(R.color.fg_less_significant)
-            val colorInsignificant = res.getColor(R.color.fg_insignificant)
-            val colorValuePositve = res.getColor(R.color.fg_value_positive)
-            val colorValueNegative = res.getColor(R.color.fg_value_negative)
-            val colorError = res.getColor(R.color.fg_error)
+            val colorSignificant = ContextCompat.getColor(context, R.color.fg_significant)
+            val colorLessSignificant = ContextCompat.getColor(context, R.color.fg_less_significant)
+            val colorInsignificant = ContextCompat.getColor(context, R.color.fg_insignificant)
+            val colorValuePositve = ContextCompat.getColor(context, R.color.fg_value_positive)
+            val colorValueNegative = ContextCompat.getColor(context, R.color.fg_value_negative)
+            val colorError = ContextCompat.getColor(context, R.color.fg_error)
 
             val value = tx.getValue(wallet)
             val sent = value.signum() < 0

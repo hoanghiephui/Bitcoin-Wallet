@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseBottomSheetDialogFragment
@@ -149,16 +150,16 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
             if (state == State.INPUT && passwordLength > 0) View.VISIBLE else View.INVISIBLE
         if (passwordLength < 4) {
             passwordMismatchView.setText(R.string.encrypt_strength_weak)
-            passwordMismatchView.setTextColor(resources.getColor(R.color.fg_error))
+            passwordMismatchView.setTextColor(ContextCompat.getColor(requireContext(), R.color.fg_error))
         } else if (passwordLength < 6) {
             passwordMismatchView.setText(R.string.encrypt_keys_dialog_password_strength_fair)
-            passwordMismatchView.setTextColor(resources.getColor(R.color.scan_dot))
+            passwordMismatchView.setTextColor(ContextCompat.getColor(requireContext(), R.color.scan_dot))
         } else if (passwordLength < 8) {
             passwordMismatchView.setText(R.string.encrypt_kstrength_good)
-            passwordMismatchView.setTextColor(resources.getColor(R.color.fg_less_significant))
+            passwordMismatchView.setTextColor(ContextCompat.getColor(requireContext(), R.color.fg_less_significant))
         } else {
             passwordMismatchView.setText(R.string.encrypt_strength_strong)
-            passwordMismatchView.setTextColor(resources.getColor(R.color.color_coin))
+            passwordMismatchView.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_coin))
         }
 
         if (state == State.INPUT) {

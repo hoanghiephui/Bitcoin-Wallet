@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.bitcoin.wallet.btc.R
 import com.google.zxing.ResultPoint
 import java.util.HashMap
@@ -26,11 +27,11 @@ class ScannerView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     init {
 
         val res = resources
-        maskColor = res.getColor(R.color.scan_mask)
-        maskResultColor = res.getColor(R.color.scan_result_view)
-        laserColor = res.getColor(R.color.scan_laser)
-        dotColor = res.getColor(R.color.scan_dot)
-        dotResultColor = res.getColor(R.color.scan_result_dots)
+        maskColor = ContextCompat.getColor(context, R.color.scan_mask)
+        maskResultColor = ContextCompat.getColor(context, R.color.scan_result_view)
+        laserColor = ContextCompat.getColor(context, R.color.scan_laser)
+        dotColor = ContextCompat.getColor(context, R.color.scan_dot)
+        dotResultColor = ContextCompat.getColor(context, R.color.scan_result_dots)
 
         maskPaint = Paint()
         maskPaint.style = Paint.Style.FILL
