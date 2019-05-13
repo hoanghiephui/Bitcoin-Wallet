@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.Bundle
+import com.bitcoin.wallet.btc.extension.observeNotNull
 import com.bitcoin.wallet.btc.ui.widget.DialogBuilder
 import com.bitcoin.wallet.btc.utils.CameraManager
 import com.bitcoin.wallet.btc.utils.Event
@@ -76,22 +77,18 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar("Scan QR Code")
         vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        viewModel.showPermissionWarnDialog.observe(this, object : Event.Observer<Void>() {
-            override fun onEvent(v: Void) {
-                WarnDialogFragment.show(
-                    supportFragmentManager, R.string.scan_permission,
-                    getString(R.string.scan_permission_mes)
-                )
-            }
-        })
-        viewModel.showProblemWarnDialog.observe(this, object : Event.Observer<Void>() {
-            override fun onEvent(v: Void) {
-                WarnDialogFragment.show(
-                    supportFragmentManager, R.string.scan_problem,
-                    getString(R.string.scan_problem_mes)
-                )
-            }
-        })
+        viewModel.showPermissionWarnDialog.observeNotNull(this) {
+            WarnDialogFragment.show(
+                supportFragmentManager, R.string.scan_permission,
+                getString(R.string.scan_permission_mes)
+            )
+        }
+        viewModel.showProblemWarnDialog.observeNotNull(this) {
+            WarnDialogFragment.show(
+                supportFragmentManager, R.string.scan_problem,
+                getString(R.string.scan_problem_mes)
+            )
+        }
 
         cameraThread = HandlerThread("cameraThread", Process.THREAD_PRIORITY_BACKGROUND)
         cameraThread?.start()
