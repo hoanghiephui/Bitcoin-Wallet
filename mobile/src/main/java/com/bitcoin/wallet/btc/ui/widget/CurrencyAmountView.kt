@@ -75,7 +75,7 @@ class CurrencyAmountView : FrameLayout {
         significantColor = ContextCompat.getColor(context, R.color.fg_significant)
         lessSignificantColor = ContextCompat.getColor(context, R.color.fg_less_significant)
         errorColor = ContextCompat.getColor(context, R.color.fg_error)
-        deleteButtonDrawable = ContextCompat.getColor(context, R.drawable.ic_clear_grey_600_24dp)
+        deleteButtonDrawable = ContextCompat.getDrawable(context, R.drawable.ic_clear_grey_600_24dp)
     }
 
     fun setColor(significantColor: Int, lessSignificantColor: Int) {

@@ -90,6 +90,9 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
         state = State.CRYPTING
         updateView()
         backgroundHandler?.post {
+            if (activity == null || isRemoving) {
+                return@post
+            }
             val oldKey = if (oldPassword != null) wallet.keyCrypter?.deriveKey(oldPassword) else null
             val keyCrypter =
                 KeyCrypterScrypt((requireActivity().application as BitcoinApplication).scryptIterationsTarget())
