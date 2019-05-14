@@ -35,6 +35,7 @@ import com.bitcoin.wallet.btc.utils.SendCoinsOfflineTask
 import com.bitcoin.wallet.btc.viewmodel.SweepWalletViewModel
 import com.google.common.collect.ComparisonChain
 import kotlinx.android.synthetic.main.activity_sweep_wallet.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.item_transaction.*
 import org.bitcoinj.core.*
 import org.bitcoinj.crypto.BIP38PrivateKey
@@ -63,7 +64,10 @@ class SweepWalletActivity : BaseActivity() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar(getString(R.string.sweep_wallet))
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = ""
         BlockchainService.start(this, false)
+        toolbar.setNavigationOnClickListener { finish() }
         viewModel.dynamicFees.observeNotNull(this) {
             updateView()
         }
