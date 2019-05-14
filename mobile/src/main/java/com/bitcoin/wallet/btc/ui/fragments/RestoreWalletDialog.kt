@@ -2,6 +2,7 @@ package com.bitcoin.wallet.btc.ui.fragments
 
 import android.Manifest
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -266,17 +267,19 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
 class PermissionDeniedDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = DialogBuilder(context)
+        val dialog = DialogBuilder(requireContext())
         dialog.setTitle(R.string.restore_wallet_permission)
         dialog.setMessage(getString(R.string.restore_wallet_permission_detail))
-        dialog.singleDismissButton { _, id ->
-            val fragment: DialogFragment?
-            if (fragmentManager != null) {
-                fragment = fragmentManager!!
-                    .findFragmentByTag(FRAGMENT_TAG) as DialogFragment?
-                fragment?.dismiss()
+        dialog.singleDismissButton (object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                val fragment: DialogFragment?
+                if (fragmentManager != null) {
+                    fragment = fragmentManager!!
+                        .findFragmentByTag(FRAGMENT_TAG) as DialogFragment?
+                    fragment?.dismiss()
+                }
             }
-        }
+        })
         return dialog.create()
     }
 

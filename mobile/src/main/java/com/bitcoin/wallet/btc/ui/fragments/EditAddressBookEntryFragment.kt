@@ -21,16 +21,17 @@ import org.bitcoinj.wallet.Wallet
 
 class EditAddressBookEntryFragment : DialogFragment() {
 
-    private var activity: BaseActivity? = null
+    private val activity: BaseActivity by lazy {
+        requireActivity() as BaseActivity
+    }
     private var addressBookDao: AddressBookDao? = null
     private var wallet: Wallet? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        this.activity = context as BaseActivity?
-        val application = activity?.application
+        val application = activity.application
         this.addressBookDao = AppDatabase.getDatabase(context).addressBookDao()
-        this.wallet = application?.getWallet()
+        this.wallet = application.getWallet()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

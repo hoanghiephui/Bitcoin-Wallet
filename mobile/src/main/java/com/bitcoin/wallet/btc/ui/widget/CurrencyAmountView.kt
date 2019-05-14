@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -100,7 +101,14 @@ class CurrencyAmountView : FrameLayout {
 
         contextButton = object : View(context) {
             override fun onMeasure(wMeasureSpec: Int, hMeasureSpec: Int) {
-                textView?.measuredHeight?.let { textView?.compoundPaddingRight?.let { it1 -> setMeasuredDimension(it1, it) } }
+                textView?.measuredHeight?.let {
+                    textView?.compoundPaddingRight?.let { it1 ->
+                        setMeasuredDimension(
+                            it1,
+                            it
+                        )
+                    }
+                }
             }
         }
         val chooseViewParams = FrameLayout.LayoutParams(
@@ -230,15 +238,15 @@ class CurrencyAmountView : FrameLayout {
     }
 
     fun setNextFocusId(nextFocusId: Int) {
-        textView!!.nextFocusDownId = nextFocusId
-        textView!!.nextFocusForwardId = nextFocusId
+        textView?.nextFocusDownId = nextFocusId
+        textView?.nextFocusForwardId = nextFocusId
     }
 
     private fun isValidAmount(zeroIsValid: Boolean): Boolean {
         val str = textView!!.text.toString().trim { it <= ' ' }
 
         try {
-            if (!str.isEmpty()) {
+            if (str.isNotEmpty()) {
                 val amount: Monetary
                 if (localCurrencyCode == null) {
                     amount = inputFormat!!.parse(str)
@@ -258,35 +266,35 @@ class CurrencyAmountView : FrameLayout {
     }
 
     private fun updateAppearance() {
-        val enabled = textView!!.isEnabled
+        val enabled = textView?.isEnabled ?: false
 
-        contextButton!!.isEnabled = enabled
+        contextButton?.isEnabled = enabled
 
-        val amount = textView!!.text.toString().trim { it <= ' ' }
+        val amount = textView?.text.toString().trim { it <= ' ' }
 
         if (enabled && !amount.isEmpty()) {
-            textView!!.setCompoundDrawablesWithIntrinsicBounds(currencySymbolDrawable, null, deleteButtonDrawable, null)
-            contextButton!!.setOnClickListener(deleteClickListener)
+            textView?.setCompoundDrawablesWithIntrinsicBounds(currencySymbolDrawable, null, deleteButtonDrawable, null)
+            contextButton?.setOnClickListener(deleteClickListener)
         } else if (enabled && contextButtonDrawable != null) {
-            textView!!.setCompoundDrawablesWithIntrinsicBounds(
+            textView?.setCompoundDrawablesWithIntrinsicBounds(
                 currencySymbolDrawable,
                 null,
                 contextButtonDrawable,
                 null
             )
-            contextButton!!.setOnClickListener(contextButtonClickListener)
+            contextButton?.setOnClickListener(contextButtonClickListener)
         } else {
-            textView!!.setCompoundDrawablesWithIntrinsicBounds(currencySymbolDrawable, null, null, null)
-            contextButton!!.setOnClickListener(null)
+            textView?.setCompoundDrawablesWithIntrinsicBounds(currencySymbolDrawable, null, null, null)
+            contextButton?.setOnClickListener(null)
         }
 
-        contextButton!!.requestLayout()
+        contextButton?.requestLayout()
 
-        textView!!.setTextColor(if (!validateAmount || isValidAmount(true)) significantColor else errorColor)
+        textView?.setTextColor(if (!validateAmount || isValidAmount(true)) significantColor else errorColor)
 
         val hintSpannable = MonetarySpannable(hintFormat, if (hint != null) hint else Coin.ZERO)
             .applyMarkup(null, MonetarySpannable.STANDARD_INSIGNIFICANT_SPANS)
-        textView!!.hint = hintSpannable
+        textView?.hint = hintSpannable
     }
 
     override fun onSaveInstanceState(): Parcelable? {
@@ -300,8 +308,10 @@ class CurrencyAmountView : FrameLayout {
     override fun onRestoreInstanceState(state: Parcelable) {
         if (state is Bundle) {
             super.onRestoreInstanceState(state.getParcelable("super_state"))
-            textView!!.onRestoreInstanceState(state.getParcelable("child_textview"))
-            setAmount(state.getSerializable("amount") as Monetary, false)
+            textView?.onRestoreInstanceState(state.getParcelable("child_textview"))
+            if (state?.getSerializable("amount") != null) {
+                setAmount(state.getSerializable("amount") as Monetary, false)
+            }
         } else {
             super.onRestoreInstanceState(state)
         }
@@ -313,7 +323,7 @@ class CurrencyAmountView : FrameLayout {
         fun focusChanged(hasFocus: Boolean)
     }
 
-    private inner class TextViewListener : TextWatcher, View.OnFocusChangeListener {
+    private inner class TextViewListener : TextWatcher, OnFocusChangeListener {
         private var fire = true
 
         fun setFire(fire: Boolean) {
@@ -340,7 +350,7 @@ class CurrencyAmountView : FrameLayout {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             updateAppearance()
             if (listener != null && fire)
-                listener!!.changed()
+                listener?.changed()
         }
 
         override fun onFocusChange(v: View, hasFocus: Boolean) {
@@ -351,7 +361,7 @@ class CurrencyAmountView : FrameLayout {
             }
 
             if (listener != null && fire)
-                listener!!.focusChanged(hasFocus)
+                listener?.focusChanged(hasFocus)
         }
     }
 }

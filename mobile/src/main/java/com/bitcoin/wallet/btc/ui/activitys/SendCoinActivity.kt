@@ -665,7 +665,11 @@ class SendCoinActivity : BaseActivity() {
                                     paymentRequestHost, Joiner.on(", ").join(reasons)
                                 )
                             )
-                            dialog.singleDismissButton({ _, _ -> handleCancel() })
+                            dialog.singleDismissButton(object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface?, which: Int) {
+                                    handleCancel()
+                                }
+                            })
                             dialog.show()
 
                         }

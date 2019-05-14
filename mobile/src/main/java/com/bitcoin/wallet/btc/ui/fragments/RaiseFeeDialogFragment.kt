@@ -45,7 +45,9 @@ import javax.inject.Inject
 
 class RaiseFeeDialogFragment : DaggerDialogFragment() {
 
-    private var activity: BaseActivity? = null
+    private val activity: BaseActivity by lazy {
+        context as BaseActivity
+    }
     private var application: BitcoinApplication? = null
     private var config: Configuration? = null
     private var wallet: Wallet? = null
@@ -92,8 +94,7 @@ class RaiseFeeDialogFragment : DaggerDialogFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        this.activity = context as BaseActivity?
-        this.application = activity!!.application
+        this.application = activity.application
         this.config = application!!.config
         this.wallet = application!!.getWallet()
     }

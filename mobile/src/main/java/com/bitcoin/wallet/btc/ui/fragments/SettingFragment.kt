@@ -161,7 +161,7 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
     }
 
     private fun handleInitiateReset() {
-        val dialog = DialogBuilder(activity)
+        val dialog = DialogBuilder(requireContext())
         dialog.setTitle(R.string.initiate_reset)
         dialog.setMessage(R.string.initiate_reset_message)
         dialog.setPositiveButton(R.string.initiate_reset_btn

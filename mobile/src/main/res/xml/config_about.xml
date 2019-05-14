@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
-            android:summary="©2019, the Bitcoin Wallet developers"
+            android:summary="©2019, the Bitcoin Wallet"
             android:title="@string/about_copyright_title"/>
     <Preference
             android:key="about_license"

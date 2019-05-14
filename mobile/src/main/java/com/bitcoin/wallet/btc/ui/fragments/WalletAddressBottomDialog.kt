@@ -29,11 +29,9 @@ class WalletAddressBottomDialog : BaseBottomSheetDialogFragment() {
     override fun onFragmentCreated(view: View, savedInstanceState: Bundle?) {
         if (address != null) {
             val uri = BitcoinURI.convertToBitcoinURI(address, null, addressLabel, null)
-            AsyncTask.execute {
-                val bitmap = BitmapDrawable(resources, Qr.bitmap(uri))
-                bitmap.isFilterBitmap = false
-                imgQrCode.setImageDrawable(bitmap)
-            }
+            val bitmap = BitmapDrawable(resources, Qr.bitmap(uri))
+            bitmap.isFilterBitmap = false
+            imgQrCode.setImageDrawable(bitmap)
             val label = WalletUtils.formatHash(
                 address?.toString(), Constants.ADDRESS_FORMAT_GROUP_SIZE,
                 Constants.ADDRESS_FORMAT_LINE_SIZE, false

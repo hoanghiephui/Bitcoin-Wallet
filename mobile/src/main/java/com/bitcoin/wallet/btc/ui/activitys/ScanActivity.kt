@@ -331,9 +331,13 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val args = arguments
-            val dialog = DialogBuilder.warn(activity, args!!.getInt("title"))
+            val dialog = DialogBuilder.warn(requireContext(), args!!.getInt("title"))
             dialog.setMessage(args.getString("message"))
-            dialog.singleDismissButton { _, _ -> activity?.finish() }
+            dialog.singleDismissButton (object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    requireActivity().finish()
+                }
+            })
             return dialog.create()
         }
 
