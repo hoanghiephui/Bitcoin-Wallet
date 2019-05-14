@@ -115,6 +115,10 @@
                 android:name="com.bitcoin.wallet.btc.ui.activitys.AboutActivity"
                 android:theme="@style/AppTheme.Light"/>
 
+        <activity
+                android:name=".ui.activitys.SweepWalletActivity"
+                android:theme="@style/AppTheme.Light"/>
+
         <provider
                 android:name="com.bitcoin.wallet.btc.data.ExchangeRatesProvider"
                 android:authorities="com.bitcoin.wallet.btc.exchange_rates"
@@ -142,7 +146,7 @@
 
         <meta-data
                 android:name="firebase_crashlytics_collection_enabled"
-                android:value="${enableCrashReporting}" />
+                android:value="${enableCrashReporting}"/>
 
         <provider
                 android:name="androidx.work.impl.WorkManagerInitializer"

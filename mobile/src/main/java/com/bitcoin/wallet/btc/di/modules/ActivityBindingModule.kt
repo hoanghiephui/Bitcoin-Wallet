@@ -46,4 +46,8 @@ abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector
     abstract fun aboutActivity(): AboutActivity
+
+    @PerActivity
+    @ContributesAndroidInjector
+    abstract fun sweepWalletActivity(): SweepWalletActivity
 }

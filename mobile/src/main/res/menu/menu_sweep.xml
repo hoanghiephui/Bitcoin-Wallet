@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+            android:id="@+id/sweep_wallet_options_reload"
+            android:icon="@drawable/ic_refresh_black_24dp"
+            android:title="@string/reload"
+            app:showAsAction="always|withText"/>
+    <item
+            android:id="@+id/sweep_wallet_options_scan"
+            android:icon="@drawable/ic_photo_camera_white_24dp"
+            android:title="@string/btn_scan"
+            app:showAsAction="always|withText"/>
+
+</menu>

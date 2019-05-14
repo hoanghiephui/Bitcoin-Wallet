@@ -1189,11 +1189,5 @@ class SendCoinActivity : BaseActivity() {
         fun start(context: Context, paymentIntent: PaymentIntent) {
             start(context, paymentIntent, null, 0)
         }
-
-        fun start(context: Context, key: PrefixedChecksummedBytes) {
-            /*val intent = Intent(context, SweepWalletActivity::class.java)todo
-            intent.putExtra(INTENT_EXTRA_KEY, key)
-            context.startActivity(intent)*/
-        }
     }
 }

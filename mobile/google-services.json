@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "899049481238",
+    "firebase_url": "https://bitcoin-wallet-5c4c4.firebaseio.com",
+    "project_id": "bitcoin-wallet-5c4c4",
+    "storage_bucket": "bitcoin-wallet-5c4c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899049481238:android:e70a7fa3e8eb8d7c",
+        "android_client_info": {
+          "package_name": "com.bitcoin.wallet.btc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899049481238-c7dmq4lh9cmoi96d6ma8cvd8dq5rbbj9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bitcoin.wallet.btc",
+            "certificate_hash": "8c7ae37765aa08a6d9759a8aba68330a94e2291f"
+          }
+        },
+        {
+          "client_id": "899049481238-s36upq3ck7jok0er3a71m4srt5rbb2ka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhxdh1tKycDubbaorlxd3de6PM_y95Y_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899049481238-s36upq3ck7jok0er3a71m4srt5rbb2ka.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

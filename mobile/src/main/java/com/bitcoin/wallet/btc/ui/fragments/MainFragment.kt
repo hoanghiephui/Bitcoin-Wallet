@@ -171,7 +171,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
 
                     override fun handlePrivateKey(key: PrefixedChecksummedBytes) {
                         if (true)
-                            SendCoinActivity.start(requireActivity(), key)
+                            SweepWalletActivity.start(baseActivity(), key)
                         else
                             super.handlePrivateKey(key)
                     }
@@ -237,7 +237,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
 
             }
             R.id.menu_sweep -> {
-                //startActivity(Intent(this, SweepWalletActivity::class.java))
+                SweepWalletActivity.start(baseActivity())
 
             }
             R.id.menu_encrypt -> {

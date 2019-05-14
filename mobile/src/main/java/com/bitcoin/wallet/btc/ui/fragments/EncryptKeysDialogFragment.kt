@@ -126,7 +126,7 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
                     WalletUtils.autoBackupWallet(activity, wallet)
                     // trigger load manually because of missing callbacks for encryption state
                     (requireActivity() as MainActivity).viewModel.walletEncrypted.load()
-                    handler.postDelayed({ dismiss() }, 2000)
+                    handler.postDelayed({ dismissAllowingStateLoss() }, 2000)
                 }
             }
         }

@@ -72,4 +72,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RequestCoinsViewModel::class)
     abstract fun bindRequestCoinsViewModel(viewModel: RequestCoinsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SweepWalletViewModel::class)
+    abstract fun bindSweepWalletViewModel(viewModel: SweepWalletViewModel): ViewModel
 }
