@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.extension.getColorFromAttr
@@ -116,7 +117,7 @@ abstract class BaseFragment : DaggerFragment(), NativeAdListener {
                 .setTitleTextColor(requireContext().getColorFromAttr(R.attr.colorBgItemDrawer))
                 .setDescriptionTextColor(requireContext().getColorFromAttr(R.attr.colorMenu))
                 .setButtonBorderColor(requireContext().getColorFromAttr(R.attr.colorAccent))
-                .setButtonTextColor(requireContext().getColorFromAttr(R.attr.colorAccent))
+                .setButtonTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 .setButtonColor(requireContext().getColorFromAttr(R.attr.colorAccent))
 
             // Use NativeAdView.render to generate the ad View

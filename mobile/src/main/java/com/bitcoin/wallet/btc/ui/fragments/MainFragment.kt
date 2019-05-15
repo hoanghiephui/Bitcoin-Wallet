@@ -38,6 +38,8 @@ import com.bitcoin.wallet.btc.ui.adapter.StatsAdapter
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.utils.CryptoCurrencies.Companion.getTextColor
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -314,6 +316,16 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
                 textview_percentage.text = "---"
             }
         }
+    }
+
+    override fun onAdLoaded(ad: Ad) {
+        super.onAdLoaded(ad)
+        viewAds.visible()
+    }
+
+    override fun onError(ad: Ad, error: AdError) {
+        super.onError(ad, error)
+        viewAds.gone()
     }
 
     private fun initViewBalance() {
