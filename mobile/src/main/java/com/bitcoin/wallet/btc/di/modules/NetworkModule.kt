@@ -10,10 +10,7 @@ import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor
 import dagger.Module
 import dagger.Provides
-import okhttp3.ConnectionSpec
-import okhttp3.OkHttpClient
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
+import okhttp3.*
 import okhttp3.internal.platform.Platform
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -30,8 +27,11 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
+        val spec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+            .tlsVersions(TlsVersion.TLS_1_2)
+            .build()
         val builder = OkHttpClient.Builder()
-            .connectionSpecs(listOf(ConnectionSpec.MODERN_TLS, ConnectionSpec.CLEARTEXT))
+            .connectionSpecs(listOf(spec))
             .connectTimeout(API_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .readTimeout(API_TIMEOUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(API_TIMEOUT.toLong(), TimeUnit.SECONDS)
