@@ -157,6 +157,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
                 content?.let { HelpDialogFragment.show(baseActivity(), it) }
             }
         })
+        createAndLoadNativeAd("YOUR_PLACEMENT_ID")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

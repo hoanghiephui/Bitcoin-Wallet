@@ -29,10 +29,6 @@
         <item>live.blockcypher.com</item>
     </string-array>
 
-    <string name="app_id">ca-app-pub-1123669775508473~3095923439</string>
-    <string name="admob_home">ca-app-pub-1123669775508473/9401956262</string>
-    <string name="admob_request">ca-app-pub-1123669775508473/3929211694</string>
-    <string name="admob_send">ca-app-pub-1123669775508473/1880443486</string>
-    <string name="admob_address">ca-app-pub-1123669775508473/7135234622</string>
-    <string name="admob_network">ca-app-pub-1123669775508473/5439009579</string>
+
+    <string name="fb_native_home">1213251655518578_1218458821664528</string>
 </resources>

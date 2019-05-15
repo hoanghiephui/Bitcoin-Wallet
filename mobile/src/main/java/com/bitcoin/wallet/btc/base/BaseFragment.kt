@@ -1,6 +1,8 @@
 package com.bitcoin.wallet.btc.base
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -10,14 +12,17 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.bitcoin.wallet.btc.R
+import com.bitcoin.wallet.btc.extension.getColorFromAttr
+import com.facebook.ads.*
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-abstract class BaseFragment : DaggerFragment() {
+abstract class BaseFragment : DaggerFragment(), NativeAdListener {
     private var disposal = CompositeDisposable()
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var mNativeAd: NativeAd
 
     @LayoutRes
     abstract fun layoutRes(): Int
@@ -76,5 +81,82 @@ abstract class BaseFragment : DaggerFragment() {
 
     fun baseActivity(): BaseActivity {
         return activity as BaseActivity
+    }
+
+    override fun onDestroy() {
+        if (::mNativeAd.isInitialized) {
+            mNativeAd.destroy()
+        }
+        super.onDestroy()
+    }
+
+    fun createAndLoadNativeAd(unitID: String) {
+        // Create a native ad request with a unique placement ID
+        // (generate your own on the Facebook app settings).
+        // Use different ID for each ad placement in your app.
+        mNativeAd = NativeAd(activity, unitID)
+        if (::mNativeAd.isInitialized) {
+            // Set a listener to get notified when the ad was loaded.
+            mNativeAd.setAdListener(this)
+
+            // Initiate a request to load an ad.
+            mNativeAd.loadAd()
+        }
+    }
+
+    private fun reloadAdContainer() {
+        val activity = activity
+        if (activity != null && ::mNativeAd.isInitialized && mNativeAd.isAdLoaded) {
+            val mNativeAdContainer = view?.findViewById<ViewGroup>(R.id.adViewContainer)
+            mNativeAdContainer?.removeAllViews()
+
+            // Create a NativeAdViewAttributes object and set the attributes
+            val attributes = NativeAdViewAttributes(baseActivity())
+                .setBackgroundColor(requireContext().getColorFromAttr(R.attr.colorPrimary))
+                .setTitleTextColor(requireContext().getColorFromAttr(R.attr.colorBgItemDrawer))
+                .setDescriptionTextColor(requireContext().getColorFromAttr(R.attr.colorMenu))
+                .setButtonBorderColor(requireContext().getColorFromAttr(R.attr.colorAccent))
+                .setButtonTextColor(requireContext().getColorFromAttr(R.attr.colorAccent))
+                .setButtonColor(requireContext().getColorFromAttr(R.attr.colorAccent))
+
+            // Use NativeAdView.render to generate the ad View
+            val mAdView = NativeAdView.render(activity, mNativeAd, attributes)
+
+            mNativeAdContainer?.addView(
+                mAdView,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    (Resources.getSystem().displayMetrics.density * DEFAULT_HEIGHT_DP).toInt()
+                )
+            )
+        }
+    }
+
+    override fun onAdLoaded(ad: Ad) {
+        if (!::mNativeAd.isInitialized || mNativeAd != ad) {
+            // Race condition, load() called again before last ad was displayed
+            return
+        }
+        reloadAdContainer()
+    }
+
+    override fun onError(ad: Ad, error: AdError) {
+        Log.e(AudienceNetworkAds.TAG, error.errorMessage)
+    }
+
+    override fun onAdClicked(ad: Ad) {
+
+    }
+
+    override fun onLoggingImpression(ad: Ad) {
+
+    }
+
+    override fun onMediaDownloaded(ad: Ad) {
+
+    }
+
+    companion object {
+        private const val DEFAULT_HEIGHT_DP = 350
     }
 }

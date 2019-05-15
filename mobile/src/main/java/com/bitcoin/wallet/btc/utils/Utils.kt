@@ -1,8 +1,11 @@
 package com.bitcoin.wallet.btc.utils
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.TypedValue
+import androidx.annotation.AttrRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import com.bitcoin.wallet.btc.R
