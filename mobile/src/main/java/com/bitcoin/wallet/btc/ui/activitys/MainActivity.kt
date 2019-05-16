@@ -113,7 +113,11 @@ class MainActivity : BaseActivity() {
                 }.show()
             }, 2300)
         }
-        NotifyWorker.enqueue("BTC", "")
+        if (application.config.nofity) {
+            NotifyWorker.enqueue("BTC", "")
+        } else {
+            NotifyWorker.clearNotify()
+        }
     }
 
     override fun onResume() {

@@ -47,6 +47,11 @@ class NotifyWorker @Inject constructor(
 
     companion object {
 
+        fun clearNotify() {
+            val workManager = WorkManager.getInstance()
+            workManager.cancelAllWork()
+        }
+
         fun enqueue(base: String, key: String) {
             val workManager = WorkManager.getInstance()
             val constraints = Constraints.Builder()
@@ -107,11 +112,11 @@ class NotifyWorker @Inject constructor(
             NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
         }
 
-        const val VERBOSE_NOTIFICATION_CHANNEL_NAME = "Verbose WorkManager Notifications"
-        const val NOTIFICATION_TITLE = "Hello, See rates today on the Bitcoin Wallet"
-        const val VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION =
+        private const val VERBOSE_NOTIFICATION_CHANNEL_NAME = "Verbose WorkManager Notifications"
+        private const val NOTIFICATION_TITLE = "Hello, See rates today on the Bitcoin Wallet"
+        private const val VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION =
             "Shows notifications whenever work starts"
-        const val CHANNEL_ID = "VERBOSE_NOTIFICATION"
-        const val NOTIFICATION_ID = 1029
+        private const val CHANNEL_ID = "VERBOSE_NOTIFICATION"
+        private const val NOTIFICATION_ID = 1029
     }
 }

@@ -9,15 +9,12 @@
             android:defaultValue="false"
             android:icon="@drawable/ic_style_grey_600_24dp"/>
 
-    <ListPreference
-            android:defaultValue="usd"
-            android:entries="@array/pref_currency_entries"
-            android:entryValues="@array/pref_currency_values"
-            android:key="currency_preference"
-            android:summary="Set default currency"
-            android:title="Currency"
-            android:enabled="false"
-            android:icon="@drawable/ic_euro_symbol_grey_600_24dp"/>
+    <SwitchPreference
+            android:key="notify_coin"
+            android:summary="Notice of exchange rates"
+            android:title="Notify"
+            android:defaultValue="true"
+            android:icon="@drawable/ic_notifications_active_grey_600_24dp"/>
 
     <ListPreference
             android:defaultValue="2/3"

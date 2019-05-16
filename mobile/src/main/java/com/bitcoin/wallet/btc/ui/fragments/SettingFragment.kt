@@ -62,8 +62,6 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
         darkMode.isChecked = isDark
         darkMode.onPreferenceChangeListener = this
 
-        val currency = findPreference("currency_preference")
-        currency.onPreferenceChangeListener = this
         backgroundThread = HandlerThread("backgroundThread", Process.THREAD_PRIORITY_BACKGROUND)
         backgroundThread?.let {
             it.start()
