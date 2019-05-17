@@ -103,7 +103,7 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment(), HasS
     }
 
     private fun onGlobalLayoutChanged(view: View) {
-        val parent = dialog?.findViewById<ViewGroup>(R.id.design_bottom_sheet);
+        val parent = dialog?.findViewById<ViewGroup>(R.id.design_bottom_sheet)
         if (parent != null) {
             val toggleArrow = view.findViewById<ExpandIconView?>(R.id.toggleArrow)
             toggleArrow?.setState(ExpandIconView.LESS, true)

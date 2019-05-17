@@ -288,6 +288,7 @@ class PermissionDeniedDialogFragment : DialogFragment() {
 
         fun showDialog(fm: FragmentManager) {
             val newFragment = PermissionDeniedDialogFragment()
+            newFragment.isCancelable = false
             newFragment.show(fm, FRAGMENT_TAG)
         }
     }

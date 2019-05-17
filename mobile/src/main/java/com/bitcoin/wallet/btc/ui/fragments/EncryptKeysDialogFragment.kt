@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.dialog_encrypt.*
 import org.bitcoinj.crypto.KeyCrypterException
 import org.bitcoinj.crypto.KeyCrypterScrypt
 
+
 class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
     private val handler = Handler()
     private val backgroundThread: HandlerThread by lazy {
@@ -196,6 +197,7 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
     companion object {
         fun show(activity: AppCompatActivity) {
             val fragment = EncryptKeysDialogFragment()
+            fragment.isCancelable = false
             fragment.show(activity.supportFragmentManager, EncryptKeysDialogFragment::class.java.simpleName)
         }
     }

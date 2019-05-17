@@ -267,6 +267,7 @@ class BackupDialog : BaseBottomSheetDialogFragment() {
     companion object {
         fun show(activity: AppCompatActivity) {
             val fragment = BackupDialog()
+            fragment.isCancelable = false
             fragment.show(activity.supportFragmentManager, "receive_fragment")
         }
 
