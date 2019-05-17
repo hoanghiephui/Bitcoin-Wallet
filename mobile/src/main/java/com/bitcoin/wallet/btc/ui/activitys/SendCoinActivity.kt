@@ -875,17 +875,17 @@ class SendCoinActivity : BaseActivity() {
     private fun upDateViewFee() {
         when (viewModel.feeCategory) {
             FeeCategory.NORMAL -> {
-                textviewFeeType.text = getString(R.string.fee_category_normal)
-                textviewFeeTime.text = "~15 - 60+ minutes."
+                textviewFeeType?.text = getString(R.string.fee_category_normal)
+                textviewFeeTime?.text = "~15 - 60+ minutes."
 
             }
             FeeCategory.ECONOMIC -> {
-                textviewFeeType.text = getString(R.string.fee_economic_)
-                textviewFeeTime.text = "Can be days or weeks."
+                textviewFeeType?.text = getString(R.string.fee_economic_)
+                textviewFeeTime?.text = "Can be days or weeks."
             }
             else -> {
-                textviewFeeType.text = getString(R.string.fee_category_priority)
-                textviewFeeTime.text = "~ 15+ minutes."
+                textviewFeeType?.text = getString(R.string.fee_category_priority)
+                textviewFeeTime?.text = "~ 15+ minutes."
             }
         }
     }
@@ -899,56 +899,56 @@ class SendCoinActivity : BaseActivity() {
         val btcFormat = config.format
         viewModel.paymentIntent?.let { payment ->
             if (payment.hasPayee()) {
-                payeeNameView.visible()
-                payeeNameView.text = payment.payeeName
+                payeeNameView?.visible()
+                payeeNameView?.text = payment.payeeName
 
-                payeeVerifiedByView.visible()
+                payeeVerifiedByView?.visible()
                 val verifiedBy =
                     payment.payeeVerifiedBy ?: getString(R.string.verified_by_unknown)
-                payeeVerifiedByView.text = Constants.CHAR_CHECKMARK + String.format(
+                payeeVerifiedByView?.text = Constants.CHAR_CHECKMARK + String.format(
                     getString(R.string.verified_by),
                     verifiedBy
                 )
             } else {
-                payeeNameView.visibility = View.GONE
-                payeeVerifiedByView.visibility = View.GONE
+                payeeNameView?.gone()
+                payeeVerifiedByView?.gone()
             }
 
             if (payment.hasOutputs()) {
-                payeeGroup.visible()
-                viewAddress.gone()
-                receivingStaticLabelView.visibility =
+                payeeGroup?.visible()
+                viewAddress?.gone()
+                receivingStaticLabelView?.visibility =
                     if (!payment.hasPayee() || payment.payeeVerifiedBy == null)
                         View.VISIBLE
                     else
                         View.GONE
-                receivingStaticAddressView.visibility =
+                receivingStaticAddressView?.visibility =
                     if (!payment.hasPayee() || payment.payeeVerifiedBy == null)
                         View.VISIBLE
                     else
                         View.GONE
-                btnClear.visibility =
+                btnClear?.visibility =
                     if (!payment.hasPayee() || payment.payeeVerifiedBy == null)
                         View.VISIBLE
                     else
                         View.GONE
 
-                receivingStaticLabelView.text = payment.memo
+                receivingStaticLabelView?.text = payment.memo
 
                 if (payment.hasAddress())
-                    receivingStaticAddressView.text = WalletUtils.formatAddress(
+                    receivingStaticAddressView?.text = WalletUtils.formatAddress(
                         payment.address,
                         Constants.ADDRESS_FORMAT_GROUP_SIZE, Constants.ADDRESS_FORMAT_LINE_SIZE, false
                     )
                 else
                     receivingStaticAddressView.setText(R.string.send_coins_address_complex)
             } else if (viewModel.validatedAddress != null) {
-                payeeGroup.visibility = View.VISIBLE
-                viewAddress.gone()
-                receivingStaticLabelView.visible()
-                receivingStaticAddressView.visible()
-                btnClear.visible()
-                receivingStaticAddressView.text = WalletUtils.formatAddress(
+                payeeGroup?.visibility = View.VISIBLE
+                viewAddress?.gone()
+                receivingStaticLabelView?.visible()
+                receivingStaticAddressView?.visible()
+                btnClear?.visible()
+                receivingStaticAddressView?.text = WalletUtils.formatAddress(
                     viewModel.validatedAddress!!.address,
                     Constants.ADDRESS_FORMAT_GROUP_SIZE, Constants.ADDRESS_FORMAT_LINE_SIZE, false
                 )
@@ -960,26 +960,26 @@ class SendCoinActivity : BaseActivity() {
                     viewModel.validatedAddress!!.label != null -> viewModel.validatedAddress!!.label
                     else -> getString(R.string.address_unlabeled)
                 }
-                receivingStaticLabelView.text = staticLabel
-                receivingStaticLabelView.setTextColor(
+                receivingStaticLabelView?.text = staticLabel
+                receivingStaticLabelView?.setTextColor(
                     ContextCompat.getColor(
                         this,
                         if (viewModel.validatedAddress?.label != null) R.color.colorAccent else if (isDarkMode) R.color.white else R.color.colorInvertedBlackThemeAlternate2
                     )
                 )
             } else if (payment.standard == null) {
-                payeeGroup.visible()
-                receivingStaticLabelView.gone()
-                receivingStaticAddressView.gone()
-                btnClear.gone()
-                viewAddress.visible()
+                payeeGroup?.visible()
+                receivingStaticLabelView?.gone()
+                receivingStaticAddressView?.gone()
+                btnClear?.gone()
+                viewAddress?.visible()
             } else {
-                payeeGroup.gone()
+                payeeGroup?.gone()
             }
 
-            receivingAddressView.isEnabled = viewModel.state == SendViewModel.State.INPUT
+            receivingAddressView?.isEnabled = viewModel.state == SendViewModel.State.INPUT
 
-            amountGroup.visibility =
+            amountGroup?.visibility =
                 if (payment.hasAmount() || viewModel.state != null && viewModel.state!!.compareTo(
                         SendViewModel.State.INPUT
                     ) >= 0
@@ -991,7 +991,7 @@ class SendCoinActivity : BaseActivity() {
                 viewModel.state == SendViewModel.State.INPUT && payment.mayEditAmount()
             )
 
-            hintView.visibility = View.GONE
+            hintView?.visibility = View.GONE
             viewModel.state?.let { state ->
                 if (state == SendViewModel.State.INPUT) {
                     if (blockchainState != null && blockchainState.replaying) {
