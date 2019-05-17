@@ -62,6 +62,9 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
         darkMode.isChecked = isDark
         darkMode.onPreferenceChangeListener = this
 
+        val currency = findPreference("notify_coin")
+        currency.onPreferenceChangeListener = this
+
         backgroundThread = HandlerThread("backgroundThread", Process.THREAD_PRIORITY_BACKGROUND)
         backgroundThread?.let {
             it.start()
@@ -108,12 +111,11 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
                     onReStart()
                 }
             }
-            "currency_preference" -> {
+            "notify_coin" -> {
                 if (::sharedPreferences.isInitialized) {
                     sharedPreferences.edit {
-                        putString("currency", newValue as String)
+                        putBoolean("notify_coin", newValue as Boolean)
                     }
-                    onReStart()
                 }
             }
             PREFS_KEY_TRUSTED_PEER -> {

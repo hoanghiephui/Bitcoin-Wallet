@@ -113,17 +113,17 @@ class MainActivity : BaseActivity() {
                 }.show()
             }, 2300)
         }
-        if (application.config.nofity) {
-            NotifyWorker.enqueue("BTC", "")
-        } else {
-            NotifyWorker.clearNotify()
-        }
     }
 
     override fun onResume() {
         handler.postDelayed({
             BlockchainService.start(this@MainActivity, true)
         }, 1000)
+        if (application.config.nofity) {
+            NotifyWorker.enqueue("BTC", "")
+        } else {
+            NotifyWorker.clearNotify()
+        }
         super.onResume()
     }
 

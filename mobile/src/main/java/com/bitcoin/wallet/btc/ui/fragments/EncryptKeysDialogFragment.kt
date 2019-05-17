@@ -90,43 +90,45 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
         state = State.CRYPTING
         updateView()
         backgroundHandler?.post {
-            if (activity == null || isRemoving) {
+            if (activity == null || isRemoving || !isAdded) {
                 return@post
             }
-            val oldKey = if (oldPassword != null) wallet.keyCrypter?.deriveKey(oldPassword) else null
-            val keyCrypter =
-                KeyCrypterScrypt((requireActivity().application as BitcoinApplication).scryptIterationsTarget())
-            val newKey = if (newPassword != null) keyCrypter.deriveKey(newPassword) else null
-            handler.post {
-                if (wallet.isEncrypted) {
-                    if (oldKey == null) {
-                        state = State.INPUT
-                        passwordView.requestFocus()
-                    } else {
-                        try {
-                            wallet.decrypt(oldKey)
-                            state = State.DONE
-                        } catch (x: KeyCrypterException) {
-                            passwordStrengthView.visible()
+            activity?.let {
+                val oldKey = if (oldPassword != null) wallet.keyCrypter?.deriveKey(oldPassword) else null
+                val keyCrypter =
+                    KeyCrypterScrypt((it.application as BitcoinApplication).scryptIterationsTarget())
+                val newKey = if (newPassword != null) keyCrypter.deriveKey(newPassword) else null
+                handler.post {
+                    if (wallet.isEncrypted) {
+                        if (oldKey == null) {
                             state = State.INPUT
                             passwordView.requestFocus()
+                        } else {
+                            try {
+                                wallet.decrypt(oldKey)
+                                state = State.DONE
+                            } catch (x: KeyCrypterException) {
+                                passwordStrengthView.visible()
+                                state = State.INPUT
+                                passwordView.requestFocus()
+                            }
+
                         }
-
                     }
-                }
 
-                if (newKey != null && !wallet.isEncrypted) {
-                    wallet.encrypt(keyCrypter, newKey)
-                    state = State.DONE
-                }
+                    if (newKey != null && !wallet.isEncrypted) {
+                        wallet.encrypt(keyCrypter, newKey)
+                        state = State.DONE
+                    }
 
-                updateView()
+                    updateView()
 
-                if (state == State.DONE) {
-                    WalletUtils.autoBackupWallet(activity, wallet)
-                    // trigger load manually because of missing callbacks for encryption state
-                    (requireActivity() as MainActivity).viewModel.walletEncrypted.load()
-                    handler.postDelayed({ dismissAllowingStateLoss() }, 2000)
+                    if (state == State.DONE && activity != null && wallet != null) {
+                        WalletUtils.autoBackupWallet(it, wallet)
+                        // trigger load manually because of missing callbacks for encryption state
+                        (requireActivity() as MainActivity).viewModel.walletEncrypted.load()
+                        handler.postDelayed({ dismissAllowingStateLoss() }, 2000)
+                    }
                 }
             }
         }
