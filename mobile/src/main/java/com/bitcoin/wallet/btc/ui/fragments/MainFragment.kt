@@ -159,7 +159,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
                 content?.let { HelpDialogFragment.show(baseActivity(), it) }
             }
         })
-        createAndLoadNativeAd("YOUR_PLACEMENT_ID")
+        createAndLoadNativeAd(getString(R.string.fb_native_home))
+        createAndLoadNativeBannerAd(getString(R.string.fb_native_home_bottom))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -320,12 +321,27 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
 
     override fun onAdLoaded(ad: Ad) {
         super.onAdLoaded(ad)
-        viewAds.visible()
+        when (ad.placementId) {
+            getString(R.string.fb_native_home) -> {
+                viewAds.visible()
+            }
+            getString(R.string.fb_native_home_bottom) -> {
+                viewAdsTwo.visible()
+            }
+        }
     }
 
     override fun onError(ad: Ad, error: AdError) {
         super.onError(ad, error)
-        viewAds.gone()
+        when (ad.placementId) {
+            getString(R.string.fb_native_home) -> {
+                viewAds.gone()
+            }
+            getString(R.string.fb_native_home_bottom) -> {
+                viewAdsTwo.gone()
+            }
+        }
+
     }
 
     private fun initViewBalance() {

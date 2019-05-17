@@ -1,6 +1,7 @@
 package com.bitcoin.wallet.btc.base
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,13 @@ abstract class BaseFragment : DaggerFragment(), NativeAdListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mNativeAd: NativeAd
+    private var mNativeBannerAd: NativeBannerAd? = null
+    private var mViewType: NativeBannerAdView.Type = NativeBannerAdView.Type.HEIGHT_100
+    private var mAdBackgroundColor: Int = 0
+    private var mTitleColor: Int = 0
+    private var mLinkColor: Int = 0
+    private var mContentColor: Int = 0
+    private var mCtaBgColor: Int = 0
 
     @LayoutRes
     abstract fun layoutRes(): Int
@@ -88,7 +96,58 @@ abstract class BaseFragment : DaggerFragment(), NativeAdListener {
         if (::mNativeAd.isInitialized) {
             mNativeAd.destroy()
         }
+        mNativeBannerAd?.destroy()
         super.onDestroy()
+    }
+
+    fun createAndLoadNativeBannerAd(id: String) {
+        mNativeBannerAd = NativeBannerAd(context, id)
+
+        // Set a listener to get notified when the ad was loaded.
+        mNativeBannerAd?.setAdListener(this)
+
+        // Initiate a request to load an ad.
+        mNativeBannerAd?.loadAd()
+    }
+
+    private fun reloadAdBannerContainer() {
+        val activity = activity
+        if (activity != null && mNativeBannerAd != null && mNativeBannerAd?.isAdLoaded == true) {
+            val mNativeAdContainer = view?.findViewById<ViewGroup>(R.id.adViewContainers)
+            mNativeAdContainer?.removeAllViews()
+
+            when (baseActivity().isDarkMode) {
+                false -> {
+                    mAdBackgroundColor = Color.WHITE
+                    mTitleColor = COLOR_DARK_GRAY
+                    mLinkColor = Color.WHITE
+                    mContentColor = COLOR_LIGHT_GRAY
+                    mCtaBgColor = COLOR_CTA_BLUE_BG
+                }
+                true -> {
+                    mAdBackgroundColor = Color.BLACK
+                    mTitleColor = Color.WHITE
+                    mContentColor = Color.LTGRAY
+                    mLinkColor = Color.BLACK
+                    mCtaBgColor = Color.WHITE
+                }
+            }
+            // Create a NativeAdViewAttributes object and set the attributes
+            val attributes = NativeAdViewAttributes(context)
+                .setBackgroundColor(mAdBackgroundColor)
+                .setTitleTextColor(mTitleColor)
+                .setDescriptionTextColor(mContentColor)
+                .setButtonBorderColor(mCtaBgColor)
+                .setButtonTextColor(mLinkColor)
+                .setButtonColor(mCtaBgColor)
+
+            // Use NativeAdView.render to generate the ad View
+            val adView = NativeBannerAdView.render(activity, mNativeBannerAd, mViewType, attributes)
+
+            // Add adView to the container showing Ads
+            mNativeAdContainer?.addView(adView, 0)
+            mNativeAdContainer?.setBackgroundColor(Color.TRANSPARENT)
+        }
     }
 
     fun createAndLoadNativeAd(unitID: String) {
@@ -134,11 +193,12 @@ abstract class BaseFragment : DaggerFragment(), NativeAdListener {
     }
 
     override fun onAdLoaded(ad: Ad) {
-        if (!::mNativeAd.isInitialized || mNativeAd != ad) {
-            // Race condition, load() called again before last ad was displayed
-            return
+        if (::mNativeAd.isInitialized && mNativeAd == ad) {
+            reloadAdContainer()
         }
-        reloadAdContainer()
+        if (mNativeBannerAd != null && mNativeBannerAd == ad) {
+            reloadAdBannerContainer()
+        }
     }
 
     override fun onError(ad: Ad, error: AdError) {
@@ -159,5 +219,8 @@ abstract class BaseFragment : DaggerFragment(), NativeAdListener {
 
     companion object {
         private const val DEFAULT_HEIGHT_DP = 350
+        private const val COLOR_LIGHT_GRAY = -0x6f6b64
+        private const val COLOR_DARK_GRAY = -0xb1a99b
+        private const val COLOR_CTA_BLUE_BG = -0xbf7f01
     }
 }
