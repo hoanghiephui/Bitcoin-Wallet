@@ -158,6 +158,10 @@ class Configuration constructor(private val prefs: SharedPreferences) {
         }
     }
 
+    fun getLastBackupTime(): Long {
+        return prefs.getLong(PREFS_KEY_LAST_BACKUP, 0)
+    }
+
     fun updateLastVersionCode(currentVersionCode: Long) {
         prefs.edit().putLong(PREFS_KEY_LAST_VERSION, currentVersionCode).apply()
     }

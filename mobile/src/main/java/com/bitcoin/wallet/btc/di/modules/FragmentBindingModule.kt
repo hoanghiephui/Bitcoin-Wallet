@@ -34,4 +34,8 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun provideHelpDialogFragment(): HelpDialogFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun provideReportIssue(): ReportIssueDialog
 }

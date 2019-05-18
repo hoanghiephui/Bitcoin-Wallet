@@ -77,4 +77,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SweepWalletViewModel::class)
     abstract fun bindSweepWalletViewModel(viewModel: SweepWalletViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReportIssueViewModel::class)
+    abstract fun bindReportIssueViewModel(viewModel: ReportIssueViewModel): ViewModel
 }

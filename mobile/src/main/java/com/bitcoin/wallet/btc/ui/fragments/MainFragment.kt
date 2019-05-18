@@ -321,27 +321,30 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
 
     override fun onAdLoaded(ad: Ad) {
         super.onAdLoaded(ad)
-        when (ad.placementId) {
-            getString(R.string.fb_native_home) -> {
-                viewAds.visible()
-            }
-            getString(R.string.fb_native_home_bottom) -> {
-                viewAdsTwo.visible()
+        if (activity != null && isAdded) {
+            when (ad.placementId) {
+                getString(R.string.fb_native_home) -> {
+                    viewAds.visible()
+                }
+                getString(R.string.fb_native_home_bottom) -> {
+                    viewAdsTwo.visible()
+                }
             }
         }
     }
 
     override fun onError(ad: Ad, error: AdError) {
-        super.onError(ad, error)
-        when (ad.placementId) {
-            getString(R.string.fb_native_home) -> {
-                viewAds.gone()
-            }
-            getString(R.string.fb_native_home_bottom) -> {
-                viewAdsTwo.gone()
+        if (activity != null && isAdded) {
+            super.onError(ad, error)
+            when (ad.placementId) {
+                getString(R.string.fb_native_home) -> {
+                    viewAds.gone()
+                }
+                getString(R.string.fb_native_home_bottom) -> {
+                    viewAdsTwo.gone()
+                }
             }
         }
-
     }
 
     private fun initViewBalance() {

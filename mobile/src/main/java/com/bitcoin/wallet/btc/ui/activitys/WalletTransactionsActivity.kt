@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.data.AddressBookDao
@@ -30,10 +31,7 @@ import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.ui.adapter.OnClickListener
 import com.bitcoin.wallet.btc.ui.adapter.TransactionsWalletAdapter
 import com.bitcoin.wallet.btc.ui.adapter.WarningType
-import com.bitcoin.wallet.btc.ui.fragments.BackupDialog
-import com.bitcoin.wallet.btc.ui.fragments.BitmapBottomDialog
-import com.bitcoin.wallet.btc.ui.fragments.EditAddressBookEntryFragment
-import com.bitcoin.wallet.btc.ui.fragments.RaiseFeeDialogFragment
+import com.bitcoin.wallet.btc.ui.fragments.*
 import com.bitcoin.wallet.btc.ui.widget.TopLinearLayoutManager
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.WalletTransactionsViewModel
@@ -131,7 +129,11 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
         })
         viewModel.showReportIssueDialog.observe(this, object : Event.Observer<String>() {
             override fun onEvent(content: String?) {
-
+                content?.let {
+                    ReportIssueDialog.show(this@WalletTransactionsActivity, R.string.report_transaction,
+                        R.string.report_issue_mes, "Reported issue", it
+                    )
+                }
             }
 
         })

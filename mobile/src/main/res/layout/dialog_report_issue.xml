@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:fillViewport="true"
+            android:scrollbars="none"
+            android:background="@drawable/bottom_sheet_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/report_issue_dialog_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/pass"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/report_issue_desc"
+                app:layout_constraintTop_toBottomOf="@+id/report_issue_dialog_message"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/report_issue_dialog_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="text|textCapSentences|textMultiLine"
+                    android:textSize="13sp"
+                    android:imeOptions="actionDone"/>
+
+            <requestFocus/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewGo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SEND"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pass"
+                app:backgroundTint="@color/color_btc"
+                android:textColor="@color/white"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:enabled="false"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"/>
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Canncel"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toStartOf="@id/viewGo"
+                app:layout_constraintBottom_toBottomOf="@+id/viewGo"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:layout_constraintTop_toTopOf="@+id/viewGo"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -257,6 +257,7 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
     companion object {
         fun show(activity: AppCompatActivity) {
             val fragment = RestoreWalletDialog()
+            fragment.isCancelable = false
             fragment.show(activity.supportFragmentManager, RestoreWalletDialog::class.java.simpleName)
         }
 

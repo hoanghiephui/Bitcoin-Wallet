@@ -138,6 +138,9 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
     }
 
     private fun updateTrustedPeer() {
+        if (activity == null || !isAdded) {
+            return
+        }
         val trustedPeer = config?.trustedPeerHost
 
         if (trustedPeer == null) {

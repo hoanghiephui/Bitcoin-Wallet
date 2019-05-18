@@ -193,10 +193,10 @@ abstract class BaseFragment : DaggerFragment(), NativeAdListener {
     }
 
     override fun onAdLoaded(ad: Ad) {
-        if (::mNativeAd.isInitialized && mNativeAd == ad) {
+        if (::mNativeAd.isInitialized && mNativeAd == ad && activity != null && isAdded) {
             reloadAdContainer()
         }
-        if (mNativeBannerAd != null && mNativeBannerAd == ad) {
+        if (mNativeBannerAd != null && mNativeBannerAd == ad && activity != null && isAdded) {
             reloadAdBannerContainer()
         }
     }

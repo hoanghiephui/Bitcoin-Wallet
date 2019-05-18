@@ -6,8 +6,8 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.TypefaceSpan;
-import com.bitcoin.wallet.btc.service.BlockchainService;
 import com.bitcoin.wallet.btc.Constants;
+import com.bitcoin.wallet.btc.service.BlockchainService;
 import com.google.common.base.Stopwatch;
 import org.bitcoinj.core.*;
 import org.bitcoinj.script.Script;
@@ -125,6 +125,9 @@ public class WalletUtils {
     }
 
     public static void autoBackupWallet(final android.content.Context context, final Wallet wallet) {
+        if (context == null || wallet == null) {
+            return;
+        }
         final Stopwatch watch = Stopwatch.createStarted();
         final Protos.Wallet.Builder builder = new WalletProtobufSerializer().walletToProto(wallet).toBuilder();
 

@@ -384,6 +384,8 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
             }
         }
 
+        val TIME_CREATE_APPLICATION = System.currentTimeMillis()
+
         fun versionLine(packageInfo: PackageInfo): String {
             return (ImmutableList.copyOf(Splitter.on('.').splitToList(packageInfo.packageName)).reverse()[0] + ' '.toString()
                     + packageInfo.versionName + if (BuildConfig.DEBUG) " (debuggable)" else "")

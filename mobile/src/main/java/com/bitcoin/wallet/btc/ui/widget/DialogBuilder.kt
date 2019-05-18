@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.bitcoin.wallet.btc.R
 
-class DialogBuilder(context: Context) : AlertDialog.Builder(context) {
+open class DialogBuilder(context: Context) : AlertDialog.Builder(context) {
     private val customTitle: View
     private val iconView: ImageView
     private val titleView: TextView
@@ -50,7 +50,7 @@ class DialogBuilder(context: Context) : AlertDialog.Builder(context) {
         return this
     }
 
-    override fun setTitle(titleResId: Int): DialogBuilder {
+    final override fun setTitle(titleResId: Int): DialogBuilder {
         if (titleResId != 0) {
             setCustomTitle(customTitle)
             titleView.setText(titleResId)
