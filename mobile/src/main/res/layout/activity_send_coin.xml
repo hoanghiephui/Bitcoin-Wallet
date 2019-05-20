@@ -113,16 +113,20 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:cardUseCompatPadding="true"
                     app:cardPreventCornerOverlap="true"
-                    app:cardElevation="4dp"
                     app:cardCornerRadius="4dp"
                     app:contentPaddingBottom="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginEnd="8dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
+                    <androidx.constraintlayout.widget.Group
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/payeeGroup"
+                            app:constraint_referenced_ids="lalb"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/lalb"
@@ -215,16 +219,6 @@
                                 app:layout_constraintHorizontal_bias="0.5"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <View
-                            android:id="@+id/divider1"
-                            android:layout_width="match_parent"
-                            android:layout_marginTop="8dp"
-                            android:layout_height="0.5dp"
-                            android:background="?invertedColorAlpha2"
-                            app:layout_constraintTop_toBottomOf="@+id/receivingStaticAddressView"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"/>
-
                     <TextView
                             android:id="@+id/receivingStaticLabelView"
                             android:layout_width="wrap_content"
@@ -276,6 +270,26 @@
                             app:layout_constraintHorizontal_bias="0.5"
                             android:visibility="gone"
                             tools:visibility="visible"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView"
+                    app:cardUseCompatPadding="true"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardCornerRadius="4dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
                     <androidx.constraintlayout.widget.Group
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -289,7 +303,7 @@
                             android:text="@string/amount_label"
                             android:textSize="16sp"
                             style="@style/TextAppearance.Body1.Medium"
-                            app:layout_constraintTop_toBottomOf="@+id/divider1"
+                            app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginStart="8dp"
@@ -360,6 +374,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginTop="8dp"/>
+
                     <View
                             android:id="@+id/divider2"
                             android:layout_width="match_parent"
@@ -509,12 +524,6 @@
                             android:id="@+id/privateKeyPasswordViewGroup"
                             android:visibility="gone"/>
 
-                    <androidx.constraintlayout.widget.Group
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/payeeGroup"
-                            app:constraint_referenced_ids="lalb,divider1"/>
-
                     <include
                             layout="@layout/item_transaction"
                             android:layout_width="match_parent"
@@ -525,16 +534,17 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             android:layout_marginTop="4dp"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
             <include
                     layout="@layout/init_ads"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView2"
                     android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
+
             <TextView
                     android:id="@+id/tvNote"
                     android:layout_width="0dp"

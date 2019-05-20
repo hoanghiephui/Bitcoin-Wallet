@@ -11,6 +11,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bitcoin.wallet.btc.BitcoinApplication
+import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseBottomSheetDialogFragment
 import com.bitcoin.wallet.btc.extension.gone
@@ -100,6 +101,7 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
                     KeyCrypterScrypt((it.application as BitcoinApplication).scryptIterationsTarget())
                 val newKey = if (newPassword != null) keyCrypter.deriveKey(newPassword) else null
                 handler.post {
+                    //Decrypt from old password
                     if (wallet.isEncrypted) {
                         if (oldKey == null) {
                             state = State.INPUT
@@ -116,7 +118,12 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
 
                         }
                     }
+                    //Use opportunity to maybe upgrade wallet
+                    if (wallet.isDeterministicUpgradeRequired(Constants.UPGRADE_OUTPUT_SCRIPT_TYPE)) {
+                        wallet.upgradeToDeterministic(Constants.UPGRADE_OUTPUT_SCRIPT_TYPE, null)
+                    }
 
+                    //Encrypt to new password
                     if (newKey != null && !wallet.isEncrypted) {
                         wallet.encrypt(keyCrypter, newKey)
                         state = State.DONE

@@ -117,25 +117,29 @@ public class ExchangeRatesProvider extends ContentProvider {
                         .add(exchangeRate.getSource());
             }
         } else if (selection.equals(QUERY_PARAM_Q)) {
-            final String selectionArg = selectionArgs[0].toLowerCase(Locale.US);
-            for (final Map.Entry<String, ExchangeRate> entry : exchangeRates.entrySet()) {
-                final ExchangeRate exchangeRate = entry.getValue();
-                final org.bitcoinj.utils.ExchangeRate rate = exchangeRate.getRate();
-                final String currencyCode = exchangeRate.getCurrencyCode();
-                final String currencySymbol = GenericUtils.INSTANCE.currencySymbol(currencyCode);
-                if (currencyCode.toLowerCase(Locale.US).contains(selectionArg)
-                        || currencySymbol.toLowerCase(Locale.US).contains(selectionArg))
-                    cursor.newRow().add(currencyCode.hashCode()).add(currencyCode).add(rate.coin.value)
-                            .add(rate.fiat.value).add(exchangeRate.getSource());
+            if (selectionArgs.length > 0) {
+                final String selectionArg = selectionArgs[0].toLowerCase(Locale.US);
+                for (final Map.Entry<String, ExchangeRate> entry : exchangeRates.entrySet()) {
+                    final ExchangeRate exchangeRate = entry.getValue();
+                    final org.bitcoinj.utils.ExchangeRate rate = exchangeRate.getRate();
+                    final String currencyCode = exchangeRate.getCurrencyCode();
+                    final String currencySymbol = GenericUtils.currencySymbol(currencyCode);
+                    if (currencyCode.toLowerCase(Locale.US).contains(selectionArg)
+                            || currencySymbol.toLowerCase(Locale.US).contains(selectionArg))
+                        cursor.newRow().add(currencyCode.hashCode()).add(currencyCode).add(rate.coin.value)
+                                .add(rate.fiat.value).add(exchangeRate.getSource());
+                }
             }
         } else if (selection.equals(KEY_CURRENCY_CODE)) {
-            final String selectionArg = selectionArgs[0];
-            final ExchangeRate exchangeRate = bestExchangeRate(selectionArg);
-            if (exchangeRate != null) {
-                final org.bitcoinj.utils.ExchangeRate rate = exchangeRate.getRate();
-                final String currencyCode = exchangeRate.getCurrencyCode();
-                cursor.newRow().add(currencyCode.hashCode()).add(currencyCode).add(rate.coin.value).add(rate.fiat.value)
-                        .add(exchangeRate.getSource());
+            if (selectionArgs.length > 0) {
+                final String selectionArg = selectionArgs[0];
+                final ExchangeRate exchangeRate = bestExchangeRate(selectionArg);
+                if (exchangeRate != null) {
+                    final org.bitcoinj.utils.ExchangeRate rate = exchangeRate.getRate();
+                    final String currencyCode = exchangeRate.getCurrencyCode();
+                    cursor.newRow().add(currencyCode.hashCode()).add(currencyCode).add(rate.coin.value).add(rate.fiat.value)
+                            .add(exchangeRate.getSource());
+                }
             }
         }
 
@@ -143,7 +147,10 @@ public class ExchangeRatesProvider extends ContentProvider {
     }
 
     private ExchangeRate bestExchangeRate(final String currencyCode) {
-        ExchangeRate rate = currencyCode != null ? exchangeRates.get(currencyCode) : null;
+        ExchangeRate rate = null;
+        if (exchangeRates != null) {
+            rate = currencyCode != null ? exchangeRates.get(currencyCode) : null;
+        }
         if (rate != null)
             return rate;
 

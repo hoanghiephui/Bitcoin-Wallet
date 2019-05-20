@@ -20,6 +20,7 @@ import com.bitcoin.wallet.btc.utils.Configuration
 import com.bitcoin.wallet.btc.utils.WalletUtils
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
+import com.facebook.ads.internal.settings.AdInternalSettings
 import com.google.common.base.Splitter
 import com.google.common.base.Stopwatch
 import com.google.common.collect.ImmutableList
@@ -106,6 +107,7 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
         if (!AudienceNetworkAds.isInitialized(this)) {
             if (BuildConfig.DEBUG) {
                 AdSettings.turnOnSDKDebugger(this)
+                AdInternalSettings.setTestMode(true)
             }
 
             AudienceNetworkAds

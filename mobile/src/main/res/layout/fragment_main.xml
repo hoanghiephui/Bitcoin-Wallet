@@ -250,7 +250,7 @@
                             android:layout_marginBottom="4dp"/>
 
                     <com.bitcoin.wallet.btc.ui.widget.CurrencyTextView
-                            tools:text="TextView"
+                            android:text="------"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:id="@+id/walletBalanceBtc"
@@ -266,7 +266,7 @@
                             android:gravity="center_vertical|end"/>
 
                     <com.bitcoin.wallet.btc.ui.widget.CurrencyTextView
-                            tools:text="TextView"
+                            android:text="----"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/wallet_balance_local"
@@ -634,32 +634,18 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="80dp"
                     app:layout_constraintTop_toBottomOf="@+id/tvSummary"/>
 
-            <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/viewAdsTwo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:cardUseCompatPadding="true"
-                    app:cardPreventCornerOverlap="true"
-                    app:strokeColor="?colorAccent"
-                    app:strokeWidth="6dp"
-                    app:cardCornerRadius="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyClear"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone">
-
-                <include
-                        layout="@layout/init_ads_two"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <include
+            layout="@layout/init_ads_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"/>
     <include
             layout="@layout/bottom_bar_menu_layout"/>
 

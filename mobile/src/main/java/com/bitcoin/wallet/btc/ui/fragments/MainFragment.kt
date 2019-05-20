@@ -40,6 +40,8 @@ import com.bitcoin.wallet.btc.utils.CryptoCurrencies.Companion.getTextColor
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
+import com.facebook.ads.AdSize
+import com.facebook.ads.AdView
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -52,6 +54,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.bottom_bar_menu_layout.*
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.init_ads_two.*
 import kotlinx.android.synthetic.main.item_network_state.*
 import org.bitcoinj.core.PrefixedChecksummedBytes
 import org.bitcoinj.core.Transaction
@@ -81,6 +84,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
     }
     private var statsAdapter by autoCleared<StatsAdapter>()
     private val BLOCKCHAIN_UPTODATE_THRESHOLD_MS = DateUtils.HOUR_IN_MILLIS
+    private var bannerAdView: AdView? = null
+
     val config: Configuration by lazy {
         baseActivity().application.config
     }
@@ -160,7 +165,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
             }
         })
         createAndLoadNativeAd(getString(R.string.fb_native_home))
-        createAndLoadNativeBannerAd(getString(R.string.fb_native_home_bottom))
+        loadAdView()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -319,6 +324,16 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
         }
     }
 
+    private fun loadAdView() {
+        bannerAdView?.destroy()
+        bannerAdView = null
+        bannerAdView = AdView(this.activity, getString(R.string.fb_banner_home), AdSize.BANNER_HEIGHT_50)
+        bannerAdView?.let {nonNullBannerAdView ->
+            adViewContainers?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.loadAd()
+        }
+    }
+
     override fun onAdLoaded(ad: Ad) {
         super.onAdLoaded(ad)
         if (activity != null && isAdded) {
@@ -327,7 +342,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
                     viewAds.visible()
                 }
                 getString(R.string.fb_native_home_bottom) -> {
-                    viewAdsTwo.visible()
+                    //viewAdsTwo.visible()
                 }
             }
         }
@@ -341,7 +356,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, RadioGroup.OnCheckedC
                     viewAds.gone()
                 }
                 getString(R.string.fb_native_home_bottom) -> {
-                    viewAdsTwo.gone()
+                    //viewAdsTwo.gone()
                 }
             }
         }

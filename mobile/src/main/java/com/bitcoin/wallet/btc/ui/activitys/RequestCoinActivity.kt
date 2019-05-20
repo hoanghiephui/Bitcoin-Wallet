@@ -140,6 +140,8 @@ class RequestCoinActivity : BaseActivity() {
                 if (isDarkMode) R.color.white else R.color.colorInvertedBlackThemeAlternate2
             )
         )
+
+        createAndLoadNativeBannerAd(getString(R.string.fb_native_home_bottom))
     }
 
     override fun onResume() {
