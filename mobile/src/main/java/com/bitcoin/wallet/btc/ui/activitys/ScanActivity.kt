@@ -258,8 +258,9 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
 
                 if (nonContinuousAutoFocus)
                     cameraHandler?.post(AutoFocusRunnable(camera))
-
-                maybeTriggerSceneTransition()
+                runOnUiThread {
+                    maybeTriggerSceneTransition()
+                }
                 cameraHandler?.post(fetchAndDecodeRunnable)
             } catch (x: Exception) {
                 viewModel?.showProblemWarnDialog?.postValue(Event.simple())
