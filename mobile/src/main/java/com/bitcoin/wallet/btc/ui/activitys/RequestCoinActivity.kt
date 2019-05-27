@@ -102,9 +102,7 @@ class RequestCoinActivity : BaseActivity() {
         })
 
         viewModel.qrCode.observe(this, Observer { bitmap ->
-            val qrDrawable = BitmapDrawable(resources, bitmap)
-            qrDrawable.isFilterBitmap = false
-            request_coins_qr.setImageDrawable(qrDrawable)
+            request_coins_qr.setImageBitmap(bitmap)
             /*request_coins_qr.setColorFilter(
                 ContextCompat.getColor(
                     this,
