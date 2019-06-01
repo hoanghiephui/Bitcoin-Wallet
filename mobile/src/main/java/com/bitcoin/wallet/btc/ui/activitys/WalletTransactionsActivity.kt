@@ -35,7 +35,10 @@ import com.bitcoin.wallet.btc.ui.fragments.*
 import com.bitcoin.wallet.btc.ui.widget.TopLinearLayoutManager
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.WalletTransactionsViewModel
+import com.facebook.ads.AdSize
+import com.facebook.ads.AdView
 import kotlinx.android.synthetic.main.activity_wallet_transaction.*
+import kotlinx.android.synthetic.main.init_ads.*
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.core.Transaction
@@ -57,6 +60,7 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
     private val config: Configuration by lazy {
         application.config
     }
+    private var bannerAdView: AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_wallet_transaction
@@ -159,11 +163,17 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
         })
         viewModel.setDirection(null)
         listenClickViews(btnRequestCoin)
+        loadAdView()
     }
 
     override fun onResume() {
         super.onResume()
         warning()?.let { viewModel.setWarning(it) }
+    }
+
+    override fun onDestroy() {
+        bannerAdView?.destroy()
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -316,6 +326,16 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                 startActivity(Intent(this, RequestCoinActivity::class.java))
                 finish()
             }
+        }
+    }
+
+    private fun loadAdView() {
+        bannerAdView?.destroy()
+        bannerAdView = null
+        bannerAdView = AdView(this, getString(R.string.fb_banner_transaction), AdSize.BANNER_HEIGHT_50)
+        bannerAdView?.let {nonNullBannerAdView ->
+            adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.loadAd()
         }
     }
 

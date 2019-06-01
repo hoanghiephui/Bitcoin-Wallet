@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class Constants {
-    public static final boolean TEST = false;
+    public static final boolean TEST = BuildConfig.DEBUG;
     public static final NetworkParameters NETWORK_PARAMETERS = TEST ? TestNet3Params.get() : MainNetParams.get();
     public static final Context CONTEXT = new Context(NETWORK_PARAMETERS);
     public static final Script.ScriptType DEFAULT_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;

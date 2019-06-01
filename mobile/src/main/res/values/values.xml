@@ -33,4 +33,6 @@
     <string name="fb_native_home">1213251655518578_1218458821664528</string>
     <string name="fb_native_home_bottom">1213251655518578_1219981268178950</string>
     <string name="fb_banner_home">1213251655518578_1221714961338914</string>
+    <string name="fb_banner_transaction">1213251655518578_1228059724037771</string>
+    <string name="fb_banner_native_send">1213251655518578_1228060410704369</string>
 </resources>

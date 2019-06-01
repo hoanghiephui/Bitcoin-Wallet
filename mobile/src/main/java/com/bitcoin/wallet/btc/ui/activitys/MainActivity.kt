@@ -16,6 +16,7 @@ import com.bitcoin.wallet.btc.extension.isTrue
 import com.bitcoin.wallet.btc.extension.observeNotNull
 import com.bitcoin.wallet.btc.extension.replace
 import com.bitcoin.wallet.btc.service.BlockchainService
+import com.bitcoin.wallet.btc.service.BlockchainService.NOTYFY_RECEP
 import com.bitcoin.wallet.btc.ui.fragments.BackupDialog
 import com.bitcoin.wallet.btc.ui.fragments.MainFragment
 import com.bitcoin.wallet.btc.utils.Event
@@ -113,6 +114,20 @@ class MainActivity : BaseActivity() {
                 }.show()
             }, 2300)
         }
+        openTransactionNotify(intent)
+    }
+
+    private fun openTransactionNotify(intent: Intent?) {
+        if (intent?.getIntExtra("noty", 0) == NOTYFY_RECEP) {
+            handler.postDelayed({
+                startActivity(Intent(this@MainActivity, WalletTransactionsActivity::class.java))
+            }, 1000)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        openTransactionNotify(intent)
     }
 
     override fun onResume() {

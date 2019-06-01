@@ -104,6 +104,7 @@ public class BlockchainService extends LifecycleService {
     private static final String ACTION_BROADCAST_TRANSACTION = BlockchainService.class.getPackage().getName()
             + ".broadcast_transaction";
     private static final String ACTION_BROADCAST_TRANSACTION_HASH = "hash";
+    public static final int NOTYFY_RECEP = 1;
 
     public static void start(final Context context, final boolean cancelCoinsReceived) {
         if (cancelCoinsReceived)
@@ -221,9 +222,10 @@ public class BlockchainService extends LifecycleService {
             }
             summaryNotification.setContentText(text);
         }
+        Intent intent = new Intent(this, MainActivity.class).putExtra("noty", NOTYFY_RECEP).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK);
         summaryNotification
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK), 0));
+                .setContentIntent(PendingIntent.getActivity(this, 1010, intent, 0));
         nm.notify(Constants.NOTIFICATION_ID_COINS_RECEIVED, summaryNotification.build());
 
         // child notification

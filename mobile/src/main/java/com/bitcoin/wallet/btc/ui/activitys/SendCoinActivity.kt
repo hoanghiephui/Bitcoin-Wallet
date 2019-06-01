@@ -207,6 +207,8 @@ class SendCoinActivity : BaseActivity() {
             btnClear.gone()
             viewAddress.visible()
         }
+
+        createAndLoadNativeBannerAd(getString(R.string.fb_banner_native_send))
     }
 
     private fun viewFee() {
@@ -655,23 +657,19 @@ class SendCoinActivity : BaseActivity() {
                             if (reasons.isEmpty())
                                 reasons.add("unknown")
 
-                            val dialog = DialogBuilder.warn(
+                            DialogBuilder.warn(
                                 this@SendCoinActivity,
                                 R.string.send_coins_failed
-                            )
-                            dialog.setMessage(
-                                getString(
-                                    R.string.send_coins_failed_mes,
-                                    paymentRequestHost, Joiner.on(", ").join(reasons)
+                            ).apply {
+                                setMessage(
+                                    getString(
+                                        R.string.send_coins_failed_mes,
+                                        paymentRequestHost, Joiner.on(", ").join(reasons)
+                                    )
                                 )
-                            )
-                            dialog.singleDismissButton(object : DialogInterface.OnClickListener {
-                                override fun onClick(dialog: DialogInterface?, which: Int) {
-                                    handleCancel()
-                                }
-                            })
-                            dialog.show()
+                                singleDismissButton(DialogInterface.OnClickListener { dialog, which -> handleCancel() })
 
+                            }.show()
                         }
                     }
                 }
