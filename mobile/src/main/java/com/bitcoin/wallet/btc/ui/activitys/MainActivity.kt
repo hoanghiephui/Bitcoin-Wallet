@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.text.Html
+import android.util.Log
 import android.view.Menu
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -22,9 +23,14 @@ import com.bitcoin.wallet.btc.ui.fragments.MainFragment
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.viewmodel.MainViewModel
 import com.bitcoin.wallet.btc.works.NotifyWorker
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.model.UpdateAvailability
 
 
 class MainActivity : BaseActivity() {
+    private val REQUEST_CODE_UPDATE = 1001
+
     val viewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
     }
@@ -115,6 +121,7 @@ class MainActivity : BaseActivity() {
             }, 2300)
         }
         openTransactionNotify(intent)
+        checkForUpdate()
     }
 
     private fun openTransactionNotify(intent: Intent?) {
@@ -139,6 +146,18 @@ class MainActivity : BaseActivity() {
         } else {
             NotifyWorker.clearNotify()
         }
+        val updateManager = AppUpdateManagerFactory.create(this)
+        updateManager.appUpdateInfo
+            .addOnSuccessListener {
+                if (it.updateAvailability() ==
+                    UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    updateManager.startUpdateFlowForResult(
+                        it,
+                        IMMEDIATE,
+                        this,
+                        REQUEST_CODE_UPDATE)
+                }
+            }
         super.onResume()
     }
 
@@ -148,9 +167,17 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        for (fragment in supportFragmentManager.fragments) {
-            fragment.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_UPDATE) {
+            if (requestCode != RESULT_OK) {
+                Log.e("System out", "Update flow failed! Result code: $resultCode")
+                // If the update is cancelled or fails,
+                // you can request to start the update again.
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+            for (fragment in supportFragmentManager.fragments) {
+                fragment.onActivityResult(requestCode, resultCode, data)
+            }
         }
     }
 
@@ -163,5 +190,26 @@ class MainActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun checkForUpdate(){
+
+        // Creates instance of the manager.
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+
+        // Checks that the platform will allow the specified type of update.
+        appUpdateManager.appUpdateInfo.addOnSuccessListener {
+            if (it.availableVersionCode() == UpdateAvailability.UPDATE_AVAILABLE &&
+                it.isUpdateTypeAllowed(IMMEDIATE))
+            {
+                appUpdateManager.startUpdateFlowForResult(
+                    it,
+                    IMMEDIATE,
+                    this,
+                    REQUEST_CODE_UPDATE)
+
+            }
+        }
+
     }
 }
