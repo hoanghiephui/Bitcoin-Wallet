@@ -16,4 +16,10 @@
             android:id="@+id/scannerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+    <include
+            layout="@layout/init_ads"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

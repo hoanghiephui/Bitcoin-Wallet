@@ -20,7 +20,10 @@ import com.bitcoin.wallet.btc.ui.widget.TopLinearLayoutManager
 import com.bitcoin.wallet.btc.utils.Configuration
 import com.bitcoin.wallet.btc.utils.Utils
 import com.bitcoin.wallet.btc.viewmodel.NetworkViewModel
+import com.facebook.ads.AdSize
+import com.facebook.ads.AdView
 import kotlinx.android.synthetic.main.activity_network.*
+import kotlinx.android.synthetic.main.init_ads.*
 import kotlinx.android.synthetic.main.item_network_state.*
 import org.bitcoinj.core.Sha256Hash
 
@@ -37,6 +40,7 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
     val config: Configuration by lazy {
         application.config
     }
+    private var bannerAdView: AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_network
@@ -78,6 +82,13 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
         })
 
         segmented.setOnCheckedChangeListener(this)
+        loadAdView()
+    }
+
+    override fun onDestroy() {
+        bannerAdView?.destroy()
+        bannerAdView = null
+        super.onDestroy()
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
@@ -148,5 +159,15 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
         errorMessageTextView.text = getString(R.string.peer_empty)
         errorMessageTextView.visibility =
             if ((peerAdapter.itemCount == 0 || peers == null) && isPeer) View.VISIBLE else View.GONE
+    }
+
+    private fun loadAdView() {
+        bannerAdView?.destroy()
+        bannerAdView = null
+        bannerAdView = AdView(this, getString(R.string.fb_banner_network), AdSize.BANNER_HEIGHT_50)
+        bannerAdView?.let {nonNullBannerAdView ->
+            adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.loadAd()
+        }
     }
 }

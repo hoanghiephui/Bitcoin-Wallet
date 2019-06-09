@@ -1,22 +1,28 @@
 package com.bitcoin.wallet.btc.repository
 
 import androidx.lifecycle.MutableLiveData
+import com.bitcoin.wallet.btc.CryptoCurrency
+import com.bitcoin.wallet.btc.TimeSpan
 import com.bitcoin.wallet.btc.api.BlockchainEndpoint
+import com.bitcoin.wallet.btc.api.CoinbaseEndpoint
+import com.bitcoin.wallet.btc.api.ZipHomeData
 import com.bitcoin.wallet.btc.base.BaseRepository
 import com.bitcoin.wallet.btc.extension.addTo
 import com.bitcoin.wallet.btc.extension.applySchedulers
 import com.bitcoin.wallet.btc.model.PriceDatum
-import com.bitcoin.wallet.btc.model.StatsResponse
+import com.bitcoin.wallet.btc.model.info.InfoResponse
+import com.bitcoin.wallet.btc.model.news.NewsResponse
+import com.bitcoin.wallet.btc.model.summary.SummaryResponse
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
-import io.reactivex.functions.BiFunction
-import java.util.concurrent.TimeUnit
+import io.reactivex.functions.Function5
+import java.util.*
 import javax.inject.Inject
 
 class WalletRepository @Inject constructor(
-    private val api: BlockchainEndpoint
+    private val api: BlockchainEndpoint,
+    private val coinbase: CoinbaseEndpoint
 ) : BaseRepository<Any>() {
     override fun insertResultIntoDb(body: Any) {
     }
@@ -51,75 +57,79 @@ class WalletRepository @Inject constructor(
         )
     }
 
-    //get stats blockchain.info
-    private val networkStatState = MutableLiveData<NetworkState>()
-    private val statsData = MutableLiveData<StatsResponse>()
-    fun getStats(compositeDisposable: CompositeDisposable): ListingData<StatsResponse> {
-        networkStatState.postValue(NetworkState.LOADING)
-        api.getStats(true)
-            .distinctUntilChanged()
-            .repeatWhen { t -> t.delay(60, TimeUnit.SECONDS) }
-            .applySchedulers()
-            .subscribe(
-                {
-                    networkStatState.postValue(NetworkState.LOADED)
-                    statsData.postValue(it)
-                },
-                {
-                    val error = NetworkState.error(it.message)
-                    // publish the error
-                    networkStatState.postValue(error)
-                }
-            )
-            .addTo(compositeDisposable)
-        return ListingData(
-            data = statsData,
-            networkState = networkStatState,
-            refresh = {},
-            retry = {}
-        )
-    }
-
-    /**
-     * get data chart home
-     */
-    private val networkZipChartState = MutableLiveData<NetworkState>()
-    private val zipChartData = MutableLiveData<ZipPriceChart>()
-    fun onGetZipDataChartPrice(
+    // get data main home
+    private val networkZipHomeState = MutableLiveData<NetworkState>()
+    private val zipHomeData = MutableLiveData<ZipHomeData>()
+    fun getHomeData(
+        baseId: String,
         base: String,
-        quote: String,
-        start: Long,
-        scale: Int,
-        apiKey: String
-    ): ListingData<ZipPriceChart> {
-        networkZipChartState.postValue(NetworkState.LOADING)
+        period: String,
+        urlInfo: String,
+        urlNews: String,
+        urlSummary: String,
+        cryptoCurrency: CryptoCurrency,
+        fiatCurrency: String,
+        timeSpan: TimeSpan
+    ): ListingData<ZipHomeData> {
+        networkZipHomeState.postValue(NetworkState.LOADING)
+        val scale = when (timeSpan) {
+            TimeSpan.ALL_TIME -> FIVE_DAYS
+            TimeSpan.YEAR -> ONE_DAY
+            TimeSpan.MONTH -> TWO_HOURS
+            TimeSpan.WEEK -> ONE_HOUR
+            TimeSpan.DAY -> FIFTEEN_MINUTES
+        }
+        var proposedStartTime = getStartTimeForTimeSpan(timeSpan, cryptoCurrency)
+        // It's possible that the selected start time is before the currency existed, so check here
+        // and show ALL_TIME instead if that's the case.
+        if (proposedStartTime < getFirstMeasurement(cryptoCurrency)) {
+            proposedStartTime = getStartTimeForTimeSpan(TimeSpan.ALL_TIME, cryptoCurrency)
+        }
         Observable.zip(
-            api.getHistoricPriceSeries(base, quote, start, scale, apiKey),
-            api.getPriceIndexes(base, apiKey),
-            BiFunction<List<PriceDatum>,
-                    Map<String, PriceDatum>,
-                    ZipPriceChart>
-            { dataChart, price ->
-                ZipPriceChart(price, dataChart)
-            })
-            .distinctUntilChanged()
+            api.getHistoricPriceSeries(
+                base = cryptoCurrency.symbol,
+                quote = fiatCurrency,
+                scale = scale,
+                start = proposedStartTime
+            ),
+            coinbase.getInfoCoinbase(urlInfo),
+            coinbase.getListNews(urlNews),
+            coinbase.getListSummaryCoin(urlSummary),
+            coinbase.getStatsCoinbase(baseId, base),
+            Function5<List<PriceDatum>, InfoResponse, NewsResponse, SummaryResponse, com.bitcoin.wallet.btc.model.stats.StatsResponse,
+                    ZipHomeData> { priceData, info, news, summary, stats ->
+                ZipHomeData(priceData, info, news, summary, stats)
+            }
+        ).distinctUntilChanged()
             .applySchedulers()
             .subscribe(
                 {
                     setRetryChartZip(null)
-                    networkZipChartState.postValue(NetworkState.LOADED)
-                    zipChartData.postValue(it)
+                    networkZipHomeState.postValue(NetworkState.LOADED)
+                    zipHomeData.postValue(it)
                 },
                 {
-                    setRetryChartZip(Action { onGetZipDataChartPrice(base, quote, start, scale, apiKey) })
+                    setRetryChartZip(Action {
+                        getHomeData(
+                            baseId,
+                            base,
+                            period,
+                            urlInfo,
+                            urlNews,
+                            urlSummary,
+                            cryptoCurrency,
+                            fiatCurrency,
+                            timeSpan
+                        )
+                    })
                     val error = NetworkState.error(it.message)
                     // publish the error
-                    networkZipChartState.postValue(error)
+                    networkZipHomeState.postValue(error)
                 }
             ).addTo(compositeDisposable)
         return ListingData(
-            data = zipChartData,
-            networkState = networkZipChartState,
+            data = zipHomeData,
+            networkState = networkZipHomeState,
             retry = {
                 retryZipChartFailed()
             },
@@ -146,8 +156,59 @@ class WalletRepository @Inject constructor(
         }
     }
 
-    data class ZipPriceChart(
-        val price: Map<String, PriceDatum>,
-        val dateChart: List<PriceDatum>
-    )
+    private fun getStartTimeForTimeSpan(
+        timeSpan: TimeSpan,
+        cryptoCurrency: CryptoCurrency
+    ): Long {
+        val start = when (timeSpan) {
+            TimeSpan.ALL_TIME -> return getFirstMeasurement(cryptoCurrency)
+            TimeSpan.YEAR -> 365
+            TimeSpan.MONTH -> 30
+            TimeSpan.WEEK -> 7
+            TimeSpan.DAY -> 1
+        }
+
+        val cal = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -start) }
+        return cal.timeInMillis / 1000
+    }
+
+    /**
+     * Provides the first timestamp for which we have prices, returned in epoch-seconds
+     *
+     * @param cryptoCurrency The [CryptoCurrency] that you want a start date for
+     * @return A [Long] in epoch-seconds since the start of our data
+     */
+    private fun getFirstMeasurement(cryptoCurrency: CryptoCurrency): Long {
+        return when (cryptoCurrency) {
+            CryptoCurrency.BTC -> FIRST_BTC_ENTRY_TIME
+            CryptoCurrency.ETHER -> FIRST_ETH_ENTRY_TIME
+            CryptoCurrency.BCH -> FIRST_BCH_ENTRY_TIME
+            CryptoCurrency.XLM -> FIRST_XLM_ENTRY_TIME
+            CryptoCurrency.PAX -> TODO("PAX is not yet supported - AND-2003")
+        }
+    }
+
+    /**
+     * A simple class of timescale constants for the [BlockchainEndpoint] methods.
+     */
+    companion object Scale {
+        const val FIFTEEN_MINUTES = 900
+        const val ONE_HOUR = 3600
+        const val TWO_HOURS = 7200
+        const val ONE_DAY = 86400
+        const val FIVE_DAYS = 432000
+
+        /**
+         * All time start times in epoch-seconds
+         */
+        // 2010-08-18 00:00:00 UTC
+        const val FIRST_BTC_ENTRY_TIME = 1282089600L
+        // 2015-08-08 00:00:00 UTC
+        const val FIRST_ETH_ENTRY_TIME = 1438992000L
+        // 2017-07-24 00:00:00 UTC
+        const val FIRST_BCH_ENTRY_TIME = 1500854400L
+        // 2014-09-04 00:00:00 UTC
+        const val FIRST_XLM_ENTRY_TIME = 1409875200L
+
+    }
 }

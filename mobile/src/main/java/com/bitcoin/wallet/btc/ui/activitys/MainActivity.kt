@@ -3,13 +3,15 @@ package com.bitcoin.wallet.btc.ui.activitys
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.text.Html
 import android.util.Log
 import android.view.Menu
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.lifecycle.ViewModelProviders
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
@@ -29,7 +31,6 @@ import com.google.android.play.core.install.model.UpdateAvailability
 
 
 class MainActivity : BaseActivity() {
-    private val REQUEST_CODE_UPDATE = 1001
 
     val viewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
@@ -48,7 +49,10 @@ class MainActivity : BaseActivity() {
                 content?.let {
                     onShowSnackbar(
                         if (it.isStatus)
-                            Html.fromHtml(getString(R.string.export_success, it.mes)).toString()
+                            HtmlCompat.fromHtml(
+                                getString(R.string.export_success, it.mes),
+                                FROM_HTML_MODE_COMPACT
+                            ).toString()
                         else getString(R.string.export_failure, it.mes)
                         , object : CallbackSnack {
                             override fun onOke() {
@@ -207,9 +211,12 @@ class MainActivity : BaseActivity() {
                     IMMEDIATE,
                     this,
                     REQUEST_CODE_UPDATE)
-
             }
         }
 
+    }
+
+    companion object {
+        private const val REQUEST_CODE_UPDATE = 1001
     }
 }

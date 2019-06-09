@@ -34,7 +34,10 @@ import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.utils.InputParser
 import com.bitcoin.wallet.btc.utils.Qr
 import com.bitcoin.wallet.btc.viewmodel.WalletAddressViewModel
+import com.facebook.ads.AdSize
+import com.facebook.ads.AdView
 import kotlinx.android.synthetic.main.activity_network.*
+import kotlinx.android.synthetic.main.init_ads.*
 import kotlinx.android.synthetic.main.item_network_state.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.bitcoinj.core.*
@@ -63,6 +66,7 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
         Handler()
     }
     private var isShowMenu = false
+    private var bannerAdView: AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_network
@@ -124,6 +128,8 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
         viewModel.clip.observe(this, Observer {
             invalidateOptionsMenu()
         })
+
+        loadAdView()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -162,6 +168,12 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
                 }
             }.parse()
         }
+    }
+
+    override fun onDestroy() {
+        bannerAdView?.destroy()
+        bannerAdView = null
+        super.onDestroy()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -345,6 +357,16 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
             dialog.setMessage(R.string.address_own_address)
             dialog.singleDismissButton(null)
             dialog.show()
+        }
+    }
+
+    private fun loadAdView() {
+        bannerAdView?.destroy()
+        bannerAdView = null
+        bannerAdView = AdView(this, getString(R.string.fb_banner_address), AdSize.BANNER_HEIGHT_50)
+        bannerAdView?.let {nonNullBannerAdView ->
+            adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.loadAd()
         }
     }
 }

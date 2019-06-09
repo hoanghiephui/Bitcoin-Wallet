@@ -35,4 +35,8 @@
     <string name="fb_banner_home">1213251655518578_1221714961338914</string>
     <string name="fb_banner_transaction">1213251655518578_1228059724037771</string>
     <string name="fb_banner_native_send">1213251655518578_1228060410704369</string>
+    <string name="fb_banner_network">1213251655518578_1231039647073112</string>
+    <string name="fb_banner_address">1213251655518578_1231042250406185</string>
+    <string name="fb_banner_scan">1213251655518578_1231046007072476</string>
+    <string name="fb_banner_barcode">1213251655518578_1231048040405606</string>
 </resources>

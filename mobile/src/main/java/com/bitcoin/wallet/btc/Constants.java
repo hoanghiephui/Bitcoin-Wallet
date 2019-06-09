@@ -46,6 +46,7 @@ public class Constants {
     public static final int SCRYPT_ITERATIONS_TARGET_LOWRAM = 32768;
     public static final OkHttpClient HTTP_CLIENT;
     public static final String URL_BLOCKCHAIN = "https://api.blockchain.info/";
+    public static final String URL_COINBASE = "https://api.coinbase.com/";
     public static final String DEFAULT_EXCHANGE_CURRENCY = "USD";
     public static final int PEER_DISCOVERY_TIMEOUT_MS = 10 * (int) DateUtils.SECOND_IN_MILLIS;
     public static final int PEER_TIMEOUT_MS = 15 * (int) DateUtils.SECOND_IN_MILLIS;

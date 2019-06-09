@@ -3,6 +3,7 @@ package com.bitcoin.wallet.btc.ui.fragments
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.drawable.BitmapDrawable
 import android.os.AsyncTask
 import android.os.Bundle
@@ -15,13 +16,18 @@ import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseBottomSheetDialogFragment
 import com.bitcoin.wallet.btc.utils.Qr
 import com.bitcoin.wallet.btc.utils.WalletUtils
+import com.facebook.ads.AdSize
+import com.facebook.ads.AdView
 import kotlinx.android.synthetic.main.fragment_bottom_sheet_wallet_address.*
+import kotlinx.android.synthetic.main.init_ads.*
 import org.bitcoinj.core.Address
 import org.bitcoinj.uri.BitcoinURI
 
 class WalletAddressBottomDialog : BaseBottomSheetDialogFragment() {
     private var address: Address? = null
     private var addressLabel: String? = null
+    private var bannerAdView: AdView? = null
+
     override fun layoutRes(): Int {
         return R.layout.fragment_bottom_sheet_wallet_address
     }
@@ -54,6 +60,27 @@ class WalletAddressBottomDialog : BaseBottomSheetDialogFragment() {
                     .setText(address?.toString())
                     .startChooser()
             }
+        }
+
+        loadAdView()
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        bannerAdView?.destroy()
+        bannerAdView = null
+        super.onDismiss(dialog)
+    }
+
+    private fun loadAdView() {
+        if (activity == null) {
+            return
+        }
+        bannerAdView?.destroy()
+        bannerAdView = null
+        bannerAdView = AdView(activity, getString(R.string.fb_banner_barcode), AdSize.BANNER_HEIGHT_50)
+        bannerAdView?.let {nonNullBannerAdView ->
+            adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.loadAd()
         }
     }
 

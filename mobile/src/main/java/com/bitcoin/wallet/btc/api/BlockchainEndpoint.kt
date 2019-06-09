@@ -15,8 +15,7 @@ interface BlockchainEndpoint {
         @Query("base") base: String,
         @Query("quote") quote: String,
         @Query("start") start: Long,
-        @Query("scale") scale: Int,
-        @Query("api_key") apiKey: String
+        @Query("scale") scale: Int
     ): Observable<List<PriceDatum>>
 
     /**

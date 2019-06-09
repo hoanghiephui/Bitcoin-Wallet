@@ -1,14 +1,15 @@
 package com.bitcoin.wallet.btc.utils
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.TypedValue
-import androidx.annotation.AttrRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import com.bitcoin.wallet.btc.R
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 object Utils {
     fun onOpenLink(activity: Activity, url: String, color: Int) {
@@ -21,5 +22,34 @@ object Utils {
         )
         val customTabsIntent = builder.build()
         customTabsIntent.launchUrl(activity, Uri.parse(url))
+    }
+
+    fun convertToCurrencyText(number: Double): String {
+        val decimalFormat = DecimalFormat("###,###,###")
+        return decimalFormat.format(number)
+    }
+
+    fun isNegative(d: Double): Boolean {
+        return java.lang.Double.compare(d, 0.0) < 0
+    }
+
+    fun cleanQueryMap(options: HashMap<String, Any>?): HashMap<String, Any> {
+        if (options == null) {
+            return HashMap()
+        }
+        val optionsCopy = HashMap(options)
+        for (key in options.keys) {
+            if (optionsCopy[key] == null) {
+                optionsCopy.remove(key)
+            }
+        }
+        return optionsCopy
+    }
+
+    @JvmStatic
+    fun onGetTimeLong(strDate: String): Long {
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        format.timeZone = TimeZone.getTimeZone("UTC")
+        return format.parse(strDate).time
     }
 }

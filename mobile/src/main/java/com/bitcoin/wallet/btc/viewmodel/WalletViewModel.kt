@@ -9,14 +9,15 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.bitcoin.wallet.btc.BitcoinApplication
+import com.bitcoin.wallet.btc.CryptoCurrency
+import com.bitcoin.wallet.btc.TimeSpan
+import com.bitcoin.wallet.btc.api.ZipHomeData
 import com.bitcoin.wallet.btc.base.BaseViewModel
 import com.bitcoin.wallet.btc.data.live.*
-import com.bitcoin.wallet.btc.model.StatsResponse
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.repository.WalletRepository
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.utils.Qr
-import io.reactivex.disposables.CompositeDisposable
 import org.bitcoinj.core.Address
 import org.bitcoinj.uri.BitcoinURI
 import javax.inject.Inject
@@ -26,44 +27,30 @@ class WalletViewModel @Inject constructor(
     private val application: Application
 ) : BaseViewModel<WalletRepository>(repository) {
 
-    //get stats
-    private val statsRequestData = MutableLiveData<Boolean>()
-    private val disposable = CompositeDisposable()
-    private val statsResult = Transformations.map(statsRequestData) {
-        repository.getStats(disposable)
-    }
-    val statsData: LiveData<StatsResponse> = Transformations.switchMap(statsResult) { it.data }
-    val statNetworkState: LiveData<NetworkState> = Transformations.switchMap(statsResult) { it.networkState }
-
-    fun onGetStats(request: Boolean) {
-        disposable.clear()
-        statsRequestData.postValue(request)
-    }
-
-
-    //get list zip chart price
-    private val zipRequestChart = MutableLiveData<HashMap<String, String>>()
-    private val zipChartResult = Transformations.map(zipRequestChart) {
-        repository.onGetZipDataChartPrice(
-            base = it["base"]!!,
-            quote = it["quote"]!!,
-            start = it["start"]?.toLong()!!,
-            scale = it["scale"]?.toInt()!!,
-            apiKey = it["api_key"]!!
+    private val zipHomeRequest = MutableLiveData<RequestHome>()
+    private val zipHomeData = Transformations.map(zipHomeRequest) {
+        repository.getHomeData(
+            baseId = it.baseId,
+            base = it.base,
+            period = it.resolution,
+            urlInfo = it.urlInfo,
+            urlNews = it.urlNews,
+            urlSummary = it.urlSummary,
+            cryptoCurrency = it.cryptoCurrency,
+            fiatCurrency = it.fiatCurrency,
+            timeSpan = it.timeSpan
         )
     }
-    val zipChart: LiveData<WalletRepository.ZipPriceChart> = Transformations.switchMap(zipChartResult) { it.data }
-    val chartNetworkState: LiveData<NetworkState> = Transformations.switchMap(zipChartResult) { it.networkState }
-
-    fun onGetZipDataChart(request: HashMap<String, String>) {
-        zipRequestChart.postValue(request)
+    val zipHomeResult: LiveData<ZipHomeData> = Transformations.switchMap(zipHomeData) { it.data }
+    val zipHomeNetworkState: LiveData<NetworkState> = Transformations.switchMap(zipHomeData) { it.networkState }
+    fun onShowDataHome(requestHome: RequestHome) {
+        zipHomeRequest.postValue(requestHome)
     }
-
     /**
      * @method retry get zip data chart
      */
     fun retryZipChart() {
-        zipChartResult?.value?.retry?.invoke()
+        zipHomeData?.value?.retry?.invoke()
     }
 
     ////////////////////////////WALLET////////////////////////////
@@ -71,15 +58,12 @@ class WalletViewModel @Inject constructor(
     val showBackupWalletDialog = MutableLiveData<Event<Void>>()
     val showRestoreWalletDialog = MutableLiveData<Event<Void>>()
     val showEncryptKeysDialog = MutableLiveData<Event<Void>>()
-    val showReportIssueDialog = MutableLiveData<Event<Void>>()
     val sendBitcoin = MutableLiveData<Event<Void>>()
     val requestBitcoin = MutableLiveData<Event<Void>>()
-    val scanAddress = MutableLiveData<Event<String>>()
     val backupWalletStatus = MutableLiveData<Event<BackUpStatus>>()
     val walletLegacyFallback: WalletLegacyFallbackLiveData by lazy {
         WalletLegacyFallbackLiveData(application as BitcoinApplication)
     }
-    val chartData = MutableLiveData<Event<Void>>()
 
 
     val balance: WalletBalanceLiveData by lazy {
@@ -138,8 +122,15 @@ class WalletViewModel @Inject constructor(
         val mes: String
     )
 
-    override fun onCleared() {
-        disposable.clear()
-        super.onCleared()
-    }
+    data class RequestHome(
+        val baseId: String,
+        val base: String,
+        val resolution: String,
+        val urlInfo: String,
+        val urlNews: String,
+        val urlSummary: String,
+        val cryptoCurrency: CryptoCurrency,
+        val fiatCurrency: String,
+        val timeSpan: TimeSpan
+    )
 }

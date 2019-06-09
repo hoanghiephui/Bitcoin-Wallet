@@ -231,9 +231,9 @@ class SendCoinActivity : BaseActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             arr
         )
-        spinnerPriority.adapter = adapter
-        spinnerPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+        spinnerPriority?.adapter = adapter
+        spinnerPriority?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
                 when (i) {
                     0 -> {
                         handleFeeCategory(FeeCategory.ECONOMIC)
@@ -252,8 +252,8 @@ class SendCoinActivity : BaseActivity() {
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}
         }
-        textviewFeeAbsolute.setOnClickListener {
-            spinnerPriority.performClick()
+        textviewFeeAbsolute?.setOnClickListener {
+            spinnerPriority?.performClick()
         }
     }
 
@@ -1169,7 +1169,6 @@ class SendCoinActivity : BaseActivity() {
     companion object {
         const val INTENT_EXTRA_PAYMENT_INTENT = "payment_intent"
         const val INTENT_EXTRA_FEE_CATEGORY = "fee_category"
-        const val INTENT_EXTRA_KEY = "sweep_key"
 
         fun start(
             context: Context, paymentIntent: PaymentIntent,

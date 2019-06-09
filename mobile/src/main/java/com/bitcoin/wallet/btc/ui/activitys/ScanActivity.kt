@@ -32,10 +32,13 @@ import com.bitcoin.wallet.btc.utils.CameraManager
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.utils.OnFirstPreDraw
 import com.bitcoin.wallet.btc.viewmodel.ScanViewModel
+import com.facebook.ads.AdSize
+import com.facebook.ads.AdView
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeReader
 import kotlinx.android.synthetic.main.activity_scan.*
+import kotlinx.android.synthetic.main.init_ads.*
 import java.util.*
 
 class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
@@ -64,6 +67,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
     private val viewModel: ScanViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory).get(ScanViewModel::class.java)
     }
+    private var bannerAdView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
@@ -121,6 +125,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
         }
 
         previewView.surfaceTextureListener = this
+        loadAdView()
     }
 
     private fun maybeTriggerSceneTransition() {
@@ -155,6 +160,8 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
         cameraThread?.quit()
         previewView.surfaceTextureListener = null
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        bannerAdView?.destroy()
+        bannerAdView = null
         super.onDestroy()
     }
 
@@ -357,6 +364,16 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
                 newFragment.arguments = args
                 newFragment.show(fm, FRAGMENT_TAG)
             }
+        }
+    }
+
+    private fun loadAdView() {
+        bannerAdView?.destroy()
+        bannerAdView = null
+        bannerAdView = AdView(this, getString(R.string.fb_banner_scan), AdSize.BANNER_HEIGHT_50)
+        bannerAdView?.let {nonNullBannerAdView ->
+            adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.loadAd()
         }
     }
 }
