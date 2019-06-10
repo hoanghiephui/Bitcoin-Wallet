@@ -14,6 +14,7 @@ import com.bitcoin.wallet.btc.TimeSpan
 import com.bitcoin.wallet.btc.api.ZipHomeData
 import com.bitcoin.wallet.btc.base.BaseViewModel
 import com.bitcoin.wallet.btc.data.live.*
+import com.bitcoin.wallet.btc.model.blocks.BlocksResponse
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.repository.WalletRepository
 import com.bitcoin.wallet.btc.utils.Event
@@ -51,6 +52,22 @@ class WalletViewModel @Inject constructor(
      */
     fun retryZipChart() {
         zipHomeData?.value?.retry?.invoke()
+    }
+
+    //get latest blocks
+    private val blocksRequest = MutableLiveData<Event<Void>>()
+    private val blocksData = Transformations.map(blocksRequest) {
+        repository.getLatestBlocks()
+    }
+    val blockResult: LiveData<BlocksResponse> = Transformations.switchMap(blocksData) { it.data }
+    val blockNetworkState: LiveData<NetworkState> = Transformations.switchMap(blocksData) { it.networkState }
+    fun onGetLatestBlocks() {
+        blocksRequest.postValue(Event.simple())
+    }
+
+    //retry latest blocks
+    fun retryLatestBlocks() {
+        blocksData?.value?.retry?.invoke()
     }
 
     ////////////////////////////WALLET////////////////////////////

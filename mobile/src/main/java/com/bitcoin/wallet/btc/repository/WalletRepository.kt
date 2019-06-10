@@ -10,6 +10,7 @@ import com.bitcoin.wallet.btc.base.BaseRepository
 import com.bitcoin.wallet.btc.extension.addTo
 import com.bitcoin.wallet.btc.extension.applySchedulers
 import com.bitcoin.wallet.btc.model.PriceDatum
+import com.bitcoin.wallet.btc.model.blocks.BlocksResponse
 import com.bitcoin.wallet.btc.model.info.InfoResponse
 import com.bitcoin.wallet.btc.model.news.NewsResponse
 import com.bitcoin.wallet.btc.model.summary.SummaryResponse
@@ -18,6 +19,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Function5
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class WalletRepository @Inject constructor(
@@ -55,6 +57,55 @@ class WalletRepository @Inject constructor(
             },
             refresh = {}
         )
+    }
+
+    //get latest blocks
+    private val networkStateBlock = MutableLiveData<NetworkState>()
+    private val blockData = MutableLiveData<BlocksResponse>()
+    fun getLatestBlocks(): ListingData<BlocksResponse> {
+        networkStateBlock.postValue(NetworkState.LOADING)
+        api.getLastBlocks("https://blockchain.info/latestblocks?format=json&cors=true")
+            .distinctUntilChanged()
+            .repeatWhen { t -> t.delay(30, TimeUnit.SECONDS) }
+            .applySchedulers()
+            .subscribe(
+                {
+                    networkStateBlock.postValue(NetworkState.LOADED)
+                    setRetryBlock(null)
+                    blockData.postValue(it)
+                },
+                {
+                    networkStateBlock.postValue(NetworkState.error(it.message))
+                    setRetryBlock(Action { getLatestBlocks() })
+                }
+            ).addTo(compositeDisposable)
+        return ListingData(
+            data = blockData,
+            networkState = networkStateBlock,
+            refresh = {},
+            retry = {
+                retryBlockFailed()
+            }
+        )
+    }
+
+    /**
+     * Keep Completable reference for the retry event
+     */
+    private var retryBlockCompletable: Completable? = null
+
+    private fun retryBlockFailed() {
+        retryBlockCompletable?.applySchedulers()
+            ?.subscribe({ }, { it.printStackTrace() })
+            ?.addTo(compositeDisposable)
+    }
+
+    private fun setRetryBlock(action: Action?) {
+        if (action == null) {
+            this.retryBlockCompletable = null
+        } else {
+            this.retryBlockCompletable = Completable.fromAction(action)
+        }
     }
 
     // get data main home

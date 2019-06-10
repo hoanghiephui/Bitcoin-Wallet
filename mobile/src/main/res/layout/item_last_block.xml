@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground">
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTrans"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="2709"
+            android:padding="4dp"
+            style="@style/TextAppearance.Subtitle2"
+            android:textSize="13sp"
+            android:gravity="center"
+            app:layout_constraintEnd_toStartOf="@id/tvSize"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/tvAge"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvHeight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="563877"
+            android:padding="4dp"
+            android:gravity="center"
+            style="@style/TextAppearance.Subtitle2"
+            android:textColor="@color/blueDark"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toStartOf="@+id/tvAge"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"/>
+
+    <com.bitcoin.wallet.btc.ui.widget.ShortTimeView
+            android:id="@+id/tvAge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="1 minutes"
+            android:maxLines="1"
+            android:padding="4dp"
+            android:gravity="center"
+            style="@style/TextAppearance.Subtitle2"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toStartOf="@+id/tvTrans"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/tvHeight"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvSize"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="953255"
+            android:gravity="center"
+            android:padding="4dp"
+            style="@style/TextAppearance.Subtitle2"
+            android:textSize="13sp"
+            app:layout_constraintStart_toEndOf="@+id/tvTrans"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

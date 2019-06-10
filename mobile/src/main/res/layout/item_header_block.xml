@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_chart"
+            android:background="?selectableItemBackgroundBorderless"
+            android:text="@string/transactions"
+            android:padding="4dp"
+            style="@style/TextAppearance.Subtitle1"
+            android:textSize="15sp"
+            android:maxLines="1"
+            android:gravity="center"
+            android:alpha="0.7"
+            app:layout_constraintEnd_toStartOf="@id/tvMonth"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/tvDay"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvHr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_chart"
+            android:text="@string/height"
+            android:padding="4dp"
+            style="@style/TextAppearance.Subtitle1"
+            android:alpha="0.7"
+            android:textSize="15sp"
+            android:gravity="center"
+            app:layout_constraintEnd_toStartOf="@+id/tvDay"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_chart"
+            android:background="?selectableItemBackgroundBorderless"
+            android:text="@string/age"
+            android:padding="4dp"
+            android:alpha="0.7"
+            android:gravity="center"
+            style="@style/TextAppearance.Subtitle1"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@+id/tvW"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/tvHr"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvMonth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_chart"
+            android:background="?selectableItemBackgroundBorderless"
+            android:text="@string/size"
+            android:alpha="0.7"
+            android:gravity="center"
+            android:padding="4dp"
+            style="@style/TextAppearance.Subtitle1"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/tvW"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            />
+</androidx.constraintlayout.widget.ConstraintLayout>

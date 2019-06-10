@@ -327,6 +327,9 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     }
 
     override fun onClickMoreDiscover() {
+    }
+
+    override fun onClickBlocks(hash: String?) {
 
     }
 
@@ -477,12 +480,19 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             mainAdapter.timeSpan = timeSpan
             mainAdapter.cryptoCurrency = cryptoCurrency
             mainAdapter.notifyItemRangeChanged(1, mainAdapter.itemCount)
+            viewModel.onGetLatestBlocks()
         }
         viewModel.zipHomeNetworkState.observeNotNull(viewLifecycleOwner) {
             mainAdapter.networkState = it
             if (it.msg != null) {
                 mainAdapter.notifyItemRangeChanged(1, mainAdapter.itemCount)
             }
+        }
+        viewModel.blockResult.observeNotNull(viewLifecycleOwner) {
+            mainAdapter.addBlocks(it.blocks)
+        }
+        viewModel.blockNetworkState.observeNotNull(viewLifecycleOwner) {
+
         }
         onGetDataHome(timeSpan, cryptoCurrency)
         initViewModelBalance()

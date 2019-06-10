@@ -6,291 +6,295 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cardView1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:cardUseCompatPadding="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+            app:layout_constraintTop_toTopOf="parent">
+
+        <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/segmented"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:sc_border_width="1dp"
+                app:sc_checked_text_color="@android:color/white"
+                app:sc_corner_radius="4dp"
+                app:sc_tint_color="@color/colorAccent">
+
+            <RadioButton
+                    android:id="@+id/btnBitcoin"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Bitcoin"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:textStyle="normal"/>
+
+            <RadioButton
+                    android:id="@+id/btnEth"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ether"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:textStyle="normal"/>
+
+            <RadioButton
+                    android:id="@+id/btnBch"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bitcoin Cash"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:textStyle="normal"/>
+
+            <RadioButton
+                    android:id="@+id/btnXlm"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Stellar"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:textStyle="normal"/>
+        </info.hoang8f.android.segmented.SegmentedGroup>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textview_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:text="----"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageview_arrow"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCurrency"
+                app:layout_constraintVertical_bias="0.0"
+                style="@style/TextAppearance.Subtitle1.Medium"
+                tools:text="$4521.02"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageview_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:contentDescription="@null"
+                android:rotation="180"
+                android:src="@drawable/ic_arrow_drop_up_grey_600_24dp"
+                android:tint="@color/product_green_medium"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/textview_price"
+                app:layout_constraintEnd_toStartOf="@+id/textview_percentage"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/textview_price"
+                app:layout_constraintTop_toTopOf="@+id/textview_price"
+                tools:ignore="RtlHardcoded"
+                tools:visibility="visible"/>
+
+        <TextView
+                android:id="@+id/textview_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageview_arrow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/imageview_arrow"
+                app:layout_constraintTop_toTopOf="@+id/imageview_arrow"
+                android:text="--"
+                style="@style/TextAppearance.Subtitle1"
+                tools:text="5.2%"/>
+
+        <TextView
+                android:id="@+id/tvMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_chart"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/time_span_month"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/tvWeek"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chart"
+                style="@style/TextAppearance.Subtitle1.Medium"/>
+
+        <TextView
+                android:id="@+id/tvDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_chart"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                style="@style/TextAppearance.Subtitle1.Medium"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textSize="13sp"
+                android:text="@string/time_span_day"
+                app:layout_constraintEnd_toStartOf="@+id/tvWeek"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chart"/>
+
+        <TextView
+                android:id="@+id/tvWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_chart"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/time_span_week"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toStartOf="@+id/tvMonth"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@id/tvDay"
+                app:layout_constraintTop_toBottomOf="@+id/chart"
+                style="@style/TextAppearance.Subtitle1.Medium"/>
+
+        <TextView
+                android:id="@+id/tvYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_chart"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/time_span_year"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toStartOf="@+id/tvAll"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvMonth"
+                app:layout_constraintTop_toBottomOf="@+id/chart"
+                style="@style/TextAppearance.Subtitle1.Medium"/>
+
+        <TextView
+                android:id="@+id/tvAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_chart"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/time_span_all_time"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvYear"
+                app:layout_constraintTop_toBottomOf="@+id/chart"
+                style="@style/TextAppearance.Subtitle1.Medium"/>
+
+        <TextView
+                android:id="@+id/tvCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/segmented"
+                tools:ignore="MissingPrefix"
+                android:text="@string/bitcoin_price"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textview_price"
+                tools:visibility="visible"/>
+
+        <include
+                layout="@layout/item_network_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/chart"
+                app:layout_constraintEnd_toEndOf="@+id/chart"
+                app:layout_constraintStart_toStartOf="@+id/chart"
+                app:layout_constraintTop_toTopOf="@+id/tvCurrency"
+                android:translationZ="10dp"
+                android:layout_marginTop="8dp"/>
+
+       <!-- <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="?invertedColorAlpha"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvAll"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"/>-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <info.hoang8f.android.segmented.SegmentedGroup
-                    android:id="@+id/segmented"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:sc_border_width="1dp"
-                    app:sc_checked_text_color="@android:color/white"
-                    app:sc_corner_radius="4dp"
-                    app:sc_tint_color="@color/colorAccent">
-
-                <RadioButton
-                        android:id="@+id/btnBitcoin"
-                        style="@style/RadioButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:text="Bitcoin"
-                        android:textSize="12sp"
-                        android:maxLines="1"
-                        android:textStyle="normal"/>
-
-                <RadioButton
-                        android:id="@+id/btnEth"
-                        style="@style/RadioButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Ether"
-                        android:textSize="12sp"
-                        android:maxLines="1"
-                        android:textStyle="normal"/>
-
-                <RadioButton
-                        android:id="@+id/btnBch"
-                        style="@style/RadioButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Bitcoin Cash"
-                        android:textSize="12sp"
-                        android:maxLines="1"
-                        android:textStyle="normal"/>
-
-                <RadioButton
-                        android:id="@+id/btnXlm"
-                        style="@style/RadioButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Stellar"
-                        android:textSize="12sp"
-                        android:maxLines="1"
-                        android:textStyle="normal"/>
-            </info.hoang8f.android.segmented.SegmentedGroup>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/textview_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="24sp"
-                    android:text="----"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageview_arrow"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvCurrency"
-                    app:layout_constraintVertical_bias="0.0"
-                    style="@style/TextAppearance.Subtitle1.Medium"
-                    tools:text="$4521.02"/>
-
-            <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageview_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:contentDescription="@null"
-                    android:rotation="180"
-                    android:src="@drawable/ic_arrow_drop_up_grey_600_24dp"
-                    android:tint="@color/product_green_medium"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="@+id/textview_price"
-                    app:layout_constraintEnd_toStartOf="@+id/textview_percentage"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toEndOf="@+id/textview_price"
-                    app:layout_constraintTop_toTopOf="@+id/textview_price"
-                    tools:ignore="RtlHardcoded"
-                    tools:visibility="visible"/>
-
-            <TextView
-                    android:id="@+id/textview_percentage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageview_arrow"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toEndOf="@+id/imageview_arrow"
-                    app:layout_constraintTop_toTopOf="@+id/imageview_arrow"
-                    android:text="--"
-                    style="@style/TextAppearance.Subtitle1"
-                    tools:text="5.2%"/>
-
-            <TextView
-                    android:id="@+id/tvMonth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_chart"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:text="@string/time_span_month"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toEndOf="@+id/tvWeek"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/chart"
-                    style="@style/TextAppearance.Subtitle1.Medium"/>
-
-            <TextView
-                    android:id="@+id/tvDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_chart"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    style="@style/TextAppearance.Subtitle1.Medium"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:textSize="13sp"
-                    android:text="@string/time_span_day"
-                    app:layout_constraintEnd_toStartOf="@+id/tvWeek"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/chart"/>
-
-            <TextView
-                    android:id="@+id/tvWeek"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_chart"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:text="@string/time_span_week"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toStartOf="@+id/tvMonth"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toEndOf="@id/tvDay"
-                    app:layout_constraintTop_toBottomOf="@+id/chart"
-                    style="@style/TextAppearance.Subtitle1.Medium"/>
-
-            <TextView
-                    android:id="@+id/tvYear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_chart"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:text="@string/time_span_year"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toStartOf="@+id/tvAll"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/tvMonth"
-                    app:layout_constraintTop_toBottomOf="@+id/chart"
-                    style="@style/TextAppearance.Subtitle1.Medium"/>
-
-            <TextView
-                    android:id="@+id/tvAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_chart"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:text="@string/time_span_all_time"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/tvYear"
-                    app:layout_constraintTop_toBottomOf="@+id/chart"
-                    style="@style/TextAppearance.Subtitle1.Medium"/>
-
-            <TextView
-                    android:id="@+id/tvCurrency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="8dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/segmented"
-                    tools:ignore="MissingPrefix"
-                    android:text="@string/bitcoin_price"/>
-
-            <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart"
-                    android:layout_width="0dp"
-                    android:layout_height="220dp"
-                    android:visibility="invisible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textview_price"
-                    tools:visibility="visible"/>
-
-            <include
-                    layout="@layout/item_network_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/chart"
-                    app:layout_constraintEnd_toEndOf="@+id/chart"
-                    app:layout_constraintStart_toStartOf="@+id/chart"
-                    app:layout_constraintTop_toTopOf="@+id/tvCurrency"
-                    android:translationZ="10dp"
-                    android:layout_marginTop="8dp"/>
-
-            <View
-                    android:id="@+id/view"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="?invertedColorAlpha"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tvAll"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"/>
+                android:id="@+id/desc"
+                app:layout_constraintTop_toBottomOf="@+id/tvAll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_up_next"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
 
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Market cap"
-                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:id="@+id/textView11"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
+                    android:textAllCaps="true"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintEnd_toStartOf="@+id/textView10"/>
 
@@ -302,10 +306,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
-                    android:textStyle="bold"
                     android:gravity="end"
-                    android:textSize="12sp"
-                    app:layout_constraintTop_toBottomOf="@+id/view"
+                    android:textSize="11sp"
+                    android:textAllCaps="true"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView11"
                     app:layout_constraintHorizontal_bias="0.5"/>
 
@@ -314,7 +318,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtMarketCap"
-                    android:textSize="15sp"
+                    style="@style/TextAppearance.Subtitle2"
                     app:layout_constraintTop_toBottomOf="@+id/textView11"
                     app:layout_constraintStart_toStartOf="@+id/textView11"
                     app:layout_constraintEnd_toEndOf="@+id/textView11"
@@ -329,7 +333,7 @@
                     app:layout_constraintStart_toStartOf="@+id/textView10"
                     app:layout_constraintEnd_toEndOf="@+id/textView10"
                     android:gravity="end"
-                    android:textSize="15sp"
+                    style="@style/TextAppearance.Subtitle2"
                     />
 
             <TextView
@@ -337,8 +341,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView15"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
+                    android:textAllCaps="true"
                     app:layout_constraintTop_toBottomOf="@+id/txtMarketCap"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="16dp"
@@ -352,8 +356,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/textView16"
                     android:gravity="end"
-                    android:textStyle="bold"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
+                    android:textAllCaps="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/txtVolume"
@@ -366,11 +370,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtSupply"
-                    android:textSize="15sp"
+                    style="@style/TextAppearance.Subtitle2"
                     app:layout_constraintTop_toBottomOf="@+id/textView15"
                     app:layout_constraintStart_toStartOf="@+id/textView15"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     app:layout_constraintEnd_toEndOf="@+id/textView15"
                     />
 
@@ -380,13 +384,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/txtAllTime"
                     android:gravity="end"
-                    android:textSize="15sp"
+                    style="@style/TextAppearance.Subtitle2"
                     app:layout_constraintEnd_toEndOf="@+id/textView16"
                     app:layout_constraintStart_toStartOf="@+id/textView16"
                     app:layout_constraintTop_toBottomOf="@+id/textView16"
                     />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView
             android:id="@+id/cardAbout"
@@ -396,11 +401,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView1"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            app:cardCornerRadius="3dp"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -412,8 +419,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtTileCoin"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
+                    style="@style/TextAppearance.Body1.Medium"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
@@ -424,6 +430,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtAbout"
+                    style="@style/TextAppearance.Subtitle2"
                     app:layout_constraintTop_toBottomOf="@+id/txtTileCoin"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp"

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.extension.inflate
 import com.bitcoin.wallet.btc.model.news.DataItem
+import com.bitcoin.wallet.btc.utils.Utils.onGetTimeLong
 import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_news.*
@@ -43,7 +44,9 @@ class StoriesAdapter(private val callback: MainAdapter.MainCallback) : ListAdapt
             get() = itemView
 
         fun initNews(item: DataItem) {
-            txtTime.text = ""
+            item.publicationDate?.let {
+                txtTime.time = onGetTimeLong(it)
+            }
             txtTitle.text = item.title
             txtSource.text = item.attributionSource
             item.images?.let {

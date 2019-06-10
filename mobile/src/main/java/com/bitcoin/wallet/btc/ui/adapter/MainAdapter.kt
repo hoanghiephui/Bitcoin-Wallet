@@ -26,6 +26,7 @@ import com.bitcoin.wallet.btc.api.ZipHomeData
 import com.bitcoin.wallet.btc.base.BaseFragment
 import com.bitcoin.wallet.btc.data.ExchangeRate
 import com.bitcoin.wallet.btc.extension.*
+import com.bitcoin.wallet.btc.model.blocks.BlocksItem
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.service.BlockchainState
 import com.bitcoin.wallet.btc.ui.widget.DividerItemDecoration
@@ -79,6 +80,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     var cryptoCurrency = CryptoCurrency.BTC
     var networkState = NetworkState.LOADING
     private var mNativeAd: NativeAd? = null
+    private var blocksItem: List<BlocksItem>? = null
 
     fun onLoadAds(mNativeAd: NativeAd?) {
         this.mNativeAd = mNativeAd
@@ -98,18 +100,24 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         notifyItemChanged(0)
     }
 
+    fun addBlocks(blocksItem: List<BlocksItem>?) {
+        this.blocksItem = blocksItem
+        notifyItemChanged(3)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.item_top_wallet -> TopWalletViewHolder(parent.inflate(R.layout.item_top_wallet), callback)
             R.layout.item_top -> TopViewHolder(parent.inflate(R.layout.item_top), callback)
             R.layout.item_news -> TopStoriesViewHolder(parent.inflate(R.layout.item_top), callback)
             R.layout.init_ads -> AdsViewHolder(parent.inflate(R.layout.init_ads))
+            R.layout.item_last_block -> BlockViewHolder(parent.inflate(R.layout.item_top), callback)
             else -> ChartViewHolder(parent.inflate(R.layout.item_top_chart), fiatSymbol, callback)
         }
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return 5 + if (blocksItem != null) 1 else 0
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -280,6 +288,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                     }
                 }
             }
+            R.layout.item_last_block -> {
+                if (holder is BlockViewHolder) {
+                    holder.cardViewMore.isVisible = blocksItem != null
+                    holder.blocksAdapter.submitList(blocksItem)
+                }
+            }
         }
     }
 
@@ -404,12 +418,23 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            0 -> R.layout.item_top_wallet
-            1 -> R.layout.item_top_chart
-            2 -> R.layout.init_ads
-            3 -> R.layout.item_top
-            else -> R.layout.item_news
+        if (blocksItem != null) {
+            return when (position) {
+                0 -> R.layout.item_top_wallet
+                1 -> R.layout.item_top_chart
+                2 -> R.layout.init_ads
+                3 -> R.layout.item_last_block
+                4 -> R.layout.item_top
+                else -> R.layout.item_news
+            }
+        } else {
+            return when (position) {
+                0 -> R.layout.item_top_wallet
+                1 -> R.layout.item_top_chart
+                2 -> R.layout.init_ads
+                3 -> R.layout.item_top
+                else -> R.layout.item_news
+            }
         }
     }
 
@@ -772,6 +797,25 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         }
     }
 
+    class BlockViewHolder(itemView: View,
+                          private val callback: MainCallback) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+        override val containerView: View?
+            get() = itemView
+        val blocksAdapter by lazy { BlocksAdapter(callback) }
+
+        init {
+            cardViewMore.gone()
+            txtTitle.text = "Latest Blocks"
+            recyClear.apply {
+                layoutManager = LinearLayoutManager(itemView.context)
+                setHasFixedSize(true)
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, false))
+                adapter = blocksAdapter
+            }
+            txtViewMore.gone()
+        }
+    }
+
     interface MainCallback {
         fun onClickExchange()
         fun onClickSend()
@@ -783,5 +827,6 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         fun onClickRetry()
         fun onClickMoreStory()
         fun onClickMoreDiscover()
+        fun onClickBlocks(hash: String?)
     }
 }

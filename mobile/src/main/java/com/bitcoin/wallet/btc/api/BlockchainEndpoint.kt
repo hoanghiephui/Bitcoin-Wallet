@@ -2,9 +2,11 @@ package com.bitcoin.wallet.btc.api
 
 import com.bitcoin.wallet.btc.model.PriceDatum
 import com.bitcoin.wallet.btc.model.StatsResponse
+import com.bitcoin.wallet.btc.model.blocks.BlocksResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface BlockchainEndpoint {
     /**
@@ -34,4 +36,7 @@ interface BlockchainEndpoint {
     fun getStats(
         @Query("cors") cors: Boolean
     ): Observable<StatsResponse>
+
+    @GET()
+    fun getLastBlocks(@Url url: String): Observable<BlocksResponse>
 }

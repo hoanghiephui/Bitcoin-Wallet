@@ -48,7 +48,7 @@ class DiscoverAdapter : ListAdapter<DataItem, DiscoverAdapter.DiscoverViewHolder
             }
             item.percentChange?.let {
                 if (Utils.isNegative(it)){
-                    txtPercent.text = "-".plus(number.format(it * 100).plus("%"))
+                    txtPercent.text = (number.format(it * 100).plus("%"))
                     txtPercent.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.product_red_medium))
                     txtPrice.chipBackgroundColor = ContextCompat.getColorStateList(holder.itemView.context, R.color.product_red_medium)
                 } else {

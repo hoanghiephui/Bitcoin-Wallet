@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
                 android:text="Discover More Assets"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -25,8 +25,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
-                android:textStyle="bold"
-                android:textSize="20sp"
+                style="@style/TextAppearance.Body1.Medium"
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <View
@@ -63,7 +62,8 @@
                 tools:text="View more stories"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textStyle="bold"
+                style="@style/TextAppearance.Body1.Medium"
+                android:textSize="13sp"
                 android:drawableEnd="@drawable/ic_keyboard_arrow_right_grey_600_24dp"
                 android:id="@+id/txtViewMore"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

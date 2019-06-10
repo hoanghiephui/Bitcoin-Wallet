@@ -76,7 +76,7 @@ public class Constants {
         HTTP_CLIENT = httpClientBuilder.build();
     }
 
-    public final static class Files {
+    public static class Files {
         public static final long WALLET_AUTOSAVE_DELAY_MS = 3 * DateUtils.SECOND_IN_MILLIS;
         public static final File EXTERNAL_STORAGE_DIR = Environment.getExternalStorageDirectory();
         public static final File EXTERNAL_WALLET_BACKUP_DIR = Environment
