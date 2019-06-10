@@ -82,4 +82,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReportIssueViewModel::class)
     abstract fun bindReportIssueViewModel(viewModel: ReportIssueViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StoryViewModel::class)
+    abstract fun bindStoryViewModel(viewModel: StoryViewModel): ViewModel
 }

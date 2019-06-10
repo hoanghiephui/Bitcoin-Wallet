@@ -143,20 +143,14 @@ abstract class BaseFragment : DaggerFragment(), NativeAdListener {
         Log.e(AudienceNetworkAds.TAG, error.errorMessage)
     }
 
-    override fun onAdClicked(ad: Ad) {
+    override fun onAdClicked(ad: Ad) {}
 
-    }
+    override fun onLoggingImpression(ad: Ad) {}
 
-    override fun onLoggingImpression(ad: Ad) {
-
-    }
-
-    override fun onMediaDownloaded(ad: Ad) {
-
-    }
+    override fun onMediaDownloaded(ad: Ad) {}
 
     companion object {
-        private const val DEFAULT_HEIGHT_DP = 350
+        const val DEFAULT_HEIGHT_DP = 250
         const val COLOR_LIGHT_GRAY = -0x6f6b64
         const val COLOR_DARK_GRAY = -0xb1a99b
         const val COLOR_CTA_BLUE_BG = -0xbf7f01

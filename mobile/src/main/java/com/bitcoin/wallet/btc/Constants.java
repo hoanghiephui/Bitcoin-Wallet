@@ -63,6 +63,7 @@ public class Constants {
             .equals(NetworkParameters.ID_MAINNET) ? 50001 : 51001;
     public static final int ELECTRUM_SERVER_DEFAULT_PORT_TLS = NETWORK_PARAMETERS.getId()
             .equals(NetworkParameters.ID_MAINNET) ? 50002 : 51002;
+    public static final int PAGE_SIZE = 20;
 
     static {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();

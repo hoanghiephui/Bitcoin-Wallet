@@ -118,6 +118,9 @@
         <activity
                 android:name=".ui.activitys.SweepWalletActivity"
                 android:theme="@style/AppTheme.Light"/>
+        <activity
+                android:name=".ui.activitys.StoryActivity"
+                android:theme="@style/AppTheme.Light"/>
 
         <provider
                 android:name="com.bitcoin.wallet.btc.data.ExchangeRatesProvider"

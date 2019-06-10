@@ -64,6 +64,13 @@ interface CoinbaseEndpoint {
         @Url url: String
     ): Observable<NewsResponse>
 
+    @GET("v2/news-articles")
+    fun getListNews(
+        @Query("asset_id") assetId: String,
+        @Query("limit") limit: Int,
+        @Query("starting_after") startingAfter: String?
+    ): Observable<NewsResponse>
+
     /**
      * get list summary coin
      * https://www.coinbase.com/api/v2/assets/summary?base=USD&resolution=day&limit=10

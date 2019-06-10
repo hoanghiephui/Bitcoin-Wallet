@@ -2,6 +2,7 @@ package com.bitcoin.wallet.btc.ui.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.os.Build
@@ -13,6 +14,7 @@ import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bitcoin.wallet.btc.Constants
@@ -21,12 +23,16 @@ import com.bitcoin.wallet.btc.CryptoCurrency.Companion.getTextColor
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.TimeSpan
 import com.bitcoin.wallet.btc.api.ZipHomeData
+import com.bitcoin.wallet.btc.base.BaseFragment
 import com.bitcoin.wallet.btc.data.ExchangeRate
 import com.bitcoin.wallet.btc.extension.*
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.service.BlockchainState
 import com.bitcoin.wallet.btc.ui.widget.DividerItemDecoration
 import com.bitcoin.wallet.btc.utils.Utils
+import com.facebook.ads.NativeAd
+import com.facebook.ads.NativeAdView
+import com.facebook.ads.NativeAdViewAttributes
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
@@ -59,12 +65,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     private var blockchainState: BlockchainState? = null
     private var balance: Coin? = null
     private val BLOCKCHAIN_UPTODATE_THRESHOLD_MS = DateUtils.HOUR_IN_MILLIS
-    val loc = Locale.US
-    val nf = NumberFormat.getCurrencyInstance(loc).apply {
+    private val loc = Locale.US
+    private val nf = NumberFormat.getCurrencyInstance(loc).apply {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
-    val number = NumberFormat.getInstance(loc).apply {
+    val number: NumberFormat = NumberFormat.getInstance(loc).apply {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
@@ -72,6 +78,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     var timeSpan = TimeSpan.DAY
     var cryptoCurrency = CryptoCurrency.BTC
     var networkState = NetworkState.LOADING
+    private var mNativeAd: NativeAd? = null
+
+    fun onLoadAds(mNativeAd: NativeAd?) {
+        this.mNativeAd = mNativeAd
+        notifyItemChanged(2)
+    }
 
     fun addWalletBance(
         format: MonetaryFormat?,
@@ -89,7 +101,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.item_top_wallet -> TopWalletViewHolder(parent.inflate(R.layout.item_top_wallet), callback)
-            R.layout.item_top -> TopViewHolder(parent.inflate(R.layout.item_top))
+            R.layout.item_top -> TopViewHolder(parent.inflate(R.layout.item_top), callback)
             R.layout.item_news -> TopStoriesViewHolder(parent.inflate(R.layout.item_top), callback)
             R.layout.init_ads -> AdsViewHolder(parent.inflate(R.layout.init_ads))
             else -> ChartViewHolder(parent.inflate(R.layout.item_top_chart), fiatSymbol, callback)
@@ -199,10 +211,10 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                     holder.apply {
                         zipHomeData?.infoResponse?.data?.let {
                             if (it.isNotEmpty()) {
-                                it.forEach {
-                                    if (it.symbol == cryptoCurrency.symbol) {
-                                        txtTileCoin.text = "About ".plus(it.name)
-                                        txtAbout.text = it.description
+                                it.forEach { data ->
+                                    if (data.symbol == cryptoCurrency.symbol) {
+                                        txtTileCoin.text = "About ".plus(data.name)
+                                        txtAbout.text = data.description
                                         return@forEach
                                     }
                                 }
@@ -210,14 +222,14 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                         }
 
                         zipHomeData?.statsResponse?.data?.let {
-                            it.marketCap?.toDouble()?.let {
-                                txtMarketCap.text = nf.format(it)
+                            it.marketCap?.toDouble()?.let { cap ->
+                                txtMarketCap.text = nf.format(cap)
                             }
-                            it.volume24h?.toDouble()?.let {
-                                txtVolume.text = nf.format(it)
+                            it.volume24h?.toDouble()?.let { volume ->
+                                txtVolume.text = nf.format(volume)
                             }
-                            it.allTimeHigh?.toDouble()?.let {
-                                txtAllTime.text = nf.format(it)
+                            it.allTimeHigh?.toDouble()?.let { all ->
+                                txtAllTime.text = nf.format(all)
                             }
                             it.circulatingSupply?.toDouble()?.let { data ->
                                 txtSupply.text = number.format(data).plus(" ".plus(it.base))
@@ -225,8 +237,8 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                         }
                         zipHomeData?.summaryResponse?.data?.forEach {
                             if (it.base == cryptoCurrency.symbol) {
-                                it.latest?.toDouble()?.let {
-                                    textview_price.text = nf.format(it)
+                                it.latest?.toDouble()?.let { latest ->
+                                    textview_price.text = nf.format(latest)
                                 }
                                 it.percentChange?.let { percentChange ->
                                     if (Utils.isNegative(percentChange)) {
@@ -262,8 +274,8 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                             chart.visible()
                             cardAbout.visible()
                             loadingProgressBar.gone()
-                            val entries = it.map {
-                                Entry(it.timestamp.toFloat(), it.price.toFloat())
+                            val entries = it.map { priceDatum ->
+                                Entry(priceDatum.timestamp.toFloat(), priceDatum.price.toFloat())
                             }
 
                             val set1 = LineDataSet(entries, "aaa").apply {
@@ -298,8 +310,8 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                             styleLimitLine(yMaxLine, ContextCompat.getColor(context, R.color.colorAccent))
                             leftAxis.addLimitLine(yMaxLine)
                             chart.invalidate()
-                            buttonsList.forEach {
-                                it.isEnabled = true
+                            buttonsList.forEach { textView ->
+                                textView.isEnabled = true
                             }
                             btnBitcoin.isEnabled = true
                             btnBch.isEnabled = true
@@ -341,6 +353,37 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                         } else {
                             cardViewMore.gone()
                         }
+                    }
+                }
+            }
+            R.layout.init_ads -> {
+                if (holder is AdsViewHolder) {
+                    holder.apply {
+                        mNativeAd?.let {
+                            val mNativeAdContainer = adViewContainer
+                            mNativeAdContainer?.removeAllViews()
+
+                            // Create a NativeAdViewAttributes object and set the attributes
+                            val attributes = NativeAdViewAttributes(itemView.context)
+                                .setBackgroundColor(itemView.context.getColorFromAttr(R.attr.colorPrimary))
+                                .setTitleTextColor(itemView.context.getColorFromAttr(R.attr.colorBgItemDrawer))
+                                .setDescriptionTextColor(itemView.context.getColorFromAttr(R.attr.colorMenu))
+                                .setButtonBorderColor(itemView.context.getColorFromAttr(R.attr.colorAccent))
+                                .setButtonTextColor(ContextCompat.getColor(itemView.context, R.color.white))
+                                .setButtonColor(itemView.context.getColorFromAttr(R.attr.colorAccent))
+
+                            // Use NativeAdView.render to generate the ad View
+                            val mAdView = NativeAdView.render(itemView.context, it, attributes)
+
+                            mNativeAdContainer?.addView(
+                                mAdView,
+                                ViewGroup.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    (Resources.getSystem().displayMetrics.density * BaseFragment.DEFAULT_HEIGHT_DP).toInt()
+                                )
+                            )
+                        }
+                        adViewContainer.isVisible = mNativeAd != null
                     }
                 }
             }
@@ -443,7 +486,10 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         }
     }
 
-    class TopViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class TopViewHolder(
+        itemView: View,
+        private val callback: MainCallback
+    ) : RecyclerView.ViewHolder(itemView), LayoutContainer {
         val discoverAdapter by lazy {
             DiscoverAdapter()
         }
@@ -459,7 +505,10 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, false))
                 adapter = discoverAdapter
             }
-            txtViewMore.setOnClickListener { }
+            txtViewMore.gone()
+            txtViewMore.setOnClickListener {
+                callback.onClickMoreDiscover()
+            }
         }
     }
 
@@ -691,10 +740,13 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             recyClear.apply {
                 layoutManager = LinearLayoutManager(itemView.context)
                 setHasFixedSize(true)
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, false))
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, true))
                 adapter = storiesAdapter
             }
-            txtViewMore.setOnClickListener { }
+            txtViewMore.visible()
+            txtViewMore.setOnClickListener {
+                callback.onClickMoreStory()
+            }
         }
     }
 
@@ -716,5 +768,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         fun onClickSegmentChart(cryptoCurrency: CryptoCurrency)
         fun onClickNews(url: String)
         fun onClickRetry()
+        fun onClickMoreStory()
+        fun onClickMoreDiscover()
     }
 }

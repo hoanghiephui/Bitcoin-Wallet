@@ -26,12 +26,23 @@ class StoriesAdapter(private val callback: MainAdapter.MainCallback) : ListAdapt
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoriesViewHolder {
-        return StoriesViewHolder(parent.inflate(R.layout.item_news))
+        return StoriesViewHolder(parent.inflate(R.layout.item_news), callback, null)
     }
 
     override fun onBindViewHolder(holder: StoriesViewHolder, position: Int) {
         val item = getItem(position)
-        holder.apply {
+        holder.initNews(item)
+    }
+
+    class StoriesViewHolder(
+        itemView: View,
+        private val callback: MainAdapter.MainCallback?,
+        private val onClickNews: ((url: String?) -> Unit?)?
+    ) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+        override val containerView: View?
+            get() = itemView
+
+        fun initNews(item: DataItem) {
             txtTime.text = ""
             txtTitle.text = item.title
             txtSource.text = item.attributionSource
@@ -48,13 +59,14 @@ class StoriesAdapter(private val callback: MainAdapter.MainCallback) : ListAdapt
                 }
             }
             itemView.setOnClickListener {
-                item.linkUrl?.let { it1 -> callback.onClickNews(it1) }
+                item.linkUrl?.let { it1 ->
+                    if (callback != null) {
+                        callback.onClickNews(it1)
+                    } else {
+                        onClickNews?.let { it2 -> it2(it1) }
+                    }
+                }
             }
         }
-    }
-
-    class StoriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
-        override val containerView: View?
-            get() = itemView
     }
 }

@@ -19,18 +19,16 @@ import com.bitcoin.wallet.btc.TimeSpan
 import com.bitcoin.wallet.btc.base.BaseFragment
 import com.bitcoin.wallet.btc.data.PaymentIntent
 import com.bitcoin.wallet.btc.extension.*
-import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.service.BlockchainState
 import com.bitcoin.wallet.btc.ui.activitys.*
 import com.bitcoin.wallet.btc.ui.activitys.ScanActivity.Companion.REQUEST_CODE_SCAN
 import com.bitcoin.wallet.btc.ui.adapter.MainAdapter
-import com.bitcoin.wallet.btc.ui.adapter.StatsAdapter
-import com.bitcoin.wallet.btc.utils.*
+import com.bitcoin.wallet.btc.utils.Configuration
+import com.bitcoin.wallet.btc.utils.Event
+import com.bitcoin.wallet.btc.utils.InputParser
+import com.bitcoin.wallet.btc.utils.Utils
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
-import com.facebook.ads.AdSize
-import com.facebook.ads.AdView
+import com.facebook.ads.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.bottom_bar_menu_layout.*
@@ -49,10 +47,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     private var timeSpan = TimeSpan.DAY
     private var cryptoCurrency = CryptoCurrency.BTC
 
-    private var statsAdapter by autoCleared<StatsAdapter>()
     private var bannerAdView: AdView? = null
+    private lateinit var mNativeAd: NativeAd
 
-    private val homeAdater by lazy {
+    private val mainAdapter by lazy {
         MainAdapter(this)
     }
 
@@ -82,11 +80,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 }
             }
         })
-        statsAdapter = StatsAdapter()
         recyClear.apply {
             layoutManager = LinearLayoutManager(baseActivity())
             setHasFixedSize(true)
-            adapter = homeAdater
+            adapter = mainAdapter
         }
         listenToDataChanges()
         initClicks()
@@ -135,7 +132,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 content?.let { HelpDialogFragment.show(baseActivity(), it) }
             }
         })
-        //createAndLoadNativeAd(getString(R.string.fb_native_home))
+        createAndLoadNativeAds(getString(R.string.fb_native_home))
         loadAdView()
     }
 
@@ -245,6 +242,27 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         }
     }
 
+    override fun onDestroy() {
+        if (::mNativeAd.isInitialized) {
+            mNativeAd.destroy()
+        }
+        super.onDestroy()
+    }
+
+    private fun createAndLoadNativeAds(unitID: String) {
+        // Create a native ad request with a unique placement ID
+        // (generate your own on the Facebook app settings).
+        // Use different ID for each ad placement in your app.
+        mNativeAd = NativeAd(activity, unitID)
+        if (::mNativeAd.isInitialized) {
+            // Set a listener to get notified when the ad was loaded.
+            mNativeAd.setAdListener(this)
+
+            // Initiate a request to load an ad.
+            mNativeAd.loadAd()
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvWarrning -> {
@@ -303,6 +321,15 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         viewModel.retryZipChart()
     }
 
+    override fun onClickMoreStory() {
+        val baseId = getBaseId(cryptoCurrency)
+        StoryActivity.open(baseActivity(), baseId)
+    }
+
+    override fun onClickMoreDiscover() {
+
+    }
+
     private fun onGetDataHome(
         timeSpan: TimeSpan,
         cryptoCurrency: CryptoCurrency
@@ -347,7 +374,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         if (activity != null && isAdded) {
             when (ad.placementId) {
                 getString(R.string.fb_native_home) -> {
-                    //viewAds.visible()
+                    mainAdapter.onLoadAds(mNativeAd)
                 }
                 getString(R.string.fb_native_home_bottom) -> {
                     //viewAdsTwo.visible()
@@ -361,7 +388,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             super.onError(ad, error)
             when (ad.placementId) {
                 getString(R.string.fb_native_home) -> {
-                    //viewAds.gone()
+                    mainAdapter.onLoadAds(null)
                 }
                 getString(R.string.fb_native_home_bottom) -> {
                     //viewAdsTwo.gone()
@@ -425,7 +452,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         val blockchainState = viewModel.blockchainState.value
         val balance = viewModel.balance.value
         val exchangeRate = viewModel.exchangeRate.value
-        homeAdater.addWalletBance(config.format, exchangeRate, blockchainState, balance)
+        mainAdapter.addWalletBance(config.format, exchangeRate, blockchainState, balance)
     }
 
     private fun initViewModelAddress() {
@@ -446,15 +473,15 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
 
     private fun listenToDataChanges() {
         viewModel.zipHomeResult.observeNotNull(viewLifecycleOwner) {
-            homeAdater.zipHomeData = it
-            homeAdater.timeSpan = timeSpan
-            homeAdater.cryptoCurrency = cryptoCurrency
-            homeAdater.notifyItemRangeChanged(1, homeAdater.itemCount)
+            mainAdapter.zipHomeData = it
+            mainAdapter.timeSpan = timeSpan
+            mainAdapter.cryptoCurrency = cryptoCurrency
+            mainAdapter.notifyItemRangeChanged(1, mainAdapter.itemCount)
         }
         viewModel.zipHomeNetworkState.observeNotNull(viewLifecycleOwner) {
-            homeAdater.networkState = it
+            mainAdapter.networkState = it
             if (it.msg != null) {
-                homeAdater.notifyItemRangeChanged(1, homeAdater.itemCount)
+                mainAdapter.notifyItemRangeChanged(1, mainAdapter.itemCount)
             }
         }
         onGetDataHome(timeSpan, cryptoCurrency)
