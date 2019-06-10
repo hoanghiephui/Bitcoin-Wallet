@@ -117,9 +117,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         when (getItemViewType(position)) {
             R.layout.item_top_wallet -> {
                 if (holder is TopWalletViewHolder) {
-
                     var showProgress = false
-
                     if (blockchainState != null && blockchainState?.bestChainDate != null) {
                         val blockchainLag = System.currentTimeMillis() - blockchainState?.bestChainDate?.time!!
                         val blockchainUptodate = blockchainLag < BLOCKCHAIN_UPTODATE_THRESHOLD_MS
@@ -209,115 +207,10 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             R.layout.item_top_chart -> {
                 if (holder is ChartViewHolder) {
                     holder.apply {
-                        zipHomeData?.infoResponse?.data?.let {
-                            if (it.isNotEmpty()) {
-                                it.forEach { data ->
-                                    if (data.symbol == cryptoCurrency.symbol) {
-                                        txtTileCoin.text = "About ".plus(data.name)
-                                        txtAbout.text = data.description
-                                        return@forEach
-                                    }
-                                }
-                            }
-                        }
-
-                        zipHomeData?.statsResponse?.data?.let {
-                            it.marketCap?.toDouble()?.let { cap ->
-                                txtMarketCap.text = nf.format(cap)
-                            }
-                            it.volume24h?.toDouble()?.let { volume ->
-                                txtVolume.text = nf.format(volume)
-                            }
-                            it.allTimeHigh?.toDouble()?.let { all ->
-                                txtAllTime.text = nf.format(all)
-                            }
-                            it.circulatingSupply?.toDouble()?.let { data ->
-                                txtSupply.text = number.format(data).plus(" ".plus(it.base))
-                            }
-                        }
-                        zipHomeData?.summaryResponse?.data?.forEach {
-                            if (it.base == cryptoCurrency.symbol) {
-                                it.latest?.toDouble()?.let { latest ->
-                                    textview_price.text = nf.format(latest)
-                                }
-                                it.percentChange?.let { percentChange ->
-                                    if (Utils.isNegative(percentChange)) {
-                                        textview_percentage.text = number.format(percentChange * 100).plus("%")
-                                    } else {
-                                        textview_percentage.text =
-                                            "+".plus(number.format(percentChange * 100).plus("%"))
-                                    }
-                                    when {
-                                        percentChange < 0 -> updateArrow(
-                                            imageview_arrow,
-                                            textview_percentage,
-                                            180f,
-                                            R.color.product_red_medium
-                                        )
-                                        percentChange == 0.0 -> imageview_arrow.invisible()
-                                        else -> updateArrow(
-                                            imageview_arrow,
-                                            textview_percentage,
-                                            0f,
-                                            R.color.product_green_medium
-                                        )
-                                    }
-                                }
-                                return@forEach
-                            }
-                        }
-                        showTimeSpanSelected(timeSpan)
-                        showSegmentCoin(cryptoCurrency)
-                        //chart
-                        val data = zipHomeData?.priceResponse
-                        data?.let {
-                            chart.visible()
-                            cardAbout.visible()
-                            loadingProgressBar.gone()
-                            val entries = it.map { priceDatum ->
-                                Entry(priceDatum.timestamp.toFloat(), priceDatum.price.toFloat())
-                            }
-
-                            val set1 = LineDataSet(entries, "aaa").apply {
-                                color = ContextCompat.getColor(context, R.color.colorAccent)
-                                lineWidth = 3f
-                                mode = LineDataSet.Mode.LINEAR
-                                setDrawValues(false)
-                                circleRadius = 1.5f
-                                setDrawCircleHole(false)
-                                setCircleColor(ContextCompat.getColor(context, R.color.colorAccent))
-                                setDrawFilled(false)
-                                isHighlightEnabled = true
-                                setDrawHighlightIndicators(false)
-                                chart.marker = ValueMarker(context, R.layout.item_chart)
-                            }
-                            chart.data = LineData(set1)
-                            chart.animateX(500)
-                            val leftAxis = chart.axisLeft
-                            leftAxis.removeAllLimitLines()
-                            val yMin = chart.yMin
-                            val yMax = chart.yMax
-                            val step = (yMax - yMin) / 4.0f
-                            for (i in 1..3) {
-                                val stepLine = LimitLine(yMin + i.toFloat() * step)
-                                styleStepLine(stepLine, 50, context)
-                                leftAxis.addLimitLine(stepLine)
-                            }
-                            val yMinLine = LimitLine(yMin)
-                            styleLimitLine(yMinLine, ContextCompat.getColor(context, R.color.colorAccent))
-                            leftAxis.addLimitLine(yMinLine)
-                            val yMaxLine = LimitLine(yMax)
-                            styleLimitLine(yMaxLine, ContextCompat.getColor(context, R.color.colorAccent))
-                            leftAxis.addLimitLine(yMaxLine)
-                            chart.invalidate()
-                            buttonsList.forEach { textView ->
-                                textView.isEnabled = true
-                            }
-                            btnBitcoin.isEnabled = true
-                            btnBch.isEnabled = true
-                            btnXlm.isEnabled = true
-                            btnEth.isEnabled = true
-                        }
+                        onSetAbout()
+                        onSetStats()
+                        onSetSummary()
+                        onSetChart(context)
 
                         if (networkState.msg != null) {
                             loadingProgressBar.gone()
@@ -384,6 +277,126 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                             )
                         }
                         adViewContainer.isVisible = mNativeAd != null
+                    }
+                }
+            }
+        }
+    }
+
+    private fun ChartViewHolder.onSetChart(context: Context) {
+        showTimeSpanSelected(timeSpan)
+        showSegmentCoin(cryptoCurrency)
+        //chart
+        val data = zipHomeData?.priceResponse
+        data?.let {
+            chart.visible()
+            cardAbout.visible()
+            loadingProgressBar.gone()
+            val entries = it.map { priceDatum ->
+                Entry(priceDatum.timestamp.toFloat(), priceDatum.price.toFloat())
+            }
+
+            val set1 = LineDataSet(entries, "aaa").apply {
+                color = ContextCompat.getColor(context, R.color.colorAccent)
+                lineWidth = 3f
+                mode = LineDataSet.Mode.LINEAR
+                setDrawValues(false)
+                circleRadius = 1.5f
+                setDrawCircleHole(false)
+                setCircleColor(ContextCompat.getColor(context, R.color.colorAccent))
+                setDrawFilled(false)
+                isHighlightEnabled = true
+                setDrawHighlightIndicators(false)
+                chart.marker = ValueMarker(context, R.layout.item_chart)
+            }
+            chart.data = LineData(set1)
+            chart.animateX(500)
+            val leftAxis = chart.axisLeft
+            leftAxis.removeAllLimitLines()
+            val yMin = chart.yMin
+            val yMax = chart.yMax
+            val step = (yMax - yMin) / 4.0f
+            for (i in 1..3) {
+                val stepLine = LimitLine(yMin + i.toFloat() * step)
+                styleStepLine(stepLine, 50, context)
+                leftAxis.addLimitLine(stepLine)
+            }
+            val yMinLine = LimitLine(yMin)
+            styleLimitLine(yMinLine, ContextCompat.getColor(context, R.color.colorAccent))
+            leftAxis.addLimitLine(yMinLine)
+            val yMaxLine = LimitLine(yMax)
+            styleLimitLine(yMaxLine, ContextCompat.getColor(context, R.color.colorAccent))
+            leftAxis.addLimitLine(yMaxLine)
+            chart.invalidate()
+            buttonsList.forEach { textView ->
+                textView.isEnabled = true
+            }
+            btnBitcoin.isEnabled = true
+            btnBch.isEnabled = true
+            btnXlm.isEnabled = true
+            btnEth.isEnabled = true
+        }
+    }
+
+    private fun ChartViewHolder.onSetSummary() {
+        zipHomeData?.summaryResponse?.data?.forEach {
+            if (it.base == cryptoCurrency.symbol) {
+                it.latest?.toDouble()?.let { latest ->
+                    textview_price.text = nf.format(latest)
+                }
+                it.percentChange?.let { percentChange ->
+                    if (Utils.isNegative(percentChange)) {
+                        textview_percentage.text = number.format(percentChange * 100).plus("%")
+                    } else {
+                        textview_percentage.text =
+                            "+".plus(number.format(percentChange * 100).plus("%"))
+                    }
+                    when {
+                        percentChange < 0 -> updateArrow(
+                            imageview_arrow,
+                            textview_percentage,
+                            180f,
+                            R.color.product_red_medium
+                        )
+                        percentChange == 0.0 -> imageview_arrow.invisible()
+                        else -> updateArrow(
+                            imageview_arrow,
+                            textview_percentage,
+                            0f,
+                            R.color.product_green_medium
+                        )
+                    }
+                }
+                return@forEach
+            }
+        }
+    }
+
+    private fun ChartViewHolder.onSetStats() {
+        zipHomeData?.statsResponse?.data?.let {
+            it.marketCap?.toDouble()?.let { cap ->
+                txtMarketCap.text = nf.format(cap)
+            }
+            it.volume24h?.toDouble()?.let { volume ->
+                txtVolume.text = nf.format(volume)
+            }
+            it.allTimeHigh?.toDouble()?.let { all ->
+                txtAllTime.text = nf.format(all)
+            }
+            it.circulatingSupply?.toDouble()?.let { data ->
+                txtSupply.text = number.format(data).plus(" ".plus(it.base))
+            }
+        }
+    }
+
+    private fun ChartViewHolder.onSetAbout() {
+        zipHomeData?.infoResponse?.data?.let {
+            if (it.isNotEmpty()) {
+                it.forEach { data ->
+                    if (data.symbol == cryptoCurrency.symbol) {
+                        txtTileCoin.text = "About ".plus(data.name)
+                        txtAbout.text = data.description
+                        return@forEach
                     }
                 }
             }
