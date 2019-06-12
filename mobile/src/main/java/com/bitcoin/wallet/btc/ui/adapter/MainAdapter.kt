@@ -827,6 +827,6 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         fun onClickRetry()
         fun onClickMoreStory()
         fun onClickMoreDiscover()
-        fun onClickBlocks(hash: String?)
+        fun onClickBlocks(hash: String?, totalSend: Long?, weight: Long?)
     }
 }

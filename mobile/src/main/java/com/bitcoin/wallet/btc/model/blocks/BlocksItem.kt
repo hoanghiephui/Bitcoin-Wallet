@@ -17,7 +17,7 @@ data class BlocksItem(
     val totalSent: Long? = null,
 
     @field:SerializedName("weight")
-    val weight: Int? = null,
+    val weight: Long? = null,
 
     @field:SerializedName("time")
     val time: Int? = null,

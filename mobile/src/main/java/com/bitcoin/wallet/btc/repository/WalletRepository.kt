@@ -1,6 +1,7 @@
 package com.bitcoin.wallet.btc.repository
 
 import androidx.lifecycle.MutableLiveData
+import com.bitcoin.wallet.btc.Constants.API_KEY
 import com.bitcoin.wallet.btc.CryptoCurrency
 import com.bitcoin.wallet.btc.TimeSpan
 import com.bitcoin.wallet.btc.api.BlockchainEndpoint
@@ -64,7 +65,7 @@ class WalletRepository @Inject constructor(
     private val blockData = MutableLiveData<BlocksResponse>()
     fun getLatestBlocks(): ListingData<BlocksResponse> {
         networkStateBlock.postValue(NetworkState.LOADING)
-        api.getLastBlocks("https://blockchain.info/latestblocks?format=json&cors=true")
+        api.getLastBlocks("https://blockchain.info/latestblocks?format=json&cors=true&api_key=$API_KEY")
             .distinctUntilChanged()
             .repeatWhen { t -> t.delay(30, TimeUnit.SECONDS) }
             .applySchedulers()
@@ -141,7 +142,8 @@ class WalletRepository @Inject constructor(
                 base = cryptoCurrency.symbol,
                 quote = fiatCurrency,
                 scale = scale,
-                start = proposedStartTime
+                start = proposedStartTime,
+                apiKey = ""
             ),
             coinbase.getInfoCoinbase(urlInfo),
             coinbase.getListNews(urlNews),

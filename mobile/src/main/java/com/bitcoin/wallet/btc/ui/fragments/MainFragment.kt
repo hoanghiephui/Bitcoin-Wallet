@@ -329,8 +329,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     override fun onClickMoreDiscover() {
     }
 
-    override fun onClickBlocks(hash: String?) {
-
+    override fun onClickBlocks(hash: String?, totalSend: Long?, weight: Long?) {
+        TransactionsBlockActivity.open(baseActivity(), hash, weight, totalSend)
     }
 
     private fun onGetDataHome(

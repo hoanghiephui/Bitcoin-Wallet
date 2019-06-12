@@ -13,6 +13,7 @@ import androidx.core.content.edit
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.lifecycle.ViewModelProviders
+import com.bitcoin.wallet.btc.Constants.API_KEY
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.isTrue
@@ -146,7 +147,7 @@ class MainActivity : BaseActivity() {
             BlockchainService.start(this@MainActivity, true)
         }, 1000)
         if (application.config.nofity) {
-            NotifyWorker.enqueue("BTC", "")
+            NotifyWorker.enqueue("BTC", API_KEY)
         } else {
             NotifyWorker.clearNotify()
         }

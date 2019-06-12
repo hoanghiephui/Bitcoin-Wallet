@@ -41,7 +41,7 @@ class BlocksAdapter(private val callback: MainAdapter.MainCallback) : ListAdapte
                         tvTrans.text = item.txCount?.toString()
                         tvSize.text = item.size?.toString()
                         itemView.setOnClickListener {
-                            callback.onClickBlocks(item.hash)
+                            callback.onClickBlocks(item.hash, item.totalSent, item.weight)
                         }
                     }
                 }

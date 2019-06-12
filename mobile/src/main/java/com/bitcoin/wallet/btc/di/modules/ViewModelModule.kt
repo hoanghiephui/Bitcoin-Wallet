@@ -87,4 +87,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StoryViewModel::class)
     abstract fun bindStoryViewModel(viewModel: StoryViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TransactionViewModel::class)
+    abstract fun binTransactionViewModel(viewModel: TransactionViewModel): ViewModel
 }

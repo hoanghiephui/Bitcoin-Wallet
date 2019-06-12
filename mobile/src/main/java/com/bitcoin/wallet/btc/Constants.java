@@ -64,6 +64,7 @@ public class Constants {
     public static final int ELECTRUM_SERVER_DEFAULT_PORT_TLS = NETWORK_PARAMETERS.getId()
             .equals(NetworkParameters.ID_MAINNET) ? 50002 : 51002;
     public static final int PAGE_SIZE = 20;
+    public static final String API_KEY = "25a6ad13-1633-4dfb-b6ee-9b91cdf0b5c3";
 
     static {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();

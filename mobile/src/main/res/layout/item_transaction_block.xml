@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools"
+        app:cardUseCompatPadding="true"
+        app:cardPreventCornerOverlap="true"
+        android:layout_margin="4dp"
+        android:id="@+id/cardView4">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                tools:text="38bbd52b28604f788369dffd7f98f0be37168fc3660085a83774d0cf41752791"
+                android:layout_width="0dp"
+                android:id="@+id/tvBlock"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:textColor="@color/color_address"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tvDay"
+                android:layout_marginEnd="8dp"
+                style="@style/TextAppearance.Subtitle2"
+                android:layout_height="wrap_content"/>
+
+        <com.bitcoin.wallet.btc.ui.widget.ShortTimeView
+                android:text="mined Feb 27, 2019\n 9:13:00 AM'"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvDay"
+                android:gravity="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvBlock"
+                android:layout_marginEnd="8dp"
+                style="@style/TextAppearance.Subtitle2"
+                android:alpha="0.6"
+                android:textSize="12sp"
+                app:layout_constraintTop_toTopOf="@+id/tvBlock"
+                app:layout_constraintBottom_toBottomOf="@+id/tvBlock"/>
+
+        <LinearLayout
+                android:id="@+id/viewFrom"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/tvDay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_keyboard_arrow_down_white"
+                app:layout_constraintStart_toStartOf="@id/viewFrom"
+                app:layout_constraintEnd_toEndOf="@id/viewFrom"
+                app:layout_constraintTop_toBottomOf="@+id/viewFrom"
+                android:layout_marginTop="8dp"/>
+
+        <LinearLayout
+                android:id="@+id/viewTo"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/imv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"/>
+
+
+        <TextView
+                tools:text="0.01713444 BTC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvCountBitcoin"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@android:color/white"
+                android:layout_marginEnd="8dp"
+                android:textAllCaps="true"
+                android:background="@drawable/bg_count_bitcoin"
+                style="@style/TextAppearance.Subtitle1.Medium"
+                android:textSize="15sp"/>
+
+        <TextView
+                tools:text="373 CONFIRMATIONS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnConfirm"
+                app:layout_constraintBottom_toTopOf="@+id/tvCountBitcoin"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/bg_confirm"
+                android:textColor="@android:color/white"
+                android:textAllCaps="true"
+                style="@style/TextAppearance.Subtitle1.Medium"
+                android:textSize="15sp"
+                app:layout_constraintTop_toBottomOf="@+id/viewTo"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintStart_toEndOf="@+id/tvFee"
+                android:layout_marginStart="8dp"/>
+
+        <TextView
+                tools:text="FEE: 0.00010546 BTC"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvFee"
+                app:layout_constraintBottom_toBottomOf="@+id/btnConfirm"
+                app:layout_constraintTop_toTopOf="@+id/btnConfirm"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnConfirm"
+                android:layout_marginStart="8dp"
+                android:textAllCaps="true"
+                android:textSize="13sp"
+                android:alpha="0.5"
+                style="@style/TextAppearance.Subtitle1.Medium"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
