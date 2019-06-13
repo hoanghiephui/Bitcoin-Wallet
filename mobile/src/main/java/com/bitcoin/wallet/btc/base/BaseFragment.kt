@@ -150,7 +150,7 @@ abstract class BaseFragment : DaggerFragment(), NativeAdListener {
     override fun onMediaDownloaded(ad: Ad) {}
 
     companion object {
-        const val DEFAULT_HEIGHT_DP = 250
+        const val DEFAULT_HEIGHT_DP = 300
         const val COLOR_LIGHT_GRAY = -0x6f6b64
         const val COLOR_DARK_GRAY = -0xb1a99b
         const val COLOR_CTA_BLUE_BG = -0xbf7f01

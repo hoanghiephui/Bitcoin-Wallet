@@ -10,6 +10,7 @@ import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.observeNotNull
 import com.bitcoin.wallet.btc.model.SummaryModel
+import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.ui.adapter.TransactionsBlockAdapter
 import com.bitcoin.wallet.btc.viewmodel.TransactionViewModel
 import com.facebook.ads.AdSize
@@ -74,10 +75,18 @@ class TransactionsBlockActivity : BaseActivity() {
         }
         viewModel.networkState.observeNotNull(this) {
             transactionsBlockAdapter.onNetworkState(it)
+            freshlayout.isRefreshing = freshlayout.isRefreshing && it == NetworkState.LOADING
         }
+        loadApi()
+        loadAdView()
+        freshlayout.setOnRefreshListener {
+            loadApi()
+        }
+    }
+
+    private fun loadApi() {
         val hash = intent.getStringExtra("hash")
         viewModel.onGetTransactions("https://blockchain.info/rawblock/$hash?api_key=$API_KEY")
-        loadAdView()
     }
 
     override fun onDestroy() {
