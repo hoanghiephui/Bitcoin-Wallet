@@ -17,7 +17,7 @@ Bitcoin Wallet is the cold wallet, it is the safest, and open source, for send a
 
 <p float="left">
   <img src="https://raw.githubusercontent.com/hoanghiephui/Bitcoin-Wallet/master/design/B1.png" width="170" />
-  <img src="https://raw.githubusercontent.com/hoanghiephui/Bitcoin-Wallet/master/design/B2.png" width="170" /> 
+  <img src="https://lh3.googleusercontent.com/7124gUmU1qYVY8HHk35RgT9F76mGMeu4iXkfdwsIpT4n8REW8JNwFM1VruCfxQ_sZg=w3360-h1788" width="170" /> 
   <img src="https://raw.githubusercontent.com/hoanghiephui/Bitcoin-Wallet/master/design/B3.png" width="170" />
   <img src="https://raw.githubusercontent.com/hoanghiephui/Bitcoin-Wallet/master/design/B4.png" width="170" />
   <img src="https://raw.githubusercontent.com/hoanghiephui/Bitcoin-Wallet/master/design/B5.png" width="170" />
