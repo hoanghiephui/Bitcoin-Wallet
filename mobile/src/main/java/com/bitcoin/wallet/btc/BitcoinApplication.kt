@@ -236,7 +236,11 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
                                 ).show()
                         } catch (x: UnreadableWalletException) {
                             //log.warn("problem loading wallet, auto-restoring: $walletFile", x) todo log
-                            wallet = WalletUtils.restoreWalletFromAutoBackup(this@BitcoinApplication)
+                            try {
+                                wallet = WalletUtils.restoreWalletFromAutoBackup(this@BitcoinApplication)
+                            }catch (ex: Exception) {
+                                Toast.makeText(this@BitcoinApplication, "cannot read backup", Toast.LENGTH_SHORT).show()
+                            }
                             if (wallet != null)
                                 Toast.makeText(this@BitcoinApplication, R.string.reset, Toast.LENGTH_LONG).show()
                         }
@@ -250,8 +254,11 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
 
                             if (it.params != Constants.NETWORK_PARAMETERS)
                                 throw Error("bad wallet network parameters: " + it.params.id)
-
-                            it.cleanup()
+                            try {
+                                it.cleanup()
+                            }catch (ex: Exception) {
+                                Toast.makeText(this@BitcoinApplication, "Error: ${ex.message}", Toast.LENGTH_LONG).show()
+                            }
                             walletFiles = wallet?.autosaveToFile(
                                 walletFile, Constants.Files.WALLET_AUTOSAVE_DELAY_MS,
                                 TimeUnit.MILLISECONDS, null

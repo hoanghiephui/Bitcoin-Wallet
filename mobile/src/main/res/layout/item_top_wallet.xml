@@ -13,8 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_home">
+            android:layout_height="match_parent">
 
         <View
                 android:id="@+id/viewBalance"
@@ -30,7 +29,7 @@
                 android:id="@+id/views"
                 android:layout_width="0dp"
                 android:layout_height="0.2dp"
-                android:background="@color/scan_dot"
+                android:background="?attr/colorMenu"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewBalanceWarning"
@@ -61,7 +60,6 @@
                 android:layout_marginTop="62dp"
                 style="@style/TextAppearance.Subtitle2"
                 android:textSize="12sp"
-                android:textColor="@color/white"
                 android:text="Request BTC"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="8dp"/>
@@ -88,7 +86,6 @@
                 android:layout_marginTop="62dp"
                 style="@style/TextAppearance.Subtitle2"
                 android:textSize="12sp"
-                android:textColor="@color/white"
                 android:text="Scan QR"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -114,7 +111,6 @@
                 android:layout_marginTop="62dp"
                 style="@style/TextAppearance.Subtitle2"
                 android:textSize="12sp"
-                android:textColor="@color/white"
                 android:text="Send BTC"/>
 
         <TextView
@@ -126,7 +122,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 style="@style/TextAppearance.Body1.Medium"
-                android:textColor="@color/white"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -137,7 +132,6 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_keyboard_arrow_down_white"
                 android:rotation="-90"
-                android:tint="@color/white"
                 android:id="@+id/imageView2"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
@@ -152,7 +146,6 @@
                 android:id="@+id/walletBalanceBtc"
                 app:layout_constraintEnd_toStartOf="@+id/imageView2"
                 style="@style/TextAppearance.Subtitle1.Medium"
-                android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="8dp"
@@ -167,7 +160,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/wallet_balance_local"
                 style="@style/TextAppearance.Subtitle1.Medium"
-                android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@+id/walletBalanceBtc"
                 app:layout_constraintEnd_toStartOf="@+id/imageView2"/>
@@ -181,17 +173,17 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:textColor="@color/white"
                 android:textSize="@dimen/font_size_tiny"
                 android:visibility="gone"
                 tools:text="ccccccccccc"
                 tools:visibility="visible"
+                style="@style/TextAppearance.Subtitle1"
                 app:layout_constraintStart_toStartOf="@+id/textView2"
                 app:layout_constraintTop_toBottomOf="@+id/wallet_balance_local"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/views"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/viewProgress"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -201,10 +193,10 @@
                 app:layout_constraintBottom_toBottomOf="@+id/wallet_balance_local"
                 android:gravity="center_horizontal"
                 android:textSize="@dimen/font_size_small"
-                android:textColor="@color/white"
                 tools:text="sfsdfsdfsfd"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible"
+                style="@style/TextAppearance.Subtitle1"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

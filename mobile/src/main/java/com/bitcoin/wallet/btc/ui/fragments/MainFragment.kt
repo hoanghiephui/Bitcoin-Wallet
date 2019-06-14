@@ -83,6 +83,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         recyClear.apply {
             layoutManager = LinearLayoutManager(baseActivity())
             setHasFixedSize(true)
+            itemAnimator = null
             adapter = mainAdapter
         }
         listenToDataChanges()
@@ -228,6 +229,9 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             }
             R.id.menu_address -> {
                 startActivity(Intent(requireActivity(), AddressActivity::class.java))
+            }
+            R.id.menu_sub -> {
+                MakePurchaseDialogFragment.show(baseActivity())
             }
         }
         return true

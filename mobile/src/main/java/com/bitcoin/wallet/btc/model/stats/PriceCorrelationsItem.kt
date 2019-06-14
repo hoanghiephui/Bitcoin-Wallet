@@ -8,7 +8,7 @@ data class PriceCorrelationsItem(
     val correlation: Double? = null,
 
     @field:SerializedName("updated_at")
-    val updatedAt: Int? = null,
+    val updatedAt: String? = null,
 
     @field:SerializedName("id")
     val id: String? = null

@@ -55,7 +55,7 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                         android:text="Hello, see more here"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/currentAddressQrCardView"
                         android:layout_marginEnd="8dp"/>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvWarrning"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

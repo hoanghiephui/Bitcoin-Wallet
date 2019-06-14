@@ -6,6 +6,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.TypefaceSpan;
+import android.widget.Toast;
 import com.bitcoin.wallet.btc.Constants;
 import com.bitcoin.wallet.btc.service.BlockchainService;
 import com.google.common.base.Stopwatch;

@@ -13,25 +13,27 @@
             android:background="@drawable/chart_marker"
             android:orientation="vertical">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textview_marker_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="10sp"
+                style="@style/TextAppearance.Subtitle1"
                 tools:text="Wednesday, Oct 2, 01:00"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textview_marker_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="11sp"
+                style="@style/TextAppearance.Subtitle1.Medium"
                 tools:text="Price (USD): 824.5"/>
 
     </LinearLayout>
 
     <View
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_below="@+id/layout_text"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-1.5dp"

@@ -44,6 +44,13 @@
             android:title="@string/edit_address_label"/>
 
     <item
+            android:id="@+id/menu_sub"
+            android:icon="@drawable/ic_local_gas_station_grey_700_24dp"
+            app:showAsAction="always"
+            android:visible="true"
+            android:title="Subscriptions"/>
+
+    <item
             android:id="@+id/menu_transaction"
             android:icon="@drawable/ic_transform_black_24dp"
             app:showAsAction="always"

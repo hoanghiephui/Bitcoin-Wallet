@@ -5,10 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.Menu
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
@@ -23,6 +19,7 @@ import com.bitcoin.wallet.btc.service.BlockchainService
 import com.bitcoin.wallet.btc.service.BlockchainService.NOTYFY_RECEP
 import com.bitcoin.wallet.btc.ui.fragments.BackupDialog
 import com.bitcoin.wallet.btc.ui.fragments.MainFragment
+import com.bitcoin.wallet.btc.ui.fragments.TermFragment
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.viewmodel.MainViewModel
 import com.bitcoin.wallet.btc.works.NotifyWorker
@@ -43,7 +40,11 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            replace(R.id.container, MainFragment(), MainFragment.TAG)
+            if (!sharedPreferences.getBoolean("policy", false)) {
+                replace(R.id.container, TermFragment(), TermFragment::class.java.simpleName)
+            } else {
+                replace(R.id.container, MainFragment(), MainFragment.TAG)
+            }
         }
         viewModel.backupWalletStatus.observe(this, object : Event.Observer<BackupDialog.BackUpStatus>() {
             override fun onEvent(content: BackupDialog.BackUpStatus?) {
@@ -97,36 +98,15 @@ class MainActivity : BaseActivity() {
         viewModel.walletEncrypted.observeNotNull(this) {
             invalidateOptionsMenu()
         }
-        if (!sharedPreferences.getBoolean("policy", false)) {
-            val wv = WebView(this)
-            wv.loadUrl("file:///android_asset/index.html")
-            wv.webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    view.loadUrl(url)
-
-                    return true
-                }
-            }
-            handler.postDelayed({
-                AlertDialog.Builder(this).apply {
-                    setTitle("Privacy Policy")
-                    setView(wv)
-                    setCancelable(false)
-                    setPositiveButton("Accept") { dialog, _ ->
-                        sharedPreferences.edit {
-                            putBoolean("policy", true)
-                        }
-                        dialog.dismiss()
-                    }
-                    setNegativeButton("Cancel") { _, _ ->
-                        finish()
-                    }
-                    create()
-                }.show()
-            }, 2300)
-        }
         openTransactionNotify(intent)
         checkForUpdate()
+    }
+
+    fun openMain() {
+        replace(R.id.container, MainFragment(), MainFragment.TAG)
+        sharedPreferences.edit {
+            putBoolean("policy", true)
+        }
     }
 
     private fun openTransactionNotify(intent: Intent?) {
@@ -155,12 +135,14 @@ class MainActivity : BaseActivity() {
         updateManager.appUpdateInfo
             .addOnSuccessListener {
                 if (it.updateAvailability() ==
-                    UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                ) {
                     updateManager.startUpdateFlowForResult(
                         it,
                         IMMEDIATE,
                         this,
-                        REQUEST_CODE_UPDATE)
+                        REQUEST_CODE_UPDATE
+                    )
                 }
             }
         super.onResume()
@@ -197,7 +179,7 @@ class MainActivity : BaseActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun checkForUpdate(){
+    private fun checkForUpdate() {
 
         // Creates instance of the manager.
         val appUpdateManager = AppUpdateManagerFactory.create(this)
@@ -205,13 +187,14 @@ class MainActivity : BaseActivity() {
         // Checks that the platform will allow the specified type of update.
         appUpdateManager.appUpdateInfo.addOnSuccessListener {
             if (it.availableVersionCode() == UpdateAvailability.UPDATE_AVAILABLE &&
-                it.isUpdateTypeAllowed(IMMEDIATE))
-            {
+                it.isUpdateTypeAllowed(IMMEDIATE)
+            ) {
                 appUpdateManager.startUpdateFlowForResult(
                     it,
                     IMMEDIATE,
                     this,
-                    REQUEST_CODE_UPDATE)
+                    REQUEST_CODE_UPDATE
+                )
             }
         }
 

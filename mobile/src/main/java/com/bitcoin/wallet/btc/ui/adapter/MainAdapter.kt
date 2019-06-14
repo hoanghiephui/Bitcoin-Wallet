@@ -34,10 +34,7 @@ import com.bitcoin.wallet.btc.utils.Utils
 import com.facebook.ads.NativeAd
 import com.facebook.ads.NativeAdView
 import com.facebook.ads.NativeAdViewAttributes
-import com.github.mikephil.charting.components.LimitLine
-import com.github.mikephil.charting.components.MarkerView
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.components.*
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -81,6 +78,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     var networkState = NetworkState.LOADING
     private var mNativeAd: NativeAd? = null
     private var blocksItem: List<BlocksItem>? = null
+    private var mHighlightedValues: Array<Highlight> = arrayOf()
 
     fun onLoadAds(mNativeAd: NativeAd?) {
         this.mNativeAd = mNativeAd
@@ -309,8 +307,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             val entries = it.map { priceDatum ->
                 Entry(priceDatum.timestamp.toFloat(), priceDatum.price.toFloat())
             }
-
-            val set1 = LineDataSet(entries, "aaa").apply {
+            val set1 = LineDataSet(entries, null).apply {
                 color = ContextCompat.getColor(context, R.color.colorAccent)
                 lineWidth = 3f
                 mode = LineDataSet.Mode.LINEAR
@@ -320,9 +317,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                 setCircleColor(ContextCompat.getColor(context, R.color.colorAccent))
                 setDrawFilled(false)
                 isHighlightEnabled = true
+                setDrawHorizontalHighlightIndicator(false)
                 setDrawHighlightIndicators(false)
-                chart.marker = ValueMarker(context, R.layout.item_chart)
+                enableDashedHighlightLine(10f, 5f, 0f)
             }
+            chart.marker = ValueMarker(context, R.layout.item_chart)
+            chart.legend.form = Legend.LegendForm.LINE
             chart.data = LineData(set1)
             chart.animateX(500)
             val leftAxis = chart.axisLeft
@@ -335,13 +335,16 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                 styleStepLine(stepLine, 50, context)
                 leftAxis.addLimitLine(stepLine)
             }
-            val yMinLine = LimitLine(yMin)
+            val yMinLine = LimitLine(yMin, "Low: ${nf.format(yMin)}")
             styleLimitLine(yMinLine, ContextCompat.getColor(context, R.color.colorAccent))
             leftAxis.addLimitLine(yMinLine)
-            val yMaxLine = LimitLine(yMax)
+            val yMaxLine = LimitLine(yMax, "High: ${nf.format(yMax)}").apply {
+                labelPosition = LimitLine.LimitLabelPosition.LEFT_TOP
+            }
             styleLimitLine(yMaxLine, ContextCompat.getColor(context, R.color.colorAccent))
             leftAxis.addLimitLine(yMaxLine)
-            chart.invalidate()
+            setMinMaxMarkers()
+            showMinMaxPriceMarkers()
             buttonsList.forEach { textView ->
                 textView.isEnabled = true
             }
@@ -350,6 +353,33 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             btnXlm.isEnabled = true
             btnEth.isEnabled = true
         }
+    }
+
+    private fun ChartViewHolder.showMinMaxPriceMarkers() {
+        chart.setDrawMarkers(true)
+        chart.highlightValues(mHighlightedValues)
+    }
+
+    private fun ChartViewHolder.getHilights(): MutableList<Highlight> {
+        val highlights: MutableList<Highlight> = mutableListOf()
+        val chartData = chart.data
+        for (item: Int in 0..chartData.dataSetCount) {
+            val xMin = chartData.getDataSetByIndex(item).xMin
+            val xMax = chartData.getDataSetByIndex(item).xMax
+            val yMin = chartData.getDataSetByIndex(item).yMin
+            val yMax = chartData.getDataSetByIndex(item).yMax
+            for (j: Int in xMin.toInt()..(xMax + 1).toInt()) {
+                val y = chartData.getDataSetByIndex(item).getEntryForXValue(j.toFloat(), Float.NaN).y
+                if (y == yMin || y == yMax) {
+                    highlights.add(Highlight (j.toFloat(), y, item))
+                }
+            }
+        }
+        return highlights
+    }
+
+    private fun ChartViewHolder.setMinMaxMarkers() {
+        mHighlightedValues = Array(2) { Highlight(chart.data.xMin, chart.data.yMin, 0); Highlight(chart.data.xMax, chart.data.yMax, 0) }
     }
 
     private fun ChartViewHolder.onSetSummary() {
@@ -475,7 +505,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         @SuppressLint("SimpleDateFormat", "SetTextI18n")
         override fun refreshContent(e: Entry, highlight: Highlight) {
             date.text = SimpleDateFormat("E, MMM dd, HH:mm").format(Date(e.x.toLong() * 1000))
-            price.text = "$fiatSymbol${NumberFormat.getNumberInstance(Locale.getDefault())
+            price.text = "$fiatSymbol${number
                 .apply { maximumFractionDigits = 2 }
                 .format(e.y)}"
 
@@ -570,7 +600,18 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
 
         init {
             initChart()
-            listenClickViews(tvDay, tvWeek, tvMonth, tvYear, tvAll, btnBitcoin, btnEth, btnBch, btnXlm, retryLoadingButton)
+            listenClickViews(
+                tvDay,
+                tvWeek,
+                tvMonth,
+                tvYear,
+                tvAll,
+                btnBitcoin,
+                btnEth,
+                btnBch,
+                btnXlm,
+                retryLoadingButton
+            )
         }
 
         override fun onClick(v: View) {
@@ -797,8 +838,10 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         }
     }
 
-    class BlockViewHolder(itemView: View,
-                          private val callback: MainCallback) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class BlockViewHolder(
+        itemView: View,
+        private val callback: MainCallback
+    ) : RecyclerView.ViewHolder(itemView), LayoutContainer {
         override val containerView: View?
             get() = itemView
         val blocksAdapter by lazy { BlocksAdapter(callback) }

@@ -38,4 +38,12 @@ abstract class FragmentBindingModule {
     @PerFragment
     @ContributesAndroidInjector
     abstract fun provideReportIssue(): ReportIssueDialog
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun provideMakePurchaseDialogFragment(): MakePurchaseDialogFragment
+
+    @PerFragment
+    @ContributesAndroidInjector
+    abstract fun provideTermFragment(): TermFragment
 }

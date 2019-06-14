@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class PercentHolding(
 
     @field:SerializedName("updated_at")
-    val updatedAt: Int? = null,
+    val updatedAt: String? = null,
 
     @field:SerializedName("value")
     val value: Double? = null

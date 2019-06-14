@@ -92,4 +92,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TransactionViewModel::class)
     abstract fun binTransactionViewModel(viewModel: TransactionViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BillingViewModel::class)
+    abstract fun binBillingViewModel(viewModel: BillingViewModel): ViewModel
 }

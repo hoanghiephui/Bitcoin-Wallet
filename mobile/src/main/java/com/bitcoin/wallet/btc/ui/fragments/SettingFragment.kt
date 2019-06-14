@@ -156,6 +156,9 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
                 }
 
                 override fun onUnknownHost() {
+                    if (activity == null || !isAdded) {
+                        return
+                    }
                     trustedPeerPreference?.summary = (trustedPeer + "\n["
                             + getString(R.string.trusted_peer_resolve_unknown_host) + "]")
                 }
