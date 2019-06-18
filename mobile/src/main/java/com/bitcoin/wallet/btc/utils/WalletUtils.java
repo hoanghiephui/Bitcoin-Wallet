@@ -8,6 +8,7 @@ import android.text.SpannedString;
 import android.text.style.TypefaceSpan;
 import android.widget.Toast;
 import com.bitcoin.wallet.btc.Constants;
+import com.bitcoin.wallet.btc.FilesWallet;
 import com.bitcoin.wallet.btc.service.BlockchainService;
 import com.google.common.base.Stopwatch;
 import org.bitcoinj.core.*;
@@ -139,24 +140,24 @@ public class WalletUtils {
         builder.clearLastSeenBlockTimeSecs();
         final Protos.Wallet walletProto = builder.build();
 
-        try (final OutputStream os = context.openFileOutput(Constants.Files.WALLET_FILENAME_PROTOBUF,
+        try (final OutputStream os = context.openFileOutput(FilesWallet.WALLET_FILENAME_PROTOBUF,
                 android.content.Context.MODE_PRIVATE)) {
             walletProto.writeTo(os);
             watch.stop();
-            //log.info("wallet backed up to: '{}', took {}", Constants.Files.WALLET_FILENAME_PROTOBUF, watch); todo log
+            //log.info("wallet backed up to: '{}', took {}", FilesWallet.WALLET_FILENAME_PROTOBUF, watch); todo log
         } catch (final IOException x) {
             //log.error("problem writing wallet backup", x);
         }
     }
 
     public static Wallet restoreWalletFromAutoBackup(final android.content.Context context) {
-        try (final InputStream is = context.openFileInput(Constants.Files.WALLET_KEY_BACKUP_PROTOBUF)) {
+        try (final InputStream is = context.openFileInput(FilesWallet.WALLET_KEY_BACKUP_PROTOBUF)) {
             final Wallet wallet = new WalletProtobufSerializer().readWallet(is, true, null);
             if (!wallet.isConsistent())
                 throw new Error("inconsistent backup");
 
             BlockchainService.resetBlockchain(context);
-            //log.info("wallet restored from backup: '" + Constants.Files.WALLET_KEY_BACKUP_PROTOBUF + "'"); todo log
+            //log.info("wallet restored from backup: '" + FilesWallet.WALLET_KEY_BACKUP_PROTOBUF + "'"); todo log
             return wallet;
         } catch (final IOException | UnreadableWalletException x) {
             throw new Error("cannot read backup", x);

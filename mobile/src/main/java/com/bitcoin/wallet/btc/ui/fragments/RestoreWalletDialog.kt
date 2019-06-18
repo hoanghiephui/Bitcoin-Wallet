@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.Constants
+import com.bitcoin.wallet.btc.FilesWallet
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseBottomSheetDialogFragment
 import com.bitcoin.wallet.btc.crypto.Crypto
@@ -68,7 +69,7 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
                 val file = getItem(position)
                 var isExternal = false
                 if (file != null) {
-                    isExternal = Constants.Files.EXTERNAL_WALLET_BACKUP_DIR == file.parentFile
+                    isExternal = FilesWallet.EXTERNAL_WALLET_BACKUP_DIR == file.parentFile
                 }
                 val isEncrypted = Crypto.OPENSSL_FILE_FILTER.accept(file)
 
@@ -212,8 +213,8 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
 
     private fun updateView() {
         val path: String
-        val backupPath = Constants.Files.EXTERNAL_WALLET_BACKUP_DIR.absolutePath
-        val storagePath = Constants.Files.EXTERNAL_STORAGE_DIR.absolutePath
+        val backupPath = FilesWallet.EXTERNAL_WALLET_BACKUP_DIR.absolutePath
+        val storagePath = FilesWallet.EXTERNAL_STORAGE_DIR.absolutePath
         if (backupPath.startsWith(storagePath))
             path = backupPath.substring(storagePath.length)
         else
@@ -222,7 +223,7 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
         val files = LinkedList<File>()
 
         // external storage
-        val externalFiles = Constants.Files.EXTERNAL_WALLET_BACKUP_DIR.listFiles()
+        val externalFiles = FilesWallet.EXTERNAL_WALLET_BACKUP_DIR.listFiles()
         if (externalFiles != null) {
             for (file in externalFiles) {
                 val looksLikeBackup = Crypto.OPENSSL_FILE_FILTER.accept(file)
@@ -233,7 +234,7 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
 
         // app-private storage
         for (filename in requireActivity().fileList()) {
-            if (filename.startsWith(Constants.Files.WALLET_KEY_BACKUP_PROTOBUF + '.')) {
+            if (filename.startsWith(FilesWallet.WALLET_KEY_BACKUP_PROTOBUF + '.')) {
                 files.add(File(requireActivity().filesDir, filename))
             }
         }

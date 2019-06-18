@@ -1,9 +1,11 @@
 package com.bitcoin.wallet.btc.ui.activitys
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bitcoin.wallet.btc.R
@@ -35,12 +37,16 @@ class StoryActivity : BaseActivity() {
                             if (isDarkMode) R.color.colorPrimaryDarkTheme else R.color.colorPrimary
                         )
                     } catch (ex: Exception) {
-                        startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(it)
+                        try {
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(it)
+                                )
                             )
-                        )
+                        }catch (ex: ActivityNotFoundException) {
+                            Toast.makeText(this, "You need to allow the browser to access website", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             })

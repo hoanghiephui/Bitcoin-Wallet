@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:colorBackground">
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:text="Address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitle"
+            style="@style/TextAppearance.Subtitle2.Medium"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+            android:layout_width="0dp"
+            android:layout_height="3dp"
+            android:background="@color/color_btc"
+            app:layout_constraintStart_toStartOf="@+id/tvTitle"
+            app:layout_constraintEnd_toEndOf="@+id/tvTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+            android:layout_marginEnd="32dp"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/ic_copy"
+            android:id="@+id/btnCopy"
+            android:background="?selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvAddress"
+            app:layout_constraintBottom_toBottomOf="@+id/tvAddress"
+            android:layout_marginEnd="8dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:text="1LuZmXJfzf73ooUcC7BHKB92gjLEGv7eCh"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvAddress"
+            android:textSize="13sp"
+            style="@style/TextAppearance.Subtitle1.Medium"
+            app:layout_constraintEnd_toStartOf="@+id/btnCopy"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle"/>
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/btnCopy"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="3dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="Summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvSummary"
+                    style="@style/TextAppearance.Subtitle2.Medium"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <View
+                    android:layout_width="0dp"
+                    android:layout_height="3dp"
+                    android:background="@color/color_btc"
+                    app:layout_constraintStart_toStartOf="@+id/tvSummary"
+                    app:layout_constraintEnd_toEndOf="@+id/tvSummary"
+                    app:layout_constraintTop_toBottomOf="@+id/tvSummary"
+                    android:layout_marginEnd="32dp"
+                    android:id="@+id/view6"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="Address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView13"
+                    style="@style/TextAppearance.Subtitle1.Medium"
+                    app:layout_constraintTop_toBottomOf="@+id/tvSummary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintEnd_toStartOf="@+id/tvAddressS"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="1LuZmXJfzf73ooUcC7BHKB92gjLEGv7eCh"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvAddressS"
+                    style="@style/TextAppearance.Subtitle1"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintStart_toEndOf="@+id/textView13"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    android:gravity="center_vertical|end"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintTop_toTopOf="@+id/textView13"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView13"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="Total\nReceived"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView20"
+                    style="@style/TextAppearance.Subtitle1.Medium"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAddressS"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintEnd_toStartOf="@+id/tvPriceReceived"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="7.80 USD"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvPriceReceived"
+                    style="@style/TextAppearance.Subtitle1"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical|end"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintStart_toEndOf="@+id/textView20"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintTop_toTopOf="@+id/textView20"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="0.00084609 BTC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvBtcReceived"
+                    style="@style/TextAppearance.Subtitle1"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPriceReceived"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView20"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="Total Sent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView26"
+                    style="@style/TextAppearance.Subtitle1.Medium"
+                    app:layout_constraintTop_toBottomOf="@+id/textView20"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="0.0 USD"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvPriceSent"
+                    style="@style/TextAppearance.Subtitle1"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView20"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="0.000 BTC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvBtcSent"
+                    style="@style/TextAppearance.Subtitle1"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPriceSent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="Balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView29"
+                    style="@style/TextAppearance.Subtitle1.Medium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvBtcSent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="16dp"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="7.80 USD"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvPriceBalance"
+                    style="@style/TextAppearance.Subtitle1"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvBtcSent"
+                    android:layout_marginTop="16dp"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:text="0000.001 BTC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvBtcBalance"
+                    style="@style/TextAppearance.Subtitle1"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPriceBalance"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:srcCompat="@drawable/ic_qrcode_white_24dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:id="@+id/btnQrCode"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintTop_toTopOf="@+id/tvSummary"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvSummary"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

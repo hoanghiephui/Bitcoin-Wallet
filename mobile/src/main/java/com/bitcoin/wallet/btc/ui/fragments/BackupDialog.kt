@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.Constants
+import com.bitcoin.wallet.btc.FilesWallet
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseBottomSheetDialogFragment
 import com.bitcoin.wallet.btc.crypto.Crypto
@@ -253,7 +254,7 @@ class BackupDialog : BaseBottomSheetDialogFragment() {
         val dateFormat = Iso8601Format("yyyy-MM-dd-HH-mm")
         dateFormat.timeZone = TimeZone.getDefault()
 
-        val filename = StringBuilder(Constants.Files.EXTERNAL_WALLET_BACKUP)
+        val filename = StringBuilder(FilesWallet.EXTERNAL_WALLET_BACKUP)
         filename.append('-')
         filename.append(dateFormat.format(Date()))
 

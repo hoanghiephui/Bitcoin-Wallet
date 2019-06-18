@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Looper;
 import com.bitcoin.wallet.btc.Constants;
+import com.bitcoin.wallet.btc.FilesWallet;
 import com.bitcoin.wallet.btc.R;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -112,7 +113,7 @@ public final class RequestWalletBalanceTask {
                 }
 
                 final List<ElectrumServer> servers = loadElectrumServers(
-                        open(assets, Constants.Files.ELECTRUM_SERVERS_FILENAME));
+                        open(assets, FilesWallet.ELECTRUM_SERVERS_FILENAME));
                 final List<Callable<Set<UTXO>>> tasks = new ArrayList<>(servers.size());
                 for (final ElectrumServer server : servers) {
                     tasks.add(new Callable<Set<UTXO>>() {

@@ -97,4 +97,14 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BillingViewModel::class)
     abstract fun binBillingViewModel(viewModel: BillingViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ExplorerViewModel::class)
+    abstract fun binExplorerViewModel(viewModel: ExplorerViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BlocksViewModel::class)
+    abstract fun binBlocksViewModel(viewModel: BlocksViewModel): ViewModel
 }

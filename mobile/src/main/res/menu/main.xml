@@ -47,8 +47,15 @@
             android:id="@+id/menu_sub"
             android:icon="@drawable/ic_local_gas_station_grey_700_24dp"
             app:showAsAction="always"
-            android:visible="true"
+            android:visible="false"
             android:title="Subscriptions"/>
+
+    <item
+            android:id="@+id/menu_explorer"
+            android:icon="@drawable/ic_explore_black_24dp"
+            app:showAsAction="always"
+            android:visible="true"
+            android:title="Explorer"/>
 
     <item
             android:id="@+id/menu_transaction"
@@ -59,7 +66,7 @@
     <item
             android:id="@+id/menu_network"
             android:icon="@drawable/ic_lan_connect"
-            app:showAsAction="always"
+            app:showAsAction="never"
             android:title="@string/network_monitor"/>
 
     <item

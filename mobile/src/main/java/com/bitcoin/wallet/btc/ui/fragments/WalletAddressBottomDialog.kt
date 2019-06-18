@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.drawable.BitmapDrawable
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast

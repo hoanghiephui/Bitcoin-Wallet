@@ -6,6 +6,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Volumes/Data/Work/key')
+            storePassword '1caigithe'
+            keyAlias = 'wallet'
+            keyPassword '1caigithe'
+        }
+    }
     compileSdkVersion 28
     //wallet/1caigithe
 
@@ -14,8 +22,8 @@ android {
         applicationId "com.bitcoin.wallet.btc"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 32
-        versionName "1.3.2"
+        versionCode 35
+        versionName "1.3.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -29,6 +37,7 @@ android {
                 arguments "-DANDROID_STL=c++_shared"
             }
         }
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {
@@ -92,10 +101,10 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui:1.0.0"
     implementation "android.arch.navigation:navigation-ui-ktx:1.0.0"
     implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0"*/
-    kapt "androidx.room:room-compiler:2.1.0-rc01"
+    kapt "androidx.room:room-compiler:2.1.0"
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
-    implementation "androidx.room:room-runtime:2.1.0-rc01"
-    implementation "androidx.room:room-rxjava2:2.1.0-rc01"
+    implementation "androidx.room:room-runtime:2.1.0"
+    implementation "androidx.room:room-rxjava2:2.1.0"
     implementation "com.google.code.gson:gson:2.8.5"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlin_version"
 

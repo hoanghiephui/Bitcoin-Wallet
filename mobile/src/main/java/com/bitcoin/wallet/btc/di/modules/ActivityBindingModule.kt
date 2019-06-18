@@ -58,4 +58,16 @@ abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector
     abstract fun transactionsBlockActivity(): TransactionsBlockActivity
+
+    @PerActivity
+    @ContributesAndroidInjector
+    abstract fun explorerActivity(): ExplorerActivity
+
+    @PerActivity
+    @ContributesAndroidInjector
+    abstract fun explorerDetailActivity(): ExplorerDetailActivity
+
+    @PerActivity
+    @ContributesAndroidInjector
+    abstract fun blocksActivity(): BlocksActivity
 }

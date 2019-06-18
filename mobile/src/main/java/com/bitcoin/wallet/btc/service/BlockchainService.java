@@ -19,10 +19,7 @@ import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import com.bitcoin.wallet.btc.BitcoinApplication;
-import com.bitcoin.wallet.btc.BuildConfig;
-import com.bitcoin.wallet.btc.Constants;
-import com.bitcoin.wallet.btc.R;
+import com.bitcoin.wallet.btc.*;
 import com.bitcoin.wallet.btc.data.AddressBookDao;
 import com.bitcoin.wallet.btc.data.AppDatabase;
 import com.bitcoin.wallet.btc.data.ExchangeRate;
@@ -428,7 +425,7 @@ public class BlockchainService extends LifecycleService {
         application = (BitcoinApplication) getApplication();
         config = application.getConfig();
         addressBookDao = AppDatabase.getDatabase(application).addressBookDao();
-        blockChainFile = new File(getDir("blockstore", Context.MODE_PRIVATE), Constants.Files.BLOCKCHAIN_FILENAME);
+        blockChainFile = new File(getDir("blockstore", Context.MODE_PRIVATE), FilesWallet.BLOCKCHAIN_FILENAME);
 
         peerConnectivityListener = new PeerConnectivityListener();
 
@@ -473,7 +470,7 @@ public class BlockchainService extends LifecycleService {
                         try {
                             final Stopwatch watch = Stopwatch.createStarted();
                             final InputStream checkpointsInputStream = getAssets()
-                                    .open(Constants.Files.CHECKPOINTS_FILENAME);
+                                    .open(FilesWallet.CHECKPOINTS_FILENAME);
                             CheckpointManager.checkpoint(Constants.NETWORK_PARAMETERS, checkpointsInputStream,
                                     blockStore, earliestKeyCreationTime);
                             watch.stop();

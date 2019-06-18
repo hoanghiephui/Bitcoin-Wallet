@@ -1,8 +1,8 @@
 package com.bitcoin.wallet.btc.di.modules
 
 import com.bitcoin.wallet.btc.BuildConfig
-import com.bitcoin.wallet.btc.Constants.URL_BLOCKCHAIN
-import com.bitcoin.wallet.btc.Constants.URL_COINBASE
+import com.bitcoin.wallet.btc.Constants.*
+import com.bitcoin.wallet.btc.api.BitcoinEndpoints
 import com.bitcoin.wallet.btc.api.BlockchainEndpoint
 import com.bitcoin.wallet.btc.api.CoinbaseEndpoint
 import com.google.gson.FieldNamingPolicy
@@ -84,6 +84,16 @@ class NetworkModule {
 
     @Singleton
     @Provides
+    @Named("bitcoin")
+    fun provideRetrofitBitcoin(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+        .baseUrl(URL_BITCOIN)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(okHttpClient)
+        .build()
+
+    @Singleton
+    @Provides
     fun provideBlockchainEndpoint(@Named("blockchain") retrofit: Retrofit): BlockchainEndpoint =
         retrofit.create(BlockchainEndpoint::class.java)
 
@@ -92,9 +102,14 @@ class NetworkModule {
     fun provideCoinbaseEndpoint(@Named("coinbase") retrofit: Retrofit): CoinbaseEndpoint =
         retrofit.create(CoinbaseEndpoint::class.java)
 
+    @Singleton
+    @Provides
+    fun provideBitcoinEndpoints(@Named("bitcoin") retrofit: Retrofit): BitcoinEndpoints =
+        retrofit.create(BitcoinEndpoints::class.java)
+
     companion object {
-        private val API_TIMEOUT = 30
-        private val PING_INTERVAL = 10
+        private const val API_TIMEOUT = 30
+        private const val PING_INTERVAL = 10
     }
 }
 

@@ -233,6 +233,9 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             R.id.menu_sub -> {
                 MakePurchaseDialogFragment.show(baseActivity())
             }
+            R.id.menu_explorer -> {
+                ExplorerActivity.open(baseActivity())
+            }
         }
         return true
     }
@@ -334,7 +337,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     }
 
     override fun onClickBlocks(hash: String?, totalSend: Long?, weight: Long?) {
-        TransactionsBlockActivity.open(baseActivity(), hash, weight, totalSend)
+        hash?.let { ExplorerDetailActivity.open(baseActivity(), it) }
     }
 
     private fun onGetDataHome(

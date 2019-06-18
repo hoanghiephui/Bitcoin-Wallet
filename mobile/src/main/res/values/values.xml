@@ -41,4 +41,7 @@
     <string name="fb_banner_barcode">1213251655518578_1231048040405606</string>
     <string name="fb_banner_news">1213251655518578_1238779769632433</string>
     <string name="fb_banner_transaction_block">1213251655518578_1238780309632379</string>
+    <string name="fb_banner_explorer">1213251655518578_1243491249161285</string>
+    <string name="fb_banner_explorer_detail">1213251655518578_1243491572494586</string>
+    <string name="fb_banner_blocks">1213251655518578_1244329719077438</string>
 </resources>

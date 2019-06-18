@@ -67,7 +67,7 @@ object Security {
      */
 
     val BASE_64_ENCODED_PUBLIC_KEY =
-        ""
+        "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkvF+TM4bauti1SgDdDxbj7eHvQC9EFwtVM0Nc+R/Kl0G9bwG2BZXbQdsKBpqz33LGU3GiIMEExtPzsqO97NXeO+FiY0u6vsTYMIJLwZxZuARmRrfcgytQDhIy5yUfNl2AuaX+jN9anECH1gBrH8niZd2BsaXc67igsHF+YStHib4l3ekWZXESWUE9mRTLB9vx1JpSm1MfRkZkZE4YFK/Qu0M0ugu8Cfqmes8x757EdfkNDkNMfCuZDm88KgoTurc+LhhHKmXxqTtQDc5m9IF5eUxR5rNaK6nrc97MJHlzurXtDRuHrKtXzTcQDy06xo2PNdFvExiMTGNFQG3nw6rRwIDAQAB"
 
     /**
      * Verifies that the data was signed with the given signature

@@ -86,7 +86,7 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
             //log.info("bitcoinj uncaught exception", throwable) todo log
         }
         try {
-            walletFile = getFileStreamPath(Constants.Files.WALLET_FILENAME_PROTOBUF)
+            walletFile = getFileStreamPath(FilesWallet.WALLET_FILENAME_PROTOBUF)
         } catch (ex: Exception) {
             //log.info("bitcoinj uncaught exception wallet file", ex) todo log
         }
@@ -124,8 +124,8 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
 
     private fun cleanupFiles() {
         for (filename in fileList()) {
-            if (filename.startsWith(Constants.Files.WALLET_KEY_BACKUP_BASE58)
-                || filename.startsWith(Constants.Files.WALLET_KEY_BACKUP_PROTOBUF + '.')
+            if (filename.startsWith(FilesWallet.WALLET_KEY_BACKUP_BASE58)
+                || filename.startsWith(FilesWallet.WALLET_KEY_BACKUP_PROTOBUF + '.')
                 || filename.endsWith(".tmp")
             ) {
                 val file = File(filesDir, filename)
@@ -260,7 +260,7 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
                                 Toast.makeText(this@BitcoinApplication, "Error: ${ex.message}", Toast.LENGTH_LONG).show()
                             }
                             walletFiles = wallet?.autosaveToFile(
-                                walletFile, Constants.Files.WALLET_AUTOSAVE_DELAY_MS,
+                                walletFile, FilesWallet.WALLET_AUTOSAVE_DELAY_MS,
                                 TimeUnit.MILLISECONDS, null
                             )
                         }
@@ -272,7 +272,7 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
                             Constants.DEFAULT_OUTPUT_SCRIPT_TYPE
                         )
                         walletFiles = wallet?.autosaveToFile(
-                            walletFile, Constants.Files.WALLET_AUTOSAVE_DELAY_MS,
+                            walletFile, FilesWallet.WALLET_AUTOSAVE_DELAY_MS,
                             TimeUnit.MILLISECONDS, null
                         )
                         autosaveWalletNow() // persist...
@@ -331,7 +331,7 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
         synchronized(getWalletLock) {
             oldWallet.shutdownAutosaveAndWait() // this will also prevent BlockchainService to save
             walletFiles = newWallet.autosaveToFile(
-                walletFile, Constants.Files.WALLET_AUTOSAVE_DELAY_MS,
+                walletFile, FilesWallet.WALLET_AUTOSAVE_DELAY_MS,
                 TimeUnit.MILLISECONDS, null
             )
         }

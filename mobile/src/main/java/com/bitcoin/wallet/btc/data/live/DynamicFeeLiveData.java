@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 import com.bitcoin.wallet.btc.BitcoinApplication;
 import com.bitcoin.wallet.btc.Constants;
+import com.bitcoin.wallet.btc.FilesWallet;
 import com.bitcoin.wallet.btc.data.FeeCategory;
 import com.google.common.base.Stopwatch;
 import com.google.common.io.ByteStreams;
@@ -35,8 +36,8 @@ public class DynamicFeeLiveData extends LiveData<Map<FeeCategory, Coin>> {
                 + (versionNameSplit >= 0 ? packageInfo.versionName.substring(versionNameSplit) : ""));
         this.userAgent = BitcoinApplication.Companion.httpUserAgent(packageInfo.versionName);
         this.assets = application.getAssets();
-        this.dynamicFeesFile = new File(application.getFilesDir(), Constants.Files.FEES_FILENAME);
-        this.tempFile = new File(application.getCacheDir(), Constants.Files.FEES_FILENAME + ".temp");
+        this.dynamicFeesFile = new File(application.getFilesDir(), FilesWallet.FEES_FILENAME);
+        this.tempFile = new File(application.getCacheDir(), FilesWallet.FEES_FILENAME + ".temp");
     }
 
     @Override
@@ -124,7 +125,7 @@ public class DynamicFeeLiveData extends LiveData<Map<FeeCategory, Coin>> {
 
     private Map<FeeCategory, Coin> loadInBackground() {
         try {
-            final Map<FeeCategory, Coin> staticFees = parseFees(assets.open(Constants.Files.FEES_FILENAME));
+            final Map<FeeCategory, Coin> staticFees = parseFees(assets.open(FilesWallet.FEES_FILENAME));
             fetchDynamicFees(dynamicFeesUrl, tempFile, dynamicFeesFile, userAgent);
             if (!dynamicFeesFile.exists())
                 return staticFees;
