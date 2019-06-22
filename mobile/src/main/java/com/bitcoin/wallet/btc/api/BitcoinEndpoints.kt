@@ -1,9 +1,11 @@
 package com.bitcoin.wallet.btc.api
 
+import com.bitcoin.wallet.btc.model.CoinPriceResponse
 import com.bitcoin.wallet.btc.model.explorer.BlocksResponse
 import com.bitcoin.wallet.btc.model.explorer.address.AddressResponse
 import com.bitcoin.wallet.btc.model.explorer.details.BlockDetailResponse
 import com.bitcoin.wallet.btc.model.explorer.transaction.TransactionsResponse
+import com.bitcoin.wallet.btc.model.index.LookupResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -31,4 +33,10 @@ interface BitcoinEndpoints {
     //https://explorer.bitcoin.com/api/btc/txs/?address=1LuZmXJfzf73ooUcC7BHKB92gjLEGv7eCh&pageNum=0
     @GET
     fun getListTransactionByAddress(@Url url: String): Observable<TransactionsResponse>
+
+    @GET
+    fun getPriceCoin(@Url url: String): Observable<CoinPriceResponse>
+
+    @GET
+    fun getLookupCoin(@Url url: String): Observable<LookupResponse>
 }

@@ -8,15 +8,7 @@
 
     <string-array name="coin">
         <item>BTC</item>
-        <item>ETH</item>
         <item>BCH</item>
-        <item>XRP</item>
-        <item>LTC</item>
-        <item>EOS</item>
-        <item>USDT</item>
-        <item>TRX</item>
-        <item>XLM</item>
-        <item>BNB</item>
     </string-array>
     <string-array name="pref_currency_entries">
         <item>USD</item>

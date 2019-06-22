@@ -70,4 +70,8 @@ abstract class ActivityBindingModule {
     @PerActivity
     @ContributesAndroidInjector
     abstract fun blocksActivity(): BlocksActivity
+
+    @PerActivity
+    @ContributesAndroidInjector
+    abstract fun toolsActivity(): ToolsActivity
 }

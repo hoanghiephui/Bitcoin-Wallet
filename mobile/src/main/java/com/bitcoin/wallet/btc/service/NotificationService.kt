@@ -45,16 +45,16 @@ class NotificationService : IntentService(NotificationService::class.java.name) 
         }
     }
 
-    override fun onHandleIntent(intent: Intent) {
+    override fun onHandleIntent(intent: Intent?) {
         org.bitcoinj.core.Context.propagate(Constants.CONTEXT)
         val wallet = application?.getWallet()
-
-        if (ACTION_DISMISS == intent.action)
-            handleDismiss()
-        else if (ACTION_DISMISS_FOREVER == intent.action)
-            handleDismissForever()
-        else
-            wallet?.let { handleMaybeShowNotification(it) }
+        intent?.let {
+            when {
+                ACTION_DISMISS == it.action -> handleDismiss()
+                ACTION_DISMISS_FOREVER == it.action -> handleDismissForever()
+                else -> wallet?.let { dat -> handleMaybeShowNotification(dat) }
+            }
+        }
     }
 
     private fun handleMaybeShowNotification(wallet: Wallet) {

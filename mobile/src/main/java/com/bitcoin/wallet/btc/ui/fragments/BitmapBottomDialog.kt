@@ -2,7 +2,6 @@ package com.bitcoin.wallet.btc.ui.fragments
 
 import android.app.Dialog
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -24,7 +23,7 @@ class BitmapBottomDialog : BottomSheetDialogFragment() {
 
         mDialog?.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
         mDialog?.window?.setGravity(Gravity.BOTTOM)
-        val bitmap = arguments?.getParcelable("bitmap") as Bitmap
+        val bitmap = arguments?.getParcelable<Bitmap>("bitmap")
         val image = mDialog?.findViewById<AppCompatImageView>(R.id.imgQrCode)
         image?.setImageBitmap(bitmap)
 

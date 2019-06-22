@@ -221,7 +221,7 @@ class RequestCoinActivity : BaseActivity() {
 
     private fun handleCopy() {
         val request = viewModel.bitcoinUri.value
-        clipboardManager.primaryClip = ClipData.newRawUri("Bitcoin payment request", request)
+        clipboardManager.setPrimaryClip(ClipData.newRawUri("Bitcoin payment request", request))
         Toast.makeText(this, R.string.clipboard_msg_request, Toast.LENGTH_SHORT).show()
     }
 

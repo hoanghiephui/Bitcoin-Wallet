@@ -3,10 +3,12 @@ package com.bitcoin.wallet.btc.utils
 import android.app.Activity
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.text.TextUtils
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import com.bitcoin.wallet.btc.R
 import java.text.DecimalFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,5 +53,31 @@ object Utils {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
         format.timeZone = TimeZone.getTimeZone("UTC")
         return format.parse(strDate).time
+    }
+
+    @JvmStatic
+    fun onGetDate(pattern: String): String {
+        return SimpleDateFormat(pattern, Locale.getDefault()).format(Date())
+    }
+
+    @JvmStatic
+    fun convertDate(strDob: String, patternOut: String, patternIn: String): String {
+        if (!TextUtils.isEmpty(strDob)) {
+            val str = strDob.trim()
+            if (TextUtils.isEmpty(str)) {
+                return ""
+            }
+            val inSdf = SimpleDateFormat(patternIn, Locale.ENGLISH)
+            val outSdf = SimpleDateFormat(patternOut, Locale.getDefault())
+            val nomineeDate: Date
+            nomineeDate = try {
+                inSdf.parse(str)
+            } catch (e: ParseException) {
+                val inTime = SimpleDateFormat(patternIn, Locale.getDefault())
+                inTime.parse(str)
+            }
+            return outSdf.format(nomineeDate)
+        }
+        return ""
     }
 }

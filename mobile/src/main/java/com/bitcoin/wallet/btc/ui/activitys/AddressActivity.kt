@@ -303,7 +303,7 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
     }
 
     private fun handleCopyToClipboard(address: String) {
-        clipboardManager.primaryClip = ClipData.newPlainText("Bitcoin address", address)
+        clipboardManager.setPrimaryClip(ClipData.newPlainText("Bitcoin address", address))
         Toast.makeText(this, R.string.clipboard_msg, Toast.LENGTH_SHORT).show()
     }
 

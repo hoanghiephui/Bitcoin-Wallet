@@ -107,4 +107,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BlocksViewModel::class)
     abstract fun binBlocksViewModel(viewModel: BlocksViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ToolsViewModel::class)
+    abstract fun binToolsViewModel(viewModel: ToolsViewModel): ViewModel
 }

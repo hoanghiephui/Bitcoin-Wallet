@@ -30,7 +30,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), NativeAdListener {
     abstract fun layoutRes(): Int
     var isDarkMode: Boolean = false
     private var mNativeBannerAd: NativeBannerAd? = null
-    private var mViewType: NativeBannerAdView.Type = NativeBannerAdView.Type.HEIGHT_50
+    var mViewType: NativeBannerAdView.Type = NativeBannerAdView.Type.HEIGHT_50
     private var mAdBackgroundColor: Int = 0
     private var mTitleColor: Int = 0
     private var mLinkColor: Int = 0

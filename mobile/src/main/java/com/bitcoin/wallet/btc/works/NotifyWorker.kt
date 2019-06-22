@@ -6,17 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.work.*
+import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.api.BlockchainEndpoint
 import com.bitcoin.wallet.btc.ui.activitys.MainActivity
 import io.reactivex.Single
-import javax.inject.Inject
-import com.bitcoin.wallet.btc.R
+import java.text.NumberFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 
 class NotifyWorker @Inject constructor(
@@ -33,13 +34,19 @@ class NotifyWorker @Inject constructor(
         return makePriceNofity(base ?: "BTC", key ?: "")
     }
 
+    private val nf = NumberFormat.getCurrencyInstance(Locale.US).apply {
+        minimumFractionDigits = 2
+        maximumFractionDigits = 2
+    }
+
     private fun makePriceNofity(base: String, key: String): Single<Result> {
         return Single.fromObservable(api.getPriceIndexes(base, key))
             .delay(12, TimeUnit.SECONDS)
             .doOnSuccess {
-                Log.d("WORK", it["USD"]?.price.toString())
-                val title = "AVG PRICE: $".plus(it["USD"]?.price.toString()).plus("/BTC")
-                makeStatusNotification(title, context)
+                it["USD"]?.price?.let { price ->
+                    val title = "AVG PRICE: ${nf.format(price)}/BTC"
+                    makeStatusNotification(title, context)
+                }
             }
             .map { if (it.isNotEmpty()) Result.success() else Result.failure() }
             .onErrorReturnItem(Result.failure())

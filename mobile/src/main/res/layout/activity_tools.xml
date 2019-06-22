@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:colorBackground">
+
+    <include layout="@layout/toolbar"/>
+
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Crypto Converter"
+                    android:textSize="18sp"
+                    style="@style/TextAppearance.Subtitle1.Medium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardBackgroundColor="?colorPrimary"
+                    app:cardUseCompatPadding="true"
+                    app:contentPadding="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/top">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/send"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Send"
+                            android:textSize="12sp"
+                            android:textAllCaps="true"
+                            style="@style/TextAppearance.Subtitle1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    <LinearLayout
+                            android:id="@+id/viewSend"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/radius_line"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingLeft="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/send">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                                android:id="@+id/edtUsd"
+                                android:layout_width="0dp"
+                                android:layout_height="45dp"
+                                android:layout_weight="1"
+                                android:background="@null"
+                                android:inputType="numberDecimal"
+                                style="@style/TextAppearance.Subtitle1"
+                                android:maxLength="12"
+                                android:text="1"/>
+
+                        <View
+                                android:layout_width="1dp"
+                                android:layout_height="45dp"
+                                android:background="?colorCardActive"/>
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                                android:id="@+id/spinner"
+                                android:layout_width="100dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center|right"
+                                android:gravity="right"/>
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="RECEIVE"
+                            android:textSize="12sp"
+                            style="@style/TextAppearance.Subtitle1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/viewSend"/>
+
+                    <LinearLayout
+                            android:id="@+id/viewRe"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/radius_line"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingLeft="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/edtCoin"
+                                android:layout_width="0dp"
+                                android:layout_height="45dp"
+                                android:layout_weight="1"
+                                style="@style/TextAppearance.Subtitle1"
+                                android:gravity="center_vertical"/>
+
+                        <View
+                                android:layout_width="1dp"
+                                android:layout_height="45dp"
+                                android:visibility="gone"
+                                android:background="?colorCardActive"/>
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                                android:id="@+id/spinnerCoin"
+                                android:layout_width="100dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center|right"
+                                android:visibility="gone"
+                                android:gravity="right"/>
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCalculate"
+                            android:layout_width="0dp"
+                            android:layout_height="55dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="Calculate Exchange"
+                            app:layout_constraintBottom_toTopOf="@+id/tt"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/viewRe"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            style="@style/TextAppearance.Subtitle2"
+                            android:text="* Does not include miner fees"/>
+
+                    <ProgressBar
+                            android:id="@+id/progressBar2"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <include
+                    layout="@layout/init_ads"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView2">
+            </include>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
+                    android:text="BTC Historical Data Lookup"
+                    android:textSize="18sp"
+                    style="@style/TextAppearance.Subtitle1.Medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/adViewContainer"/>
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="?colorPrimary"
+                    app:cardUseCompatPadding="true"
+                    app:contentPadding="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bottom">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="DATE"
+                            android:textSize="12sp"
+                            android:textAllCaps="true"
+                            style="@style/TextAppearance.Subtitle1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    <LinearLayout
+                            android:id="@+id/viewDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/radius_line"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingLeft="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/date">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvDate"
+                                android:layout_width="0dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                style="@style/TextAppearance.Subtitle1"
+                                android:gravity="center_vertical"
+                                tools:text="sdfdsfdfsdfdfdsfsfd"/>
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                android:tint="?colorCardActive"
+                                app:srcCompat="@drawable/ic_date_range_grey_600_24dp"/>
+                    </LinearLayout>
+
+                    <View
+                            android:id="@+id/rootDate"
+                            android:background="?selectableItemBackground"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintTop_toTopOf="@id/viewDate"
+                            app:layout_constraintBottom_toBottomOf="@id/viewDate"
+                            app:layout_constraintStart_toStartOf="@id/viewDate"
+                            app:layout_constraintEnd_toEndOf="@id/viewDate"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/textView16"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="AVG PRICE"
+                            android:textSize="12sp"
+                            style="@style/TextAppearance.Subtitle1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/viewDate"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvPriceHistory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:textSize="20sp"
+                            android:inputType="numberDecimal"
+                            style="@style/TextAppearance.Subtitle1.Medium"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView16"
+                            tools:text="$6,499.03"/>
+
+                    <ProgressBar
+                            android:id="@+id/progressBar3"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    <com.google.android.material.button.MaterialButton
+                            android:visibility="gone"
+                            android:text="@string/retry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btnRetry"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginBottom="8dp"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

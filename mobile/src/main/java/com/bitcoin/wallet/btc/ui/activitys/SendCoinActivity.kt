@@ -39,6 +39,7 @@ import com.bitcoin.wallet.btc.ui.widget.CurrencyCalculatorLink
 import com.bitcoin.wallet.btc.ui.widget.DialogBuilder
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.SendViewModel
+import com.facebook.ads.NativeBannerAdView
 import com.google.common.base.Joiner
 import kotlinx.android.synthetic.main.activity_send_coin.*
 import kotlinx.android.synthetic.main.item_transaction.*
@@ -50,6 +51,7 @@ import org.bitcoinj.wallet.SendRequest
 import org.bitcoinj.wallet.Wallet
 import org.bouncycastle.crypto.params.KeyParameter
 import java.io.FileNotFoundException
+import java.text.NumberFormat
 import java.util.*
 
 class SendCoinActivity : BaseActivity() {
@@ -74,7 +76,10 @@ class SendCoinActivity : BaseActivity() {
     private var backgroundThread: HandlerThread? = null
     private var backgroundHandler: Handler? = null
     private var sentTransactionViewHolder: TransactionsWalletAdapter.TransactionViewHolder? = null
-
+    private val nf = NumberFormat.getCurrencyInstance(Locale.US).apply {
+        minimumFractionDigits = 2
+        maximumFractionDigits = 2
+    }
 
     override fun layoutRes(): Int {
         return R.layout.activity_send_coin
@@ -113,7 +118,9 @@ class SendCoinActivity : BaseActivity() {
         }
 
         viewModel.priceList.observe(this, Observer {
-            textview_price.text = "$".plus(it["USD"]?.price.toString()).plus(" 1 BTC")
+            it["USD"]?.price?.let {
+                textview_price.text = nf.format(it).plus("/BTC")
+            }
         })
         viewModel.priceNetworkState.observe(this, Observer {
 
@@ -208,6 +215,7 @@ class SendCoinActivity : BaseActivity() {
             viewAddress.visible()
         }
 
+        mViewType = NativeBannerAdView.Type.HEIGHT_100
         createAndLoadNativeBannerAd(getString(R.string.fb_banner_native_send))
     }
 

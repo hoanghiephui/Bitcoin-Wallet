@@ -539,6 +539,9 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 R.id.menu_exchange -> {
                     startActivity(Intent(requireActivity(), ExchangeRatesActivity::class.java))
                 }
+                R.id.menu_tools -> {
+                    ToolsActivity.open(baseActivity())
+                }
             }
             return@setNavigationItemSelectedListener true
         }

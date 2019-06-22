@@ -33,6 +33,11 @@
                     android:title="@string/network_monitor"/>
 
             <item
+                    android:id="@+id/menu_tools"
+                    android:icon="@drawable/ic_compare_arrows_grey_600_24dp"
+                    android:title="Price Converter"/>
+
+            <item
                     android:id="@+id/action_settings"
                     android:title="@string/action_settings"
                     android:icon="@drawable/ic_settings_black_24dp"/>

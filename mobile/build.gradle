@@ -14,16 +14,16 @@ android {
             keyPassword '1caigithe'
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     //wallet/1caigithe
 
 
     defaultConfig {
         applicationId "com.bitcoin.wallet.btc"
         minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 35
-        versionName "1.3.5"
+        targetSdkVersion 29
+        versionCode 36
+        versionName "1.3.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -93,7 +93,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'com.google.firebase:firebase-crash:16.2.1'
-    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-core:17.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -152,4 +152,5 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     implementation "com.android.billingclient:billing:2.0.1"
+    implementation 'com.github.drawers:SpinnerDatePicker:2.0.1'
 }

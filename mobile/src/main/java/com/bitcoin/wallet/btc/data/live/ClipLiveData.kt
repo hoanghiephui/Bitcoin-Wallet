@@ -25,6 +25,6 @@ class ClipLiveData(application: BitcoinApplication) : LiveData<ClipData>(),
     }
 
     fun setClipData(clipData: ClipData) {
-        clipboardManager.primaryClip = clipData
+        clipboardManager.setPrimaryClip(clipData)
     }
 }
