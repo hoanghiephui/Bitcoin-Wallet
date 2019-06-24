@@ -665,6 +665,9 @@ class SendCoinActivity : BaseActivity() {
                             if (reasons.isEmpty())
                                 reasons.add("unknown")
 
+                            if (isFinishing || isDestroyed) {
+                                return
+                            }
                             DialogBuilder.warn(
                                 this@SendCoinActivity,
                                 R.string.send_coins_failed

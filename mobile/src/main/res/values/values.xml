@@ -45,4 +45,7 @@
     <string name="fb_banner_explorer_detail">1213251655518578_1243491572494586</string>
     <string name="fb_banner_blocks">1213251655518578_1244329719077438</string>
     <string name="fb_banner_native_tools">1213251655518578_1247250632118680</string>
+
+    <string name="app_id">ca-app-pub-1609742394526278~9542235028</string>
+    <string name="ads_home">ca-app-pub-1609742394526278/8528536257</string>
 </resources>

@@ -15,11 +15,11 @@ import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
-import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.data.AddressBookDao
@@ -267,23 +267,30 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                     R.id.wallet_transactions_context_browse -> {
                         if (!txRotation) {
                             val block = tx.txId.toString()
-                            try {
-                                Utils.onOpenLink(
-                                    this@WalletTransactionsActivity,
-                                    "https://www.blockchain.com/btc/tx/$block",
-                                    if (isDarkMode) R.color.colorPrimaryDarkTheme else R.color.colorPrimary
-                                )
-                            } catch (ex: Exception) {
-                                startActivity(
-                                    Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.withAppendedPath(Uri.parse("https://www.blockchain.com/btc/"), "tx/$block")
-                                    )
-                                )
-                            }
+                            ExplorerDetailActivity.open(this@WalletTransactionsActivity, block)
                             //log.info("Viewing transaction {} on {}", tx.txId, blockExplorerUri) todo
                         }
                         return true
+                    }
+                    R.id.menu_confirm -> {
+                        try {
+                            Utils.onOpenLink(
+                                this@WalletTransactionsActivity,
+                                "https://www.buybitcoinworldwide.com/confirmations/",
+                                if (isDarkMode) R.color.colorPrimaryDarkTheme else R.color.colorPrimary
+                            )
+                        } catch (ex: Exception) {
+                            try {
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://www.buybitcoinworldwide.com/confirmations/")
+                                    )
+                                )
+                            } catch (ex: Exception) {
+                                Toast.makeText(this@WalletTransactionsActivity, "Error the browse", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 }
 

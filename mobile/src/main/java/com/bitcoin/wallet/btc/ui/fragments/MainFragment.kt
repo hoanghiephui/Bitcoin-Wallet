@@ -29,6 +29,7 @@ import com.bitcoin.wallet.btc.utils.InputParser
 import com.bitcoin.wallet.btc.utils.Utils
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
 import com.facebook.ads.*
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.bottom_bar_menu_layout.*
@@ -48,6 +49,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     private var cryptoCurrency = CryptoCurrency.BTC
 
     private var bannerAdView: AdView? = null
+    private var adView: com.google.android.gms.ads.AdView? = null
     private lateinit var mNativeAd: NativeAd
 
     private val mainAdapter by lazy {
@@ -82,7 +84,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         })
         recyClear.apply {
             layoutManager = LinearLayoutManager(baseActivity())
-            setHasFixedSize(true)
             itemAnimator = null
             adapter = mainAdapter
         }
@@ -253,6 +254,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         if (::mNativeAd.isInitialized) {
             mNativeAd.destroy()
         }
+        bannerAdView?.destroy()
+        adView?.destroy()
+        bannerAdView = null
+        adView = null
         super.onDestroy()
     }
 
@@ -372,10 +377,36 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     private fun loadAdView() {
         bannerAdView?.destroy()
         bannerAdView = null
-        bannerAdView = AdView(this.activity, getString(R.string.fb_banner_home), AdSize.BANNER_HEIGHT_50)
+        bannerAdView = AdView(this.activity, getString(R.string.fb_banner_transaction_block), AdSize.BANNER_HEIGHT_50)
         bannerAdView?.let {nonNullBannerAdView ->
             adViewContainers?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.setAdListener(object : AdListener {
+                override fun onAdClicked(p0: Ad?) {
+                }
+
+                override fun onError(p0: Ad?, p1: AdError?) {
+                    loadGoogleAdView()
+                }
+
+                override fun onAdLoaded(p0: Ad?) {
+                }
+
+                override fun onLoggingImpression(p0: Ad?) {
+                }
+            })
             nonNullBannerAdView.loadAd()
+        }
+    }
+
+    private fun loadGoogleAdView() {
+        adView?.destroy()
+        adView = com.google.android.gms.ads.AdView(baseActivity())
+        val adRequest = AdRequest.Builder().build()
+        adView?.let {
+            it.adSize = com.google.android.gms.ads.AdSize.SMART_BANNER
+            it.adUnitId = getString(R.string.ads_home)
+            adViewContainers?.addView(it)
+            it.loadAd(adRequest)
         }
     }
 

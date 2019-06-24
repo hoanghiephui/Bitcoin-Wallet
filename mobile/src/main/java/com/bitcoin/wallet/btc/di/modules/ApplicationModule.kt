@@ -3,8 +3,8 @@ package com.bitcoin.wallet.btc.di.modules
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import androidx.paging.PagedList
+import androidx.preference.PreferenceManager
 import com.bitcoin.wallet.btc.Constants.PAGE_SIZE
 import com.bitcoin.wallet.btc.di.annotations.ForApplication
 import dagger.Module

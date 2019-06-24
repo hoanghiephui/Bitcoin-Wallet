@@ -23,7 +23,12 @@
             app:showAsAction="never"/>
     <item
             android:id="@+id/wallet_transactions_context_browse"
-            android:title="@string/browse"
+            android:title="See more transaction"
+            app:showAsAction="never"/>
+
+    <item
+            android:id="@+id/menu_confirm"
+            android:title="Bitcoin Confirmations"
             app:showAsAction="never"/>
 
 </menu>

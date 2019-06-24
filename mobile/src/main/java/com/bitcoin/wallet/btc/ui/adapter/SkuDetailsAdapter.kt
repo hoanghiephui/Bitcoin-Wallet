@@ -112,9 +112,7 @@ open class SkuDetailsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     sku_title.text = name
                     sku_description.text = description
                     sku_price.text = price
-                    val drawableId = getSkuDrawableId(sku, this)
                     sku_image.setImageResource(R.drawable.ic_launcher_foreground)
-                    isEnabled = canPurchase
                 }
             }
         }

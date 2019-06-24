@@ -5,6 +5,7 @@ import com.bitcoin.wallet.btc.model.explorer.BlocksResponse
 import com.bitcoin.wallet.btc.model.explorer.address.AddressResponse
 import com.bitcoin.wallet.btc.model.explorer.details.BlockDetailResponse
 import com.bitcoin.wallet.btc.model.explorer.transaction.TransactionsResponse
+import com.bitcoin.wallet.btc.model.explorer.tx.TxResponse
 import com.bitcoin.wallet.btc.model.index.LookupResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
@@ -39,4 +40,7 @@ interface BitcoinEndpoints {
 
     @GET
     fun getLookupCoin(@Url url: String): Observable<LookupResponse>
+
+    @GET("tx/{hash}")
+    fun getTransactions(@Path("hash") hash: String): Observable<TxResponse>
 }

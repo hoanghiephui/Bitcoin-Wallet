@@ -39,7 +39,7 @@ class ExplorerDetailActivity : BaseActivity() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar("Transactions Explorer")
-        val input = intent.getStringExtra("input")
+        val input = intent.getStringExtra("input") ?: ""
         initRecyclerView()
         viewModel.transaction.observeNotNull(this) {
             transactionAdapter.submitList(it)

@@ -95,7 +95,6 @@
             android:layout_height="match_parent"
             android:paddingBottom="55dp"
             app:behavior_overlapTop="70dp"
-            android:clipChildren="false"
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 

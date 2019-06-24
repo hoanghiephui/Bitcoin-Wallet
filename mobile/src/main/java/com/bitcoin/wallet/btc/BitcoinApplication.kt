@@ -10,9 +10,9 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
-import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.bitcoin.wallet.btc.di.components.AppComponent
 import com.bitcoin.wallet.btc.service.BlockchainService
@@ -21,6 +21,7 @@ import com.bitcoin.wallet.btc.utils.WalletUtils
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
 import com.facebook.ads.internal.settings.AdInternalSettings
+import com.google.android.gms.ads.MobileAds
 import com.google.common.base.Splitter
 import com.google.common.base.Stopwatch
 import com.google.common.collect.ImmutableList
@@ -59,7 +60,6 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
     val packageInfo: PackageInfo by lazy {
         packageManager.getPackageInfo(packageName, 0)
     }
-    private val BIP39_WORDLIST_FILENAME = "bip39.txt"
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> = appComponent
 
@@ -74,21 +74,15 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
         org.bitcoinj.core.Context.enableStrictMode()
         try {
             org.bitcoinj.core.Context.propagate(Constants.CONTEXT)
-            /*log.info(//todo log
-                "=== starting app using configuration: {}, {}", "prod",
-                Constants.NETWORK_PARAMETERS.id
-            )*/
         } catch (e: NoClassDefFoundError) {
             e.printStackTrace()
-            //log.info("bitcoinj uncaught exception", e) todo log
-        }
-        Threading.uncaughtExceptionHandler = Thread.UncaughtExceptionHandler { _, _ ->
-            //log.info("bitcoinj uncaught exception", throwable) todo log
         }
         try {
-            walletFile = getFileStreamPath(FilesWallet.WALLET_FILENAME_PROTOBUF)
+            synchronized(this) {
+                walletFile = getFileStreamPath(FilesWallet.WALLET_FILENAME_PROTOBUF)
+            }
         } catch (ex: Exception) {
-            //log.info("bitcoinj uncaught exception wallet file", ex) todo log
+
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -107,7 +101,7 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
         if (!AudienceNetworkAds.isInitialized(this)) {
             if (BuildConfig.DEBUG) {
                 AdSettings.turnOnSDKDebugger(this)
-                AdInternalSettings.setTestMode(true)
+                AdInternalSettings.setTestMode(false)
             }
 
             AudienceNetworkAds
@@ -116,6 +110,7 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
                 .initialize()
             AudienceNetworkAds.isInAdsProcess(this)
         }
+        MobileAds.initialize(this, getString(R.string.app_id))
     }
 
     override fun onInitialized(result: AudienceNetworkAds.InitResult?) {
@@ -378,6 +373,7 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
 
     companion object {
         const val ACTION_WALLET_REFERENCE_CHANGED = "com.bitcoin.wallet.wallet_reference_changed"
+        private const val BIP39_WORDLIST_FILENAME = "bip39.txt"
         fun httpUserAgent(versionName: String): String {
             return try {
                 val versionMessage = VersionMessage(Constants.NETWORK_PARAMETERS, 0)

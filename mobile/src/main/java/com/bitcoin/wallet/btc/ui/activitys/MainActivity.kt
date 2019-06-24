@@ -24,6 +24,7 @@ import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.viewmodel.MainViewModel
 import com.bitcoin.wallet.btc.works.NotifyWorker
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
 import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
 import com.google.android.play.core.install.model.UpdateAvailability
 
@@ -186,7 +187,7 @@ class MainActivity : BaseActivity() {
 
         // Checks that the platform will allow the specified type of update.
         appUpdateManager.appUpdateInfo.addOnSuccessListener {
-            if (it.availableVersionCode() == UpdateAvailability.UPDATE_AVAILABLE &&
+            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
                 it.isUpdateTypeAllowed(IMMEDIATE)
             ) {
                 appUpdateManager.startUpdateFlowForResult(

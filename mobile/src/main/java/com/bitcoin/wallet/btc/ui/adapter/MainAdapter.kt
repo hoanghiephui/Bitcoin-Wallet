@@ -14,6 +14,8 @@ import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.ViewCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -219,7 +221,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                         onSetChart(context)
 
                         if (networkState.msg != null) {
-                            loadingProgressBar.gone()
+                            loadingProgressBar.invisible()
                             errorMessageTextView.text = networkState.msg
                             errorMessageTextView.visible()
                             retryLoadingButton.visible()
@@ -227,6 +229,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                             errorMessageTextView.gone()
                             retryLoadingButton.gone()
                         }
+                        loadingProgressBar.isInvisible = networkState != NetworkState.LOADING
                     }
                 }
             }
@@ -264,12 +267,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
 
                             // Create a NativeAdViewAttributes object and set the attributes
                             val attributes = NativeAdViewAttributes(itemView.context)
-                                .setBackgroundColor(itemView.context.getColorFromAttr(R.attr.colorPrimary))
+                                .setBackgroundColor(itemView.context.getColorFromAttr(android.R.attr.colorBackground))
                                 .setTitleTextColor(itemView.context.getColorFromAttr(R.attr.colorBgItemDrawer))
                                 .setDescriptionTextColor(itemView.context.getColorFromAttr(R.attr.colorMenu))
                                 .setButtonBorderColor(itemView.context.getColorFromAttr(R.attr.colorAccent))
                                 .setButtonTextColor(ContextCompat.getColor(itemView.context, R.color.white))
-                                .setButtonColor(itemView.context.getColorFromAttr(R.attr.colorAccent))
+                                .setButtonColor(itemView.context.getColorFromAttr(R.attr.invertedColorAlpha2))
 
                             // Use NativeAdView.render to generate the ad View
                             val mAdView = NativeAdView.render(itemView.context, it, attributes)
@@ -303,7 +306,6 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         data?.let {
             chart.visible()
             cardAbout.visible()
-            loadingProgressBar.gone()
             val entries = it.map { priceDatum ->
                 Entry(priceDatum.timestamp.toFloat(), priceDatum.price.toFloat())
             }
@@ -358,24 +360,6 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     private fun ChartViewHolder.showMinMaxPriceMarkers() {
         chart.setDrawMarkers(true)
         chart.highlightValues(mHighlightedValues)
-    }
-
-    private fun ChartViewHolder.getHilights(): MutableList<Highlight> {
-        val highlights: MutableList<Highlight> = mutableListOf()
-        val chartData = chart.data
-        for (item: Int in 0..chartData.dataSetCount) {
-            val xMin = chartData.getDataSetByIndex(item).xMin
-            val xMax = chartData.getDataSetByIndex(item).xMax
-            val yMin = chartData.getDataSetByIndex(item).yMin
-            val yMax = chartData.getDataSetByIndex(item).yMax
-            for (j: Int in xMin.toInt()..(xMax + 1).toInt()) {
-                val y = chartData.getDataSetByIndex(item).getEntryForXValue(j.toFloat(), Float.NaN).y
-                if (y == yMin || y == yMax) {
-                    highlights.add(Highlight (j.toFloat(), y, item))
-                }
-            }
-        }
-        return highlights
     }
 
     private fun ChartViewHolder.setMinMaxMarkers() {

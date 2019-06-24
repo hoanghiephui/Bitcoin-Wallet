@@ -11,6 +11,7 @@
 -keepattributes *Annotation*
 -keep class androidx.appcompat.widget.SearchView { *; }
 -keep public class com.google.android.gms.* { public *; }
+-keep public class com.google.android.gms.ads.* { public *; }
 
 -keepclasseswithmembernames,includedescriptorclasses class * {
     native <methods>;

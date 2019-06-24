@@ -22,6 +22,7 @@ class TransactionsDataSource(
 ) : ItemKeyedDataSource<Int, Any>() {
     val networkState = MutableLiveData<NetworkState>()
     var isBlock = false
+    private var isTx = false
 
     val initialLoad = MutableLiveData<NetworkState>()
     private var pageNumber = 0
@@ -97,13 +98,39 @@ class TransactionsDataSource(
                                 pageSize = data.transactionResponse.pagesTotal ?: pageSize
                                 callback.onResult(list)
                             }, {
-                                if (it.message?.contains("400") == true) {
-                                    networkState.postValue(NetworkState.error("Invalid address: Checksum mismatch"))
-                                    initialLoad.postValue(networkState.value)
-                                } else {
-                                    networkState.postValue(error)
-                                    initialLoad.postValue(networkState.value)
-                                }
+                                api.getTransactions(hash)
+                                    .distinctUntilChanged()
+                                    .applySchedulers()
+                                    .subscribe(
+                                        { txResponse ->
+                                            setRetry(null)
+                                            isTx = true
+                                            networkState.postValue(NetworkState.LOADED)
+                                            initialLoad.postValue(NetworkState.LOADED)
+                                            list.add(txResponse)
+                                            list.add(
+                                                Response.Title(
+                                                    "Inputs",
+                                                    if (txResponse.vin != null && txResponse.vin[0].addr != null) txResponse?.vin.size.toString() else "0"
+                                                )
+                                            )
+                                            list.addAll(txResponse.vin ?: mutableListOf())
+                                            list.add(
+                                                Response.Title(
+                                                    "Outputs",
+                                                    if (txResponse.vout != null && txResponse.vout[0].scriptPubKey != null) txResponse?.vout.size.toString() else "0"
+                                                )
+                                            )
+                                            list.addAll(txResponse.vout ?: mutableListOf())
+                                            callback.onResult(list)
+                                        },
+                                        {
+                                            isTx = false
+                                            networkState.postValue(NetworkState.error("No results found"))
+                                            initialLoad.postValue(networkState.value)
+                                        }
+                                    )
+                                    .addTo(compositeDisposable)
                             }).addTo(compositeDisposable)
 
                     } else {
@@ -116,7 +143,7 @@ class TransactionsDataSource(
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Any>) {
-        if (params.key > pageSize) {
+        if (params.key > pageSize || isTx) {
             return
         }
         // set network value to loading.
