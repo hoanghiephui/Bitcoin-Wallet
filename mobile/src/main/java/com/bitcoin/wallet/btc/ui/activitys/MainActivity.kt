@@ -1,6 +1,7 @@
 package com.bitcoin.wallet.btc.ui.activitys
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -24,7 +25,6 @@ import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.viewmodel.MainViewModel
 import com.bitcoin.wallet.btc.works.NotifyWorker
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
 import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
 import com.google.android.play.core.install.model.UpdateAvailability
 
@@ -100,7 +100,9 @@ class MainActivity : BaseActivity() {
             invalidateOptionsMenu()
         }
         openTransactionNotify(intent)
-        checkForUpdate()
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            checkForUpdate()
+        }
     }
 
     fun openMain() {

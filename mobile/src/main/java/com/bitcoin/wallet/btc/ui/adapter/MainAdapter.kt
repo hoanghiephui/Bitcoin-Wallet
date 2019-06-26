@@ -3,6 +3,7 @@ package com.bitcoin.wallet.btc.ui.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.os.Build
@@ -17,9 +18,11 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bitcoin.wallet.btc.Constants
+import com.bitcoin.wallet.btc.Constants.setMargin
 import com.bitcoin.wallet.btc.CryptoCurrency
 import com.bitcoin.wallet.btc.CryptoCurrency.Companion.getTextColor
 import com.bitcoin.wallet.btc.R
@@ -33,9 +36,8 @@ import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.service.BlockchainState
 import com.bitcoin.wallet.btc.ui.widget.DividerItemDecoration
 import com.bitcoin.wallet.btc.utils.Utils
-import com.facebook.ads.NativeAd
-import com.facebook.ads.NativeAdView
-import com.facebook.ads.NativeAdViewAttributes
+import com.bitcoin.wallet.btc.utils.WalletUtils.dpToPx
+import com.facebook.ads.*
 import com.github.mikephil.charting.components.*
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -58,7 +60,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainAdapter(private val callback: MainCallback,
+                  private val isDarkMode: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var zipHomeData: ZipHomeData? = null
     private var format: MonetaryFormat? = null
     private var exchangeRate: ExchangeRate? = null
@@ -84,7 +87,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
 
     fun onLoadAds(mNativeAd: NativeAd?) {
         this.mNativeAd = mNativeAd
-        notifyItemChanged(2)
+        notifyItemChanged(3)
     }
 
     fun addWalletBance(
@@ -102,7 +105,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
 
     fun addBlocks(blocksItem: List<BlocksItem>?) {
         this.blocksItem = blocksItem
-        notifyItemChanged(3)
+        notifyItemChanged(2)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -112,7 +115,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             R.layout.item_news -> TopStoriesViewHolder(parent.inflate(R.layout.item_top), callback)
             R.layout.init_ads -> AdsViewHolder(parent.inflate(R.layout.init_ads))
             R.layout.item_last_block -> BlockViewHolder(parent.inflate(R.layout.item_top), callback)
-            else -> ChartViewHolder(parent.inflate(R.layout.item_top_chart), fiatSymbol, callback)
+            else -> ChartViewHolder(parent.inflate(R.layout.item_top_chart), fiatSymbol, callback, isDarkMode)
         }
     }
 
@@ -230,6 +233,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                             retryLoadingButton.gone()
                         }
                         loadingProgressBar.isInvisible = networkState != NetworkState.LOADING
+                        createAndLoadNativeBannerAd(context.getString(R.string.fb_banner_native_top_dashboard))
                     }
                 }
             }
@@ -267,7 +271,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
 
                             // Create a NativeAdViewAttributes object and set the attributes
                             val attributes = NativeAdViewAttributes(itemView.context)
-                                .setBackgroundColor(itemView.context.getColorFromAttr(android.R.attr.colorBackground))
+                                //.setBackgroundColor(itemView.context.getColorFromAttr(android.R.attr.colorBackground))
                                 .setTitleTextColor(itemView.context.getColorFromAttr(R.attr.colorBgItemDrawer))
                                 .setDescriptionTextColor(itemView.context.getColorFromAttr(R.attr.colorMenu))
                                 .setButtonBorderColor(itemView.context.getColorFromAttr(R.attr.colorAccent))
@@ -285,7 +289,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                                 )
                             )
                         }
-                        adViewContainer.isVisible = mNativeAd != null
+                        adViewContainer.isVisible = mNativeAd != null && mNativeAd?.isAdLoaded == true
                     }
                 }
             }
@@ -295,6 +299,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                     holder.blocksAdapter.submitList(blocksItem)
                 }
             }
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        if (holder is ChartViewHolder) {
+            holder.onDestroyAds()
         }
     }
 
@@ -436,8 +446,8 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             return when (position) {
                 0 -> R.layout.item_top_wallet
                 1 -> R.layout.item_top_chart
-                2 -> R.layout.init_ads
-                3 -> R.layout.item_last_block
+                2 -> R.layout.item_last_block
+                3 -> R.layout.init_ads
                 4 -> R.layout.item_top
                 else -> R.layout.item_news
             }
@@ -445,8 +455,8 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             return when (position) {
                 0 -> R.layout.item_top_wallet
                 1 -> R.layout.item_top_chart
-                2 -> R.layout.init_ads
-                3 -> R.layout.item_top
+                3 -> R.layout.init_ads
+                2 -> R.layout.item_top
                 else -> R.layout.item_news
             }
         }
@@ -567,8 +577,9 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     class ChartViewHolder(
         itemView: View,
         private val fiatSymbol: String,
-        private val callback: MainCallback
-    ) : RecyclerView.ViewHolder(itemView), LayoutContainer, View.OnClickListener {
+        private val callback: MainCallback,
+        private val isDarkMode: Boolean
+    ) : RecyclerView.ViewHolder(itemView), LayoutContainer, View.OnClickListener, NativeAdListener {
         override val containerView: View?
             get() = itemView
 
@@ -581,6 +592,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                 itemView.findViewById(R.id.tvAll)
             )
         }
+        private var mNativeBannerAd: NativeBannerAd? = null
+        private var mAdBackgroundColor: Int = 0
+        private var mTitleColor: Int = 0
+        private var mLinkColor: Int = 0
+        private var mContentColor: Int = 0
+        private var mCtaBgColor: Int = 0
 
         init {
             initChart()
@@ -596,6 +613,82 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                 btnXlm,
                 retryLoadingButton
             )
+            adContainer.apply {
+                gone()
+                background = ContextCompat.getDrawable(itemView.context, R.drawable.bg_up_next)
+                setPadding(8)
+                setMargin(this, dpToPx(context, 8))
+            }
+        }
+
+        fun createAndLoadNativeBannerAd(id: String) {
+            mNativeBannerAd = NativeBannerAd(itemView.context, id)
+
+            // Set a listener to get notified when the ad was loaded.
+            mNativeBannerAd?.setAdListener(this)
+
+            // Initiate a request to load an ad.
+            mNativeBannerAd?.loadAd()
+        }
+
+        fun onDestroyAds(){
+            mNativeBannerAd?.destroy()
+            mNativeBannerAd = null
+        }
+
+        private fun reloadAdBannerContainer() {
+            if (mNativeBannerAd != null && mNativeBannerAd?.isAdLoaded == true) {
+                adContainer.removeAllViews()
+
+                when (isDarkMode) {
+                    false -> {
+                        mAdBackgroundColor = Color.WHITE
+                        mTitleColor = BaseFragment.COLOR_DARK_GRAY
+                        mLinkColor = Color.WHITE
+                        mContentColor = BaseFragment.COLOR_LIGHT_GRAY
+                        mCtaBgColor = BaseFragment.COLOR_CTA_BLUE_BG
+                    }
+                    true -> {
+                        mAdBackgroundColor = Color.BLACK
+                        mTitleColor = Color.WHITE
+                        mContentColor = Color.LTGRAY
+                        mLinkColor = Color.BLACK
+                        mCtaBgColor = Color.WHITE
+                    }
+                }
+                // Create a NativeAdViewAttributes object and set the attributes
+                val attributes = NativeAdViewAttributes(itemView.context)
+                    .setBackgroundColor(mAdBackgroundColor)
+                    .setTitleTextColor(mTitleColor)
+                    .setDescriptionTextColor(mContentColor)
+                    .setButtonBorderColor(mCtaBgColor)
+                    .setButtonTextColor(mLinkColor)
+                    .setButtonColor(mCtaBgColor)
+
+                // Use NativeAdView.render to generate the ad View
+                val adView = NativeBannerAdView.render(itemView.context, mNativeBannerAd, NativeBannerAdView.Type.HEIGHT_100, attributes)
+
+                // Add adView to the container showing Ads
+                adContainer.addView(adView, 0)
+                adContainer.visible()
+            }
+        }
+
+        override fun onAdClicked(p0: Ad?) {
+
+        }
+
+        override fun onMediaDownloaded(p0: Ad?) {
+        }
+
+        override fun onError(p0: Ad?, p1: AdError?) {
+        }
+
+        override fun onAdLoaded(p0: Ad?) {
+            reloadAdBannerContainer()
+        }
+
+        override fun onLoggingImpression(p0: Ad?) {
         }
 
         override fun onClick(v: View) {
@@ -818,7 +911,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             get() = itemView
 
         init {
-            adViewContainer.gone()
+            adViewContainer.apply {
+                gone()
+                background = ContextCompat.getDrawable(itemView.context, R.drawable.bg_up_next)
+                setPadding(8)
+                setMargin(this, dpToPx(context, 8))
+            }
         }
     }
 
@@ -836,10 +934,13 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             recyClear.apply {
                 layoutManager = LinearLayoutManager(itemView.context)
                 setHasFixedSize(true)
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, false))
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, true))
                 adapter = blocksAdapter
             }
-            txtViewMore.gone()
+            txtViewMore.text = "View all"
+            txtViewMore.setOnClickListener {
+                callback.onClickViewAllBlock()
+            }
         }
     }
 
@@ -855,5 +956,6 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         fun onClickMoreStory()
         fun onClickMoreDiscover()
         fun onClickBlocks(hash: String?, totalSend: Long?, weight: Long?)
+        fun onClickViewAllBlock()
     }
 }

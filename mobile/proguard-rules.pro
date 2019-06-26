@@ -457,3 +457,5 @@
 -keep class com.bitcoin.wallet.btc.model.** { *; }
 
 -keep class com.android.vending.billing.**
+-keep class com.bitcoin.wallet.btc.FilesWallet.** { *; }
+-keep class com.bitcoin.wallet.btc.Constants.** { *; }

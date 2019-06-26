@@ -46,8 +46,7 @@ class ExplorerActivity : BaseActivity(), View.OnKeyListener {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        setSupportActionBar(toolbar)
-        supportActionBar?.title = ""
+        setupToolbar("Bitcoin Explorer")
         initRecyclerView()
         initViewModel()
         edtSearch.setOnKeyListener(this)

@@ -1,60 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/cardViewMore"
         android:visibility="gone"
         tools:visibility="visible"
+        android:background="@drawable/bg_up_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:cardUseCompatPadding="true">
+        android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.appcompat.widget.AppCompatTextView
+            android:text="Discover More Assets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtTitle"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            style="@style/TextAppearance.Body1.Medium"/>
+
+    <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:colorControlHighlight"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyClear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:layout_marginTop="4dp"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:text="Discover More Assets"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtTitle"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="16dp"
-                style="@style/TextAppearance.Body1.Medium"/>
-
-        <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="?android:colorControlHighlight"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyClear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:layout_marginTop="4dp"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:background="?selectableItemBackground"
-                android:gravity="center_vertical"
-                tools:text="View more stories"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                style="@style/TextAppearance.Body1.Medium"
-                android:textSize="13sp"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_grey_600_24dp"
-                android:id="@+id/txtViewMore"/>
-    </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+    <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:background="?selectableItemBackground"
+            android:gravity="center_vertical"
+            tools:text="View more stories"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            style="@style/TextAppearance.Body1.Medium"
+            android:textSize="13sp"
+            android:drawableEnd="@drawable/ic_keyboard_arrow_right_grey_600_24dp"
+            android:id="@+id/txtViewMore"/>
+</LinearLayout>

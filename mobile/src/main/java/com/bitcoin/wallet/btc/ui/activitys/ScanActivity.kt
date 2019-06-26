@@ -349,7 +349,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
             return dialog.create()
         }
 
-        override fun onCancel(dialog: DialogInterface?) {
+        override fun onCancel(dialog: DialogInterface) {
             activity?.finish()
         }
 

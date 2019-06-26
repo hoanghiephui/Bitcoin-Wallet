@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Process
-import android.preference.PreferenceManager
 import androidx.core.content.edit
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.Constants
@@ -39,7 +39,7 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
     private val PREFS_KEY_INITIATE_RESET = "initiate_reset"
     private val PREFS_KEY_EXTENDED_PUBLIC_KEY = "extended_public_key"
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (activity == null) {
             return
@@ -57,23 +57,23 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
             addPreferencesFromResource(R.xml.config)
         }
 
-        val darkMode: SwitchPreference = findPreference("dark_preference") as SwitchPreference
-        darkMode.setDefaultValue(isDark)
-        darkMode.isChecked = isDark
-        darkMode.onPreferenceChangeListener = this
+        val darkMode: SwitchPreference? = findPreference<SwitchPreference>("dark_preference")
+        darkMode?.setDefaultValue(isDark)
+        darkMode?.isChecked = isDark
+        darkMode?.onPreferenceChangeListener = this
 
-        val currency = findPreference("notify_coin")
-        currency.onPreferenceChangeListener = this
+        val currency = findPreference<SwitchPreference>("notify_coin")
+        currency?.onPreferenceChangeListener = this
 
         backgroundThread = HandlerThread("backgroundThread", Process.THREAD_PRIORITY_BACKGROUND)
         backgroundThread?.let {
             it.start()
             backgroundHandler = Handler(it.looper)
         }
-        trustedPeerPreference = findPreference(Configuration.PREFS_KEY_TRUSTED_PEER)
+        trustedPeerPreference = findPreference(PREFS_KEY_TRUSTED_PEER)
         trustedPeerPreference?.onPreferenceChangeListener = this
 
-        trustedPeerOnlyPreference = findPreference(Configuration.PREFS_KEY_TRUSTED_PEER_ONLY)
+        trustedPeerOnlyPreference = findPreference(PREFS_KEY_TRUSTED_PEER_ONLY)
         trustedPeerOnlyPreference?.onPreferenceChangeListener = this
         updateTrustedPeer()
     }

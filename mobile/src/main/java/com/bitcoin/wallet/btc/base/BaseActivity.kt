@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -13,8 +12,10 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.R
+import com.bitcoin.wallet.btc.extension.visible
 import com.facebook.ads.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
@@ -160,7 +161,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), NativeAdListener {
 
             // Add adView to the container showing Ads
             mNativeAdContainer?.addView(adView, 0)
-            mNativeAdContainer?.setBackgroundColor(Color.TRANSPARENT)
+            mNativeAdContainer?.visible()
         }
     }
 

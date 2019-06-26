@@ -113,7 +113,7 @@ class BackupDialog : BaseBottomSheetDialogFragment() {
         }
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         passwordView?.removeTextChangedListener(textWatcher)
         passwordAgainView?.removeTextChangedListener(textWatcher)
 

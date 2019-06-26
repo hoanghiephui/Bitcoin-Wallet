@@ -27,7 +27,7 @@ class EditAddressBookEntryFragment : DialogFragment() {
     private var addressBookDao: AddressBookDao? = null
     private var wallet: Wallet? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         val application = activity.application
         this.addressBookDao = AppDatabase.getDatabase(context).addressBookDao()

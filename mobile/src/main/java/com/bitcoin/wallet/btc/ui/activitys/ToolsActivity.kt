@@ -7,16 +7,21 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProviders
+import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.getTextString
+import com.bitcoin.wallet.btc.extension.gone
 import com.bitcoin.wallet.btc.extension.hideKeyboard
 import com.bitcoin.wallet.btc.extension.observeNotNull
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.utils.Utils.convertDate
 import com.bitcoin.wallet.btc.utils.Utils.onGetDate
+import com.bitcoin.wallet.btc.utils.WalletUtils
 import com.bitcoin.wallet.btc.viewmodel.ToolsViewModel
 import com.facebook.ads.NativeBannerAdView
 import com.google.android.material.snackbar.Snackbar
@@ -24,6 +29,7 @@ import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
 import kotlinx.android.synthetic.main.activity_tools.*
+import kotlinx.android.synthetic.main.init_ads.*
 import java.text.NumberFormat
 import java.util.*
 
@@ -36,8 +42,7 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         return R.layout.activity_tools
     }
 
-    private val loc = Locale.US
-    private val nf = NumberFormat.getCurrencyInstance(loc).apply {
+    private val nf = NumberFormat.getCurrencyInstance(Locale.US).apply {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
@@ -46,11 +51,13 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         setupToolbar("Price Converter")
         initSpiner()
         viewModel.priceCoinData.observeNotNull(this) {
-            val price =
-                if (spinner.getItemAtPosition(spinner.selectedItemPosition) == "BTC") it?.data?.bTC?.times(edtUsd.getTextString().toDouble())
-                else it?.data?.bCH?.times(edtUsd.getTextString().toDouble())
-            price?.let {
-                edtCoin.text = nf.format(it)
+            if (edtUsd.getTextString().isNotEmpty()) {
+                val price =
+                    if (spinner.getItemAtPosition(spinner.selectedItemPosition) == "BTC") it?.data?.bTC?.times(edtUsd.getTextString().toDouble())
+                    else it?.data?.bCH?.times(edtUsd.getTextString().toDouble())
+                price?.let { data ->
+                    edtCoin.text = nf.format(data)
+                }
             }
         }
         viewModel.networkState.observeNotNull(this) {
@@ -87,6 +94,12 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         }
         mViewType = NativeBannerAdView.Type.HEIGHT_100
         createAndLoadNativeBannerAd(getString(R.string.fb_banner_native_tools))
+        adViewContainer.apply {
+            gone()
+            background = ContextCompat.getDrawable(this@ToolsActivity, R.drawable.bg_up_next)
+            setPadding(8)
+            Constants.setMargin(this, WalletUtils.dpToPx(context, 10))
+        }
     }
 
     private fun showDate(year: Int, monthOfYear: Int, dayOfMonth: Int, spinnerTheme: Int, maxDate: Calendar?) {

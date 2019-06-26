@@ -78,6 +78,7 @@ class ExchangeRatesActivity : BaseActivity(), ExchangeRatesAdapter.OnClickListen
         config.registerOnSharedPreferenceChangeListener(this)
         viewModel.balance.observe(this, Observer<Coin> { maybeSubmitList() })
         viewModel.blockchainState.observe(this, Observer<BlockchainState> { maybeSubmitList() })
+        createAndLoadNativeBannerAd(getString(R.string.fb_banner_native_exchange))
     }
 
     override fun onDestroy() {

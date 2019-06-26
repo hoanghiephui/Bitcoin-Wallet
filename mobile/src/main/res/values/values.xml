@@ -38,14 +38,23 @@
     <string name="fb_banner_network">1213251655518578_1231039647073112</string>
     <string name="fb_banner_address">1213251655518578_1231042250406185</string>
     <string name="fb_banner_scan">1213251655518578_1231046007072476</string>
-    <string name="fb_banner_barcode">1213251655518578_1231048040405606</string>
+    <string name="fb_banner_bottom_address">1213251655518578_1231048040405606</string>
     <string name="fb_banner_news">1213251655518578_1238779769632433</string>
     <string name="fb_banner_transaction_block">1213251655518578_1238780309632379</string>
     <string name="fb_banner_explorer">1213251655518578_1243491249161285</string>
     <string name="fb_banner_explorer_detail">1213251655518578_1243491572494586</string>
     <string name="fb_banner_blocks">1213251655518578_1244329719077438</string>
     <string name="fb_banner_native_tools">1213251655518578_1247250632118680</string>
+    <string name="fb_banner_native_exchange">1213251655518578_1231048037072273</string>
+    <string name="fb_native_send">1213251655518578_1249771841866559</string>
+    <string name="fb_banner_native_top_dashboard">1213251655518578_1247250628785347</string>
+    <string name="fb_full_my_address">1213251655518578_1250707795106297</string>
 
     <string name="app_id">ca-app-pub-1609742394526278~9542235028</string>
     <string name="ads_home">ca-app-pub-1609742394526278/8528536257</string>
+    <string name="ads_send">ca-app-pub-1609742394526278/1548797578</string>
+    <string name="ads_bottom_address">ca-app-pub-1609742394526278/3769612710</string>
+    <string name="ads_wallet_transactions">ca-app-pub-1609742394526278/6692903922</string>
+    <string name="ads_explorer_detail">ca-app-pub-1609742394526278/4601927201</string>
+    <string name="ads_full_my_address">ca-app-pub-1609742394526278/3571507441</string>
 </resources>

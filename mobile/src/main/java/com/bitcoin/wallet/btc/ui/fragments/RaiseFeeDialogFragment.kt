@@ -92,7 +92,7 @@ class RaiseFeeDialogFragment : DaggerDialogFragment() {
 
     //private static final Logger log = LoggerFactory.getLogger(RaiseFeeDialogFragment.class);todo log
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         this.application = activity.application
         this.config = application!!.config
@@ -160,7 +160,7 @@ class RaiseFeeDialogFragment : DaggerDialogFragment() {
         return dialog
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         this.dialog = null
 
         wipePasswords()

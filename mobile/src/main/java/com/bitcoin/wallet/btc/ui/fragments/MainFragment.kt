@@ -53,7 +53,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     private lateinit var mNativeAd: NativeAd
 
     private val mainAdapter by lazy {
-        MainAdapter(this)
+        MainAdapter(this, baseActivity().isDarkMode)
     }
 
     val config: Configuration by lazy {
@@ -135,7 +135,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             }
         })
         createAndLoadNativeAds(getString(R.string.fb_native_home))
-        loadAdView()
+        loadGoogleAdView()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -168,7 +168,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         }
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val externalStorageState = Environment.getExternalStorageState()
         val enableRestoreWalletOption =
@@ -191,7 +191,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.action_settings -> {
                 startActivity(Intent(requireActivity(), SettingActivity::class.java))
@@ -236,6 +236,9 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             }
             R.id.menu_explorer -> {
                 ExplorerActivity.open(baseActivity())
+            }
+            R.id.menu_tools -> {
+                ToolsActivity.open(baseActivity())
             }
         }
         return true
@@ -345,6 +348,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         hash?.let { ExplorerDetailActivity.open(baseActivity(), it) }
     }
 
+    override fun onClickViewAllBlock() {
+        BlocksActivity.open(baseActivity(), Utils.onGetDate("yyyy-MM-dd"))
+    }
+
     private fun onGetDataHome(
         timeSpan: TimeSpan,
         cryptoCurrency: CryptoCurrency
@@ -417,9 +424,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 getString(R.string.fb_native_home) -> {
                     mainAdapter.onLoadAds(mNativeAd)
                 }
-                getString(R.string.fb_native_home_bottom) -> {
-                    //viewAdsTwo.visible()
-                }
             }
         }
     }
@@ -430,9 +434,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             when (ad.placementId) {
                 getString(R.string.fb_native_home) -> {
                     mainAdapter.onLoadAds(null)
-                }
-                getString(R.string.fb_native_home_bottom) -> {
-                    //viewAdsTwo.gone()
                 }
             }
         }

@@ -26,7 +26,11 @@ import com.bitcoin.wallet.btc.ui.widget.CurrencyCalculatorLink
 import com.bitcoin.wallet.btc.utils.Configuration
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.viewmodel.RequestCoinsViewModel
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_request_coin.*
+import kotlinx.android.synthetic.main.init_ads.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.bitcoinj.core.Address
 import org.bitcoinj.script.Script
@@ -42,6 +46,7 @@ class RequestCoinActivity : BaseActivity() {
         getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
     private var amountCalculatorLink: CurrencyCalculatorLink? = null
+    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun onAttachedToWindow() {
         setShowWhenLocked(true)
@@ -165,6 +170,8 @@ class RequestCoinActivity : BaseActivity() {
         amountCalculatorLink?.exchangeDirection?.let {
             config.lastExchangeDirection = it
         }
+        adView?.destroy()
+        adView = null
         super.onDestroy()
     }
 
@@ -203,6 +210,11 @@ class RequestCoinActivity : BaseActivity() {
         saveInstanceState(outState)
     }
 
+    override fun onError(ad: Ad, error: AdError) {
+        super.onError(ad, error)
+        loadGoogleAdView()
+    }
+
     private fun saveInstanceState(outState: Bundle) {
         val receiveAddress = viewModel.freshReceiveAddress.value
         if (receiveAddress != null)
@@ -232,6 +244,18 @@ class RequestCoinActivity : BaseActivity() {
         builder.setText(request.toString())
         builder.setChooserTitle(R.string.request_coins_share)
         builder.startChooser()
+    }
+
+    private fun loadGoogleAdView() {
+        adView?.destroy()
+        adView = com.google.android.gms.ads.AdView(this)
+        val adRequest = AdRequest.Builder().build()
+        adView?.let {
+            it.adSize = com.google.android.gms.ads.AdSize.SMART_BANNER
+            it.adUnitId = getString(R.string.ads_send)
+            adViewContainer?.addView(it)
+            it.loadAd(adRequest)
+        }
     }
 
     companion object {

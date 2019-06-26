@@ -1,6 +1,8 @@
 package com.bitcoin.wallet.btc;
 
 import android.text.format.DateUtils;
+import android.view.View;
+import android.view.ViewGroup;
 import com.google.common.io.BaseEncoding;
 import okhttp3.OkHttpClient;
 import org.bitcoinj.core.Coin;
@@ -74,5 +76,19 @@ public class Constants {
         httpClientBuilder.writeTimeout(15, TimeUnit.SECONDS);
         httpClientBuilder.readTimeout(15, TimeUnit.SECONDS);
         HTTP_CLIENT = httpClientBuilder.build();
+    }
+
+    public static void setMargin(View v, int margin) {
+        ViewGroup.MarginLayoutParams params =
+                (ViewGroup.MarginLayoutParams)v.getLayoutParams();
+        params.setMargins(margin, margin,
+                margin, margin);
+    }
+
+    public static void setMarginStartEnd(View v, int margin) {
+        ViewGroup.MarginLayoutParams params =
+                (ViewGroup.MarginLayoutParams)v.getLayoutParams();
+        params.setMargins(margin, params.topMargin,
+                margin, params.bottomMargin);
     }
 }

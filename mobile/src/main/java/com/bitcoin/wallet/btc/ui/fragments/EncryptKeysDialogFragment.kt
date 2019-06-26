@@ -63,7 +63,7 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
         super.onResume()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         passwordAgainView.removeTextChangedListener(textWatcher)
         passwordView.removeTextChangedListener(textWatcher)
         wipePasswords()

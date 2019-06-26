@@ -66,7 +66,7 @@ class NotifyWorker @Inject constructor(
                 .build()
             workManager.enqueueUniquePeriodicWork(
                 base,
-                ExistingPeriodicWorkPolicy.KEEP, PeriodicWorkRequest.Builder(NotifyWorker::class.java, 15, TimeUnit.MINUTES)
+                ExistingPeriodicWorkPolicy.KEEP, PeriodicWorkRequest.Builder(NotifyWorker::class.java, 20, TimeUnit.MINUTES)
                     .setInputData(
                         Data.Builder()
                             .putString("base", base)

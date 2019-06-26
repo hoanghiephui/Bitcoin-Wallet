@@ -35,8 +35,11 @@ import com.bitcoin.wallet.btc.ui.fragments.*
 import com.bitcoin.wallet.btc.ui.widget.TopLinearLayoutManager
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.WalletTransactionsViewModel
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
 import com.facebook.ads.AdSize
 import com.facebook.ads.AdView
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_wallet_transaction.*
 import kotlinx.android.synthetic.main.init_ads.*
 import org.bitcoinj.core.Address
@@ -61,6 +64,7 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
         application.config
     }
     private var bannerAdView: AdView? = null
+    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_wallet_transaction
@@ -173,6 +177,9 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
 
     override fun onDestroy() {
         bannerAdView?.destroy()
+        bannerAdView = null
+        adView?.destroy()
+        adView = null
         super.onDestroy()
     }
 
@@ -336,13 +343,31 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
         }
     }
 
+    override fun onError(ad: Ad, error: AdError) {
+        super.onError(ad, error)
+        loadGoogleAdView()
+    }
+
     private fun loadAdView() {
         bannerAdView?.destroy()
         bannerAdView = null
         bannerAdView = AdView(this, getString(R.string.fb_banner_transaction), AdSize.BANNER_HEIGHT_50)
         bannerAdView?.let {nonNullBannerAdView ->
             adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.setAdListener(this)
             nonNullBannerAdView.loadAd()
+        }
+    }
+
+    private fun loadGoogleAdView() {
+        adView?.destroy()
+        adView = com.google.android.gms.ads.AdView(this)
+        val adRequest = AdRequest.Builder().build()
+        adView?.let {
+            it.adSize = com.google.android.gms.ads.AdSize.SMART_BANNER
+            it.adUnitId = getString(R.string.ads_wallet_transactions)
+            adViewContainer?.addView(it)
+            it.loadAd(adRequest)
         }
     }
 

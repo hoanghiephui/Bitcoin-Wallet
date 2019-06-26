@@ -6,6 +6,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Resources
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.*
@@ -14,20 +15,21 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
+import com.bitcoin.wallet.btc.base.BaseFragment
 import com.bitcoin.wallet.btc.data.*
-import com.bitcoin.wallet.btc.extension.gone
-import com.bitcoin.wallet.btc.extension.hideKeyboard
-import com.bitcoin.wallet.btc.extension.invisible
-import com.bitcoin.wallet.btc.extension.visible
+import com.bitcoin.wallet.btc.extension.*
 import com.bitcoin.wallet.btc.service.BlockchainService
 import com.bitcoin.wallet.btc.ui.activitys.ScanActivity.Companion.REQUEST_CODE_SCAN
 import com.bitcoin.wallet.btc.ui.adapter.ListItem
@@ -39,9 +41,10 @@ import com.bitcoin.wallet.btc.ui.widget.CurrencyCalculatorLink
 import com.bitcoin.wallet.btc.ui.widget.DialogBuilder
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.SendViewModel
-import com.facebook.ads.NativeBannerAdView
+import com.facebook.ads.*
 import com.google.common.base.Joiner
 import kotlinx.android.synthetic.main.activity_send_coin.*
+import kotlinx.android.synthetic.main.init_ads.*
 import kotlinx.android.synthetic.main.item_transaction.*
 import kotlinx.android.synthetic.main.item_wallet_address.*
 import org.bitcoinj.core.*
@@ -80,13 +83,15 @@ class SendCoinActivity : BaseActivity() {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
+    private var mNativeAd: NativeAd? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_send_coin
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        setupToolbar("Send")
+        setupToolbar("Send Bitcoin")
+        createAndLoadNativeAd()
         backgroundThread = HandlerThread("backgroundThread", Process.THREAD_PRIORITY_BACKGROUND).also {
             it.start()
             backgroundHandler = Handler(it.looper)
@@ -214,9 +219,6 @@ class SendCoinActivity : BaseActivity() {
             btnClear.gone()
             viewAddress.visible()
         }
-
-        mViewType = NativeBannerAdView.Type.HEIGHT_100
-        createAndLoadNativeBannerAd(getString(R.string.fb_banner_native_send))
     }
 
     private fun viewFee() {
@@ -280,13 +282,15 @@ class SendCoinActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         amountCalculatorLink?.exchangeDirection?.let {
             config.lastExchangeDirection = it
         }
         handler.removeCallbacksAndMessages(null)
         backgroundThread?.looper?.quit()
         viewModel.sentTransaction?.confidence?.removeEventListener(sentTransactionConfidenceListener)
+        mNativeAd?.destroy()
+        mNativeAd = null
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -1175,6 +1179,52 @@ class SendCoinActivity : BaseActivity() {
 
             }
         }
+    }
+
+    override fun onAdLoaded(ad: Ad) {
+        reloadAdContainer()
+        super.onAdLoaded(ad)
+    }
+
+    ///ads
+    private fun createAndLoadNativeAd() {
+        mNativeAd = NativeAd(this, getString(R.string.fb_native_send))
+        mNativeAd?.setAdListener(this)
+        mNativeAd?.loadAd()
+        adViewContainer.apply {
+            gone()
+            background = ContextCompat.getDrawable(this@SendCoinActivity, R.drawable.bg_up_next)
+            setPadding(8)
+            Constants.setMarginStartEnd(this, WalletUtils.dpToPx(context, 10))
+        }
+    }
+
+    private fun reloadAdContainer() {
+        mNativeAd?.let {
+            val mNativeAdContainer = adViewContainer
+            mNativeAdContainer?.removeAllViews()
+
+            // Create a NativeAdViewAttributes object and set the attributes
+            val attributes = NativeAdViewAttributes(this)
+                //.setBackgroundColor(itemView.context.getColorFromAttr(android.R.attr.colorBackground))
+                .setTitleTextColor(getColorFromAttr(R.attr.colorBgItemDrawer))
+                .setDescriptionTextColor(getColorFromAttr(R.attr.colorMenu))
+                .setButtonBorderColor(getColorFromAttr(R.attr.colorAccent))
+                .setButtonTextColor(ContextCompat.getColor(this, R.color.white))
+                .setButtonColor(getColorFromAttr(R.attr.invertedColorAlpha2))
+
+            // Use NativeAdView.render to generate the ad View
+            val mAdView = NativeAdView.render(this, it, attributes)
+
+            mNativeAdContainer?.addView(
+                mAdView,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    (Resources.getSystem().displayMetrics.density * 200).toInt()
+                )
+            )
+        }
+        adViewContainer.isVisible = mNativeAd != null && mNativeAd?.isAdLoaded == true
     }
 
     companion object {

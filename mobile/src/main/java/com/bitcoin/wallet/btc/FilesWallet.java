@@ -6,7 +6,9 @@ import org.bitcoinj.core.NetworkParameters;
 
 import java.io.File;
 
-public class FilesWallet extends Constants {
+import static com.bitcoin.wallet.btc.Constants.NETWORK_PARAMETERS;
+
+public class FilesWallet {
     public static final long WALLET_AUTOSAVE_DELAY_MS = 3 * DateUtils.SECOND_IN_MILLIS;
     public static final File EXTERNAL_STORAGE_DIR = Environment.getExternalStorageDirectory();
     public static final File EXTERNAL_WALLET_BACKUP_DIR = Environment

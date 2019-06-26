@@ -37,7 +37,9 @@ import java.text.NumberFormat
 import java.util.*
 
 class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
-                               private val showQrCode: (String?) -> Unit) :
+                               private val showQrCode: (String?) -> Unit,
+                               private val clickTransactionId: (String?) -> Unit
+) :
     DataPagingListAdapter<Any, RecyclerView.ViewHolder>(
         diffCallback = object : DiffUtil.ItemCallback<Any>() {
             override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
@@ -83,6 +85,9 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                         tvOutput.text = number.format(txs.valueOut ?: 0)?.plus(" BTC")
                         tvFees.text = number.format(txs.fees ?: 0)?.plus(" BTC")
                         tvSizeT.text = txs.size?.toString()
+                        tvTransactionId.setOnClickListener {
+                            clickTransactionId(txs.txid)
+                        }
                     }
                 }
             }

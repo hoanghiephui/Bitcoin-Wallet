@@ -6,4 +6,4 @@
               android:layout_alignParentBottom="true"
               android:layout_gravity="bottom|center_horizontal"
               android:orientation="vertical"
-              android:paddingTop="2dp"/>
+              android:paddingTop="4dp"/>

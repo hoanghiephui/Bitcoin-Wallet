@@ -13,8 +13,11 @@ import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.ui.adapter.TransactionsExtraAdapter
 import com.bitcoin.wallet.btc.ui.fragments.WalletAddressBottomDialog
 import com.bitcoin.wallet.btc.viewmodel.ExplorerViewModel
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
 import com.facebook.ads.AdSize
 import com.facebook.ads.AdView
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.init_ads.*
 import org.bitcoinj.core.Address
@@ -29,9 +32,12 @@ class ExplorerDetailActivity : BaseActivity() {
             viewModel.retryTransaction()
         }, showQrCode = {
             WalletAddressBottomDialog.show(this, Address.fromString(Constants.NETWORK_PARAMETERS, it), null)
+        }, clickTransactionId = {
+            it?.let { it1 -> open(this, it1) }
         })
     }
     private var bannerAdView: AdView? = null
+    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_list
@@ -68,7 +74,14 @@ class ExplorerDetailActivity : BaseActivity() {
     override fun onDestroy() {
         bannerAdView?.destroy()
         bannerAdView = null
+        adView?.destroy()
+        adView = null
         super.onDestroy()
+    }
+
+    override fun onError(ad: Ad, error: AdError) {
+        super.onError(ad, error)
+        loadGoogleAdView()
     }
 
     private fun loadAdView() {
@@ -77,7 +90,20 @@ class ExplorerDetailActivity : BaseActivity() {
         bannerAdView = AdView(this, getString(R.string.fb_banner_explorer_detail), AdSize.BANNER_HEIGHT_50)
         bannerAdView?.let {nonNullBannerAdView ->
             adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.setAdListener(this)
             nonNullBannerAdView.loadAd()
+        }
+    }
+
+    private fun loadGoogleAdView() {
+        adView?.destroy()
+        adView = com.google.android.gms.ads.AdView(this)
+        val adRequest = AdRequest.Builder().build()
+        adView?.let {
+            it.adSize = com.google.android.gms.ads.AdSize.SMART_BANNER
+            it.adUnitId = getString(R.string.ads_explorer_detail)
+            adViewContainer?.addView(it)
+            it.loadAd(adRequest)
         }
     }
 

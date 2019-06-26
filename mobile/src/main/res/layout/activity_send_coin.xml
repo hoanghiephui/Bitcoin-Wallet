@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:toolbarId="@+id/toolbar"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+                app:layout_scrollFlags="exitUntilCollapsed|scroll"
                 android:fitsSystemWindows="true"
                 app:titleEnabled="false"
                 app:contentScrim="?attr/colorPrimary">
@@ -65,7 +65,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_back"
                     app:popupTheme="?android:toolbarStyle"
                     app:theme="?android:toolbarStyle">
@@ -102,7 +102,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:cardUseCompatPadding="true"
-                    app:cardPreventCornerOverlap="true"
                     app:cardCornerRadius="4dp"
                     app:contentPaddingBottom="8dp"
                     android:layout_marginStart="8dp"
@@ -132,7 +131,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"/>
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/payeeNameView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -141,16 +140,18 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             tools:text="paynem"
+                            style="@style/TextAppearance.Subtitle2"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"/>
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/payeeVerifiedByView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toBottomOf="@+id/payeeNameView"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
+                            style="@style/TextAppearance.Subtitle2"
                             android:singleLine="true"
                             android:textSize="@dimen/font_size_small"
                             tools:text="verified"
@@ -263,16 +264,25 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <include
+                    layout="@layout/init_ads"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
             <androidx.cardview.widget.CardView
                     android:id="@+id/cardView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView"
+                    app:layout_constraintTop_toBottomOf="@+id/adViewContainer"
                     app:cardUseCompatPadding="true"
-                    app:cardPreventCornerOverlap="true"
                     app:cardCornerRadius="4dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp">
 
@@ -353,7 +363,7 @@
                                 tools:targetApi="o"/>
                     </com.bitcoin.wallet.btc.ui.widget.CurrencyAmountView>
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/hintView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -361,6 +371,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:textSize="@dimen/font_size_small"
+                            style="@style/TextAppearance.Subtitle2"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginTop="8dp"/>
@@ -420,17 +431,18 @@
                                         style="@style/TextAppearance.Subtitle1"
                                         tools:text="Priority"/>
 
-                                <TextView
+                                <androidx.appcompat.widget.AppCompatTextView
                                         android:id="@+id/textviewFeeTime"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_vertical"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
+                                        style="@style/TextAppearance.Subtitle2"
                                         tools:text="~ 60 min"/>
 
                             </LinearLayout>
 
-                            <TextView
+                            <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/textviewFeeAbsolute"
                                     android:layout_width="match_parent"
                                     android:layout_height="48dp"
@@ -438,8 +450,8 @@
                                     android:layout_marginRight="16dp"
                                     android:layout_weight="0.9"
                                     android:gravity="right|center_vertical"
-                                    android:textSize="16sp"
-                                    tools:ignore="MissingPrefix"
+                                    android:textSize="15sp"
+                                    style="@style/TextAppearance.Subtitle1.Medium"
                                     tools:text="0.000081BTC (0.43 USD)"/>
 
                             <Spinner
@@ -526,16 +538,8 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <include
-                    layout="@layout/init_ads"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView2"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvNote"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -544,7 +548,7 @@
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/adViewContainer"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView2"
                     android:text="Note: Payments are irreversible! Always check the receiving address."
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="12dp"
