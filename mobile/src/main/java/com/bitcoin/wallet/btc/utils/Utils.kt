@@ -32,7 +32,7 @@ object Utils {
     }
 
     fun isNegative(d: Double): Boolean {
-        return java.lang.Double.compare(d, 0.0) < 0
+        return d.compareTo(0.0) < 0
     }
 
     fun cleanQueryMap(options: HashMap<String, Any>?): HashMap<String, Any> {

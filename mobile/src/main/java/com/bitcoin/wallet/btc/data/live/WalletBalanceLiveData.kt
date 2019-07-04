@@ -2,10 +2,13 @@ package com.bitcoin.wallet.btc.data.live
 
 import android.content.SharedPreferences
 import android.os.AsyncTask
+import androidx.annotation.WorkerThread
 import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.utils.Configuration
+import kotlinx.coroutines.*
 import org.bitcoinj.core.Coin
+import org.bitcoinj.core.Context
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.utils.Threading
 import org.bitcoinj.wallet.Wallet
@@ -16,6 +19,7 @@ import org.bitcoinj.wallet.listeners.WalletReorganizeEventListener
 
 class WalletBalanceLiveData @JvmOverloads constructor(
     application: BitcoinApplication,
+    private val viewModelScope: CoroutineScope,
     private val balanceType: Wallet.BalanceType = Wallet.BalanceType.ESTIMATED
 ) : BaseWalletLiveData<Coin>(application), SharedPreferences.OnSharedPreferenceChangeListener {
     private val config: Configuration = application.config
@@ -47,11 +51,23 @@ class WalletBalanceLiveData @JvmOverloads constructor(
     }
 
     override fun load() {
-        val wallet = wallet
-        AsyncTask.execute {
+        viewModelScope.launch {
+            loadBlance()
+        }
+        /*AsyncTask.execute {
             org.bitcoinj.core.Context.propagate(Constants.CONTEXT)
             postValue(wallet?.getBalance(balanceType))
-        }
+        }*/
+    }
+
+    @WorkerThread
+    suspend fun loadBlance() = withContext(Dispatchers.IO) {
+        Context.propagate(Constants.CONTEXT)
+        postValue(wallet?.getBalance(balanceType))
+    }
+
+    fun stopJobLoadBlance() {
+        viewModelScope.coroutineContext.cancel()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

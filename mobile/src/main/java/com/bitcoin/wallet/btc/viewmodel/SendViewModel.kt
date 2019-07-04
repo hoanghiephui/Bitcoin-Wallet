@@ -11,6 +11,10 @@ import com.bitcoin.wallet.btc.data.live.*
 import com.bitcoin.wallet.btc.model.PriceDatum
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.repository.WalletRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.wallet.Wallet
 import javax.inject.Inject
@@ -19,6 +23,12 @@ class SendViewModel @Inject constructor(
     application: Application,
     repository: WalletRepository
 ) : BaseViewModel<WalletRepository>(repository) {
+    private val viewModelScope = CoroutineScope(Job() + Dispatchers.Main)
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.coroutineContext.cancel()
+    }
     //get list price
     private val priceRequestData = MutableLiveData<String>()
     private val zipResult = Transformations.map(priceRequestData) {
@@ -56,7 +66,7 @@ class SendViewModel @Inject constructor(
         BlockchainStateLiveData(application as BitcoinApplication)
     }
     val balance: WalletBalanceLiveData by lazy {
-        WalletBalanceLiveData(application as BitcoinApplication, Wallet.BalanceType.AVAILABLE)
+        WalletBalanceLiveData(application as BitcoinApplication, viewModelScope, Wallet.BalanceType.AVAILABLE)
     }
     val progress = MutableLiveData<String>()
 

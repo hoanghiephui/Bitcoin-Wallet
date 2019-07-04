@@ -10,7 +10,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.text.HtmlCompat
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bitcoin.wallet.btc.CryptoCurrency
@@ -18,7 +20,10 @@ import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.TimeSpan
 import com.bitcoin.wallet.btc.base.BaseFragment
 import com.bitcoin.wallet.btc.data.PaymentIntent
-import com.bitcoin.wallet.btc.extension.*
+import com.bitcoin.wallet.btc.extension.gone
+import com.bitcoin.wallet.btc.extension.listenClickViews
+import com.bitcoin.wallet.btc.extension.observeNotNull
+import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.service.BlockchainState
 import com.bitcoin.wallet.btc.ui.activitys.*
 import com.bitcoin.wallet.btc.ui.activitys.ScanActivity.Companion.REQUEST_CODE_SCAN
@@ -30,9 +35,7 @@ import com.bitcoin.wallet.btc.utils.Utils
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
 import com.facebook.ads.*
 import com.google.android.gms.ads.AdRequest
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.bottom_bar_menu_layout.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.init_ads_two.*
 import org.bitcoinj.core.PrefixedChecksummedBytes
@@ -41,7 +44,6 @@ import org.bitcoinj.core.VerificationException
 import org.bitcoinj.script.Script
 
 class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallback {
-    private val behaviour by lazy { BottomSheetBehavior.from(bottomSheet) }
     private val viewModel: WalletViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory).get(WalletViewModel::class.java)
     }
@@ -50,7 +52,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
 
     private var bannerAdView: AdView? = null
     private var adView: com.google.android.gms.ads.AdView? = null
-    private lateinit var mNativeAd: NativeAd
 
     private val mainAdapter by lazy {
         MainAdapter(this, baseActivity().isDarkMode)
@@ -71,17 +72,14 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     }
 
     override fun onFragmentCreated(view: View, savedInstanceState: Bundle?) {
-        baseActivity().setSupportActionBar(bottomBar)
-        behaviour.setBottomSheetCallback({ state: Int ->
-            when (state) {
-                BottomSheetBehavior.STATE_EXPANDED -> {
-                    bottomBar.navigationIcon = requireContext().getDrawableCompat(R.drawable.ic_clear)
-                }
-                BottomSheetBehavior.STATE_COLLAPSED -> {
-                    bottomBar.navigationIcon = requireContext().getDrawableCompat(R.drawable.ic_menu)
-                }
-            }
-        })
+        baseActivity().setSupportActionBar(toolbar)
+        baseActivity().supportActionBar?.title = ""
+        val toggle = ActionBarDrawerToggle(
+            baseActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
         recyClear.apply {
             layoutManager = LinearLayoutManager(baseActivity())
             itemAnimator = null
@@ -134,8 +132,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 content?.let { HelpDialogFragment.show(baseActivity(), it) }
             }
         })
-        createAndLoadNativeAds(getString(R.string.fb_native_home))
-        loadGoogleAdView()
+        //createAndLoadNativeAds(getString(R.string.fb_native_home))
+        loadAdView()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -168,19 +166,29 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         }
     }
 
+    override fun onBackPressed(): Boolean {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            return false
+        } else {
+            return true
+
+        }
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val externalStorageState = Environment.getExternalStorageState()
         val enableRestoreWalletOption =
             Environment.MEDIA_MOUNTED == externalStorageState || Environment.MEDIA_MOUNTED_READ_ONLY == externalStorageState
-        menu?.findItem(R.id.menu_restore)?.isEnabled = enableRestoreWalletOption
+        menu.findItem(R.id.menu_restore)?.isEnabled = enableRestoreWalletOption
         val isLegacyFallback = viewModel.walletLegacyFallback.value
         if (isLegacyFallback != null) {
-            menu?.findItem(R.id.menu_legacy)?.isVisible = isLegacyFallback
+            menu.findItem(R.id.menu_legacy)?.isVisible = isLegacyFallback
         }
         val isEncrypted = (baseActivity() as MainActivity).viewModel.walletEncrypted.value
         if (isEncrypted != null) {
-            val encryptKeysOption = menu?.findItem(R.id.menu_encrypt)
+            val encryptKeysOption = menu.findItem(R.id.menu_encrypt)
             encryptKeysOption?.setTitle(
                 if (isEncrypted)
                     R.string.encrypt_change
@@ -192,7 +200,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
+        when (item.itemId) {
             R.id.action_settings -> {
                 startActivity(Intent(requireActivity(), SettingActivity::class.java))
 
@@ -244,38 +252,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         return true
     }
 
-    override fun onBackPressed(): Boolean {
-        return if (behaviour.state == BottomSheetBehavior.STATE_COLLAPSED) {
-            true
-        } else {
-            behaviour.state = BottomSheetBehavior.STATE_COLLAPSED
-            false
-        }
-    }
-
     override fun onDestroy() {
-        if (::mNativeAd.isInitialized) {
-            mNativeAd.destroy()
-        }
         bannerAdView?.destroy()
         adView?.destroy()
         bannerAdView = null
         adView = null
         super.onDestroy()
-    }
-
-    private fun createAndLoadNativeAds(unitID: String) {
-        // Create a native ad request with a unique placement ID
-        // (generate your own on the Facebook app settings).
-        // Use different ID for each ad placement in your app.
-        mNativeAd = NativeAd(activity, unitID)
-        if (::mNativeAd.isInitialized) {
-            // Set a listener to get notified when the ad was loaded.
-            mNativeAd.setAdListener(this)
-
-            // Initiate a request to load an ad.
-            mNativeAd.loadAd()
-        }
     }
 
     override fun onClick(v: View?) {
@@ -384,7 +366,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     private fun loadAdView() {
         bannerAdView?.destroy()
         bannerAdView = null
-        bannerAdView = AdView(this.activity, getString(R.string.fb_banner_transaction_block), AdSize.BANNER_HEIGHT_50)
+        bannerAdView = AdView(this.activity, getString(R.string.fb_banner_dashboard), AdSize.BANNER_HEIGHT_50)
         bannerAdView?.let {nonNullBannerAdView ->
             adViewContainers?.addView(nonNullBannerAdView)
             nonNullBannerAdView.setAdListener(object : AdListener {
@@ -410,36 +392,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         adView = com.google.android.gms.ads.AdView(baseActivity())
         val adRequest = AdRequest.Builder().build()
         adView?.let {
-            it.adSize = com.google.android.gms.ads.AdSize.SMART_BANNER
+            it.adSize = com.google.android.gms.ads.AdSize.BANNER
             it.adUnitId = getString(R.string.ads_home)
             adViewContainers?.addView(it)
             it.loadAd(adRequest)
         }
     }
-
-    override fun onAdLoaded(ad: Ad) {
-        super.onAdLoaded(ad)
-        if (activity != null && isAdded) {
-            when (ad.placementId) {
-                getString(R.string.fb_native_home) -> {
-                    mainAdapter.onLoadAds(mNativeAd)
-                }
-            }
-        }
-    }
-
-    override fun onError(ad: Ad, error: AdError) {
-        if (activity != null && isAdded) {
-            super.onError(ad, error)
-            when (ad.placementId) {
-                getString(R.string.fb_native_home) -> {
-                    mainAdapter.onLoadAds(null)
-                }
-            }
-        }
-    }
-
-
 
     private fun initViewModelBalance() {
         viewModel.blockchainState.observeNotNull(viewLifecycleOwner) {
@@ -551,7 +509,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     private fun initClicks() {
         listenClickViews(tvWarrning)
         navigationView.setNavigationItemSelectedListener {
-            behaviour.state = BottomSheetBehavior.STATE_COLLAPSED
             when (it.itemId) {
                 R.id.action_settings -> {
                     startActivity(Intent(requireActivity(), SettingActivity::class.java))
@@ -576,15 +533,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 }
             }
             return@setNavigationItemSelectedListener true
-        }
-        bottomBar.setNavigationOnClickListener {
-            behaviour.apply {
-                state = if (state == BottomSheetBehavior.STATE_EXPANDED) {
-                    BottomSheetBehavior.STATE_COLLAPSED
-                } else {
-                    BottomSheetBehavior.STATE_EXPANDED
-                }
-            }
         }
     }
 

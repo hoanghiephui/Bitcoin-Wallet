@@ -39,7 +39,7 @@ class WalletAddressBottomDialog : BaseBottomSheetDialogFragment(), AdListener {
 
     override fun onFragmentCreated(view: View, savedInstanceState: Bundle?) {
         if (address != null) {
-            val uri = BitcoinURI.convertToBitcoinURI(address, null, addressLabel, null)
+            val uri = BitcoinURI.convertToBitcoinURI(address, null, null, null)
             val bitmap = BitmapDrawable(resources, Qr.bitmap(uri))
             bitmap.isFilterBitmap = false
             imgQrCode.setImageDrawable(bitmap)

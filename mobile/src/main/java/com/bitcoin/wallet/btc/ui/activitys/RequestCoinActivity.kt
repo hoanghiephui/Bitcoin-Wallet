@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.Menu
@@ -252,7 +251,7 @@ class RequestCoinActivity : BaseActivity() {
         val adRequest = AdRequest.Builder().build()
         adView?.let {
             it.adSize = com.google.android.gms.ads.AdSize.SMART_BANNER
-            it.adUnitId = getString(R.string.ads_send)
+            it.adUnitId = getString(R.string.ads_request)
             adViewContainer?.addView(it)
             it.loadAd(adRequest)
         }

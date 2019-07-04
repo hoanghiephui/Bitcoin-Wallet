@@ -8,6 +8,7 @@
         android:layout_height="match_parent"
         android:background="?colorPrimaryDark"
         app:behavior_hideable="false"
+        android:visibility="gone"
         app:behavior_peekHeight="?actionBarSize"
         app:layout_behavior="com.bitcoin.wallet.btc.ui.widget.BottomNavigationBehavior"
         android:elevation="8dp">

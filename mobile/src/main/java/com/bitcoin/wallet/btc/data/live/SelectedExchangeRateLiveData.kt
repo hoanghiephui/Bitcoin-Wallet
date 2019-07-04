@@ -5,6 +5,7 @@ import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.loader.content.CursorLoader
 import com.bitcoin.wallet.btc.BitcoinApplication
+import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.data.ExchangeRate
 import com.bitcoin.wallet.btc.data.ExchangeRatesProvider
 import com.bitcoin.wallet.btc.utils.Configuration
@@ -17,7 +18,7 @@ class SelectedExchangeRateLiveData(application: BitcoinApplication) : LiveData<E
     init {
         this.loader = object : CursorLoader(
             application,
-            ExchangeRatesProvider.contentUri(application.packageName, false), null,
+            ExchangeRatesProvider.contentUri(BuildConfig.APPLICATION_ID, false), null,
             ExchangeRatesProvider.KEY_CURRENCY_CODE, arrayOf<String>(), null
         ) {
             override fun deliverResult(cursor: Cursor?) {

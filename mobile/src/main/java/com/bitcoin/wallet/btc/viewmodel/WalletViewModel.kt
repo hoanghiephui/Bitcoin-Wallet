@@ -4,6 +4,7 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,6 +20,7 @@ import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.repository.WalletRepository
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.utils.Qr
+import kotlinx.coroutines.*
 import org.bitcoinj.core.Address
 import org.bitcoinj.uri.BitcoinURI
 import javax.inject.Inject
@@ -27,6 +29,12 @@ class WalletViewModel @Inject constructor(
     repository: WalletRepository,
     private val application: Application
 ) : BaseViewModel<WalletRepository>(repository) {
+    private val viewModelScope = CoroutineScope(Job() + Dispatchers.Main)
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.coroutineContext.cancel()
+    }
 
     private val zipHomeRequest = MutableLiveData<RequestHome>()
     private val zipHomeData = Transformations.map(zipHomeRequest) {
@@ -84,7 +92,7 @@ class WalletViewModel @Inject constructor(
 
 
     val balance: WalletBalanceLiveData by lazy {
-        WalletBalanceLiveData(application as BitcoinApplication)
+        WalletBalanceLiveData(application as BitcoinApplication, viewModelScope)
     }
 
     val exchangeRate: SelectedExchangeRateLiveData by lazy {
@@ -96,7 +104,7 @@ class WalletViewModel @Inject constructor(
     }
 
     val currentAddress: CurrentAddressLiveData by lazy {
-        CurrentAddressLiveData(application as BitcoinApplication)
+        CurrentAddressLiveData(application as BitcoinApplication, viewModelScope)
     }
 
     val ownName: ConfigOwnNameLiveData by lazy {
@@ -117,16 +125,26 @@ class WalletViewModel @Inject constructor(
     }
 
     private fun maybeGenerateQrCode() {
-        val address = currentAddress.value
+        viewModelScope.launch {
+            parseQrCode()
+        }
+        /*val address = currentAddress.value
         if (address != null) {
             AsyncTask.execute { qrCode.postValue(Qr.bitmap(uri(address, ownName.value))) }
+        }*/
+    }
+
+    @WorkerThread
+    private suspend fun parseQrCode() = withContext(Dispatchers.IO) {
+        currentAddress.value?.let {
+            qrCode.postValue(Qr.bitmap(uri(it, ownName.value)))
         }
     }
 
     private fun maybeGenerateBitcoinUri() {
         val address = currentAddress.value
-        if (address != null) {
-            bitcoinUri.value = Uri.parse(uri(address, ownName.value))
+        currentAddress.value?.let {
+            bitcoinUri.value = Uri.parse(uri(it, ownName.value))
         }
     }
 

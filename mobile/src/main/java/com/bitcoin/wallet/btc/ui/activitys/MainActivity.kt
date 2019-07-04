@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.Menu
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
@@ -24,22 +25,31 @@ import com.bitcoin.wallet.btc.ui.fragments.TermFragment
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.viewmodel.MainViewModel
 import com.bitcoin.wallet.btc.works.NotifyWorker
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.InstallState
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), InstallStateUpdatedListener {
 
     val viewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
     }
     private val handler by lazy { Handler() }
+    private var appUpdateManager: AppUpdateManager? = null
+
     override fun layoutRes(): Int {
         return R.layout.activity_main
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        appUpdateManager = AppUpdateManagerFactory.create(this)
         if (savedInstanceState == null) {
             if (!sharedPreferences.getBoolean("policy", false)) {
                 replace(R.id.container, TermFragment(), TermFragment::class.java.simpleName)
@@ -134,20 +144,16 @@ class MainActivity : BaseActivity() {
         } else {
             NotifyWorker.clearNotify()
         }
-        val updateManager = AppUpdateManagerFactory.create(this)
-        updateManager.appUpdateInfo
-            .addOnSuccessListener {
-                if (it.updateAvailability() ==
-                    UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                ) {
-                    updateManager.startUpdateFlowForResult(
-                        it,
-                        IMMEDIATE,
-                        this,
-                        REQUEST_CODE_UPDATE
-                    )
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            appUpdateManager?.appUpdateInfo
+                ?.addOnSuccessListener {
+                    // If the update is downloaded but not installed,
+                    // notify the user to complete the update.
+                    if (it.installStatus() == InstallStatus.DOWNLOADED) {
+                        popupSnackbarForCompleteUpdate()
+                    }
                 }
-            }
+        }
         super.onResume()
     }
 
@@ -158,8 +164,22 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_UPDATE) {
-            if (requestCode != RESULT_OK) {
+            if (resultCode != RESULT_OK) {
                 Log.e("System out", "Update flow failed! Result code: $resultCode")
+                Snackbar.make(
+                    container,
+                    "Bitcoin Wallet recommends that you update to the latest version.",
+                    Snackbar.LENGTH_INDEFINITE
+                ).apply {
+                    setAction("OK") { this.dismiss() }
+                    setActionTextColor(
+                        ContextCompat.getColor(
+                            this@MainActivity,
+                            R.color.colorAccent
+                        )
+                    )
+                    show()
+                }
                 // If the update is cancelled or fails,
                 // you can request to start the update again.
             }
@@ -182,25 +202,51 @@ class MainActivity : BaseActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onDestroy() {
+        appUpdateManager?.unregisterListener(this)
+        super.onDestroy()
+    }
+
+    override fun onStateUpdate(state: InstallState?) {
+        if (state?.installStatus() == InstallStatus.DOWNLOADED) {
+            // After the update is downloaded, show a notification
+            // and request user confirmation to restart the app.
+            popupSnackbarForCompleteUpdate()
+        }
+    }
+
     private fun checkForUpdate() {
-
-        // Creates instance of the manager.
-        val appUpdateManager = AppUpdateManagerFactory.create(this)
-
+        appUpdateManager?.registerListener(this)
         // Checks that the platform will allow the specified type of update.
-        appUpdateManager.appUpdateInfo.addOnSuccessListener {
+        appUpdateManager?.appUpdateInfo?.addOnSuccessListener {
             if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
-                it.isUpdateTypeAllowed(IMMEDIATE)
+                it.isUpdateTypeAllowed(FLEXIBLE)
             ) {
-                appUpdateManager.startUpdateFlowForResult(
+                appUpdateManager?.startUpdateFlowForResult(
                     it,
-                    IMMEDIATE,
+                    FLEXIBLE,
                     this,
                     REQUEST_CODE_UPDATE
                 )
             }
         }
 
+    }
+
+    /* Displays the snackbar notification and call to action. */
+    fun popupSnackbarForCompleteUpdate() {
+        Snackbar.make(
+            container,
+            "An update has just been downloaded.",
+            Snackbar.LENGTH_INDEFINITE
+        ).apply {
+            setAction("RESTART") {
+                this.dismiss()
+                appUpdateManager?.completeUpdate()
+            }
+            setActionTextColor(ContextCompat.getColor(this@MainActivity, R.color.colorAccent))
+            show()
+        }
     }
 
     companion object {

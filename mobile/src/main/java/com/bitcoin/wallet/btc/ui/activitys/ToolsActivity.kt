@@ -14,16 +14,16 @@ import androidx.lifecycle.ViewModelProviders
 import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
-import com.bitcoin.wallet.btc.extension.getTextString
-import com.bitcoin.wallet.btc.extension.gone
-import com.bitcoin.wallet.btc.extension.hideKeyboard
-import com.bitcoin.wallet.btc.extension.observeNotNull
+import com.bitcoin.wallet.btc.extension.*
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.utils.Utils.convertDate
 import com.bitcoin.wallet.btc.utils.Utils.onGetDate
 import com.bitcoin.wallet.btc.utils.WalletUtils
 import com.bitcoin.wallet.btc.viewmodel.ToolsViewModel
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
 import com.facebook.ads.NativeBannerAdView
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
@@ -46,6 +46,7 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
+    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar("Price Converter")
@@ -100,6 +101,12 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
             setPadding(8)
             Constants.setMargin(this, WalletUtils.dpToPx(context, 10))
         }
+    }
+
+    override fun onDestroy() {
+        adView?.destroy()
+        adView = null
+        super.onDestroy()
     }
 
     private fun showDate(year: Int, monthOfYear: Int, dayOfMonth: Int, spinnerTheme: Int, maxDate: Calendar?) {
@@ -200,6 +207,34 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         )
         adapterCoin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCoin.adapter = adapterCoin
+    }
+
+    override fun onError(ad: Ad, error: AdError) {
+        loadGoogleAdView()
+        super.onError(ad, error)
+    }
+
+    private fun loadGoogleAdView() {
+        adView?.destroy()
+        adView = com.google.android.gms.ads.AdView(this)
+        val adRequest = AdRequest.Builder().addTestDevice("79398AF8E4D6DF64AFD7003348328251") .build()
+        adView?.let {
+            it.adSize = com.google.android.gms.ads.AdSize.LARGE_BANNER
+            it.adUnitId = getString(R.string.ads_banner_tools)
+            adViewContainer?.addView(it)
+            it.adListener = object: com.google.android.gms.ads.AdListener() {
+                override fun onAdLoaded() {
+                    super.onAdLoaded()
+                    adViewContainer.visible()
+                }
+
+                override fun onAdFailedToLoad(p0: Int) {
+                    super.onAdFailedToLoad(p0)
+                    adViewContainer.gone()
+                }
+            }
+            it.loadAd(adRequest)
+        }
     }
 
     companion object {

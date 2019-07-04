@@ -1,8 +1,9 @@
 package com.bitcoin.wallet.btc.data.live
 
-import android.os.AsyncTask
+import androidx.annotation.WorkerThread
 import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.Constants
+import kotlinx.coroutines.*
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Transaction
@@ -13,7 +14,8 @@ import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener
 import org.bitcoinj.wallet.listeners.WalletReorganizeEventListener
 
-class CurrentAddressLiveData(application: BitcoinApplication) : BaseWalletLiveData<Address>(application) {
+class CurrentAddressLiveData(application: BitcoinApplication,
+                             private val viewModelScope: CoroutineScope) : BaseWalletLiveData<Address>(application) {
 
     private val walletListener = WalletListener()
 
@@ -38,13 +40,23 @@ class CurrentAddressLiveData(application: BitcoinApplication) : BaseWalletLiveDa
         wallet.removeReorganizeEventListener(walletListener)
         wallet.removeCoinsSentEventListener(walletListener)
         wallet.removeCoinsReceivedEventListener(walletListener)
+        viewModelScope.coroutineContext.cancel()
     }
 
     override fun load() {
-        AsyncTask.execute {
+        viewModelScope.launch {
+            loadCurrentReceiveAddress()
+        }
+        /*AsyncTask.execute {
             org.bitcoinj.core.Context.propagate(Constants.CONTEXT)
             postValue(wallet?.currentReceiveAddress())
-        }
+        }*/
+    }
+
+    @WorkerThread
+    suspend fun loadCurrentReceiveAddress() = withContext(Dispatchers.IO) {
+        org.bitcoinj.core.Context.propagate(Constants.CONTEXT)
+        postValue(wallet?.currentReceiveAddress())
     }
 
     private inner class WalletListener : WalletCoinsReceivedEventListener, WalletCoinsSentEventListener,

@@ -24,6 +24,7 @@ import com.bitcoin.wallet.btc.data.AddressBookEntry
 import com.bitcoin.wallet.btc.data.AppDatabase
 import com.bitcoin.wallet.btc.data.PaymentIntent
 import com.bitcoin.wallet.btc.extension.gone
+import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.ui.activitys.ScanActivity.Companion.REQUEST_CODE_SCAN
 import com.bitcoin.wallet.btc.ui.adapter.AddressAdapter
 import com.bitcoin.wallet.btc.ui.adapter.AddressSendAdapter
@@ -34,8 +35,11 @@ import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.utils.InputParser
 import com.bitcoin.wallet.btc.utils.Qr
 import com.bitcoin.wallet.btc.viewmodel.WalletAddressViewModel
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
 import com.facebook.ads.AdSize
 import com.facebook.ads.AdView
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_network.*
 import kotlinx.android.synthetic.main.init_ads.*
 import kotlinx.android.synthetic.main.item_network_state.*
@@ -67,6 +71,7 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
     }
     private var isShowMenu = false
     private var bannerAdView: AdView? = null
+    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_network
@@ -173,6 +178,8 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
     override fun onDestroy() {
         bannerAdView?.destroy()
         bannerAdView = null
+        adView?.destroy()
+        adView = null
         super.onDestroy()
     }
 
@@ -360,13 +367,42 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
         }
     }
 
+    override fun onError(ad: Ad, error: AdError) {
+        loadGoogleAdView()
+        super.onError(ad, error)
+    }
+
     private fun loadAdView() {
         bannerAdView?.destroy()
         bannerAdView = null
         bannerAdView = AdView(this, getString(R.string.fb_banner_address), AdSize.BANNER_HEIGHT_50)
         bannerAdView?.let {nonNullBannerAdView ->
             adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.setAdListener(this)
             nonNullBannerAdView.loadAd()
+        }
+    }
+
+    private fun loadGoogleAdView() {
+        adView?.destroy()
+        adView = com.google.android.gms.ads.AdView(this)
+        val adRequest = AdRequest.Builder().build()
+        adView?.let {
+            it.adSize = com.google.android.gms.ads.AdSize.BANNER
+            it.adUnitId = getString(R.string.ads_banner_address)
+            adViewContainer?.addView(it)
+            it.adListener = object: com.google.android.gms.ads.AdListener() {
+                override fun onAdLoaded() {
+                    super.onAdLoaded()
+                    adViewContainer.visible()
+                }
+
+                override fun onAdFailedToLoad(p0: Int) {
+                    super.onAdFailedToLoad(p0)
+                    adViewContainer.gone()
+                }
+            }
+            it.loadAd(adRequest)
         }
     }
 }

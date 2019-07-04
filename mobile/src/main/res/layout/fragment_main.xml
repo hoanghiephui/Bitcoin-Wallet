@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.drawerlayout.widget.DrawerLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
+            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -19,19 +25,11 @@
                 app:titleEnabled="false"
                 app:contentScrim="?attr/colorPrimary">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                    android:fitsSystemWindows="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/home_bg"
-                    app:layout_collapseMode="parallax"/>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:paddingStart="6dp"
-                    android:paddingEnd="6dp"
-                    app:layout_collapseMode="parallax">
+                    android:paddingEnd="6dp">
 
                 <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
@@ -39,7 +37,7 @@
                         app:cardCornerRadius="3dp"
                         app:cardPreventCornerOverlap="true"
                         app:cardUseCompatPadding="true"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="55dp"
                         app:layout_constraintTop_toTopOf="parent"
                         android:id="@+id/currentAddressQrCardView"
                         app:contentPadding="2dp"
@@ -61,7 +59,6 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/textView3"
                         style="@style/TextAppearance.Body1.Medium"
-                        android:textColor="@color/white"
                         app:layout_constraintTop_toTopOf="@+id/currentAddressQrCardView"
                         app:layout_constraintBottom_toBottomOf="@+id/currentAddressQrCardView"
                         app:layout_constraintEnd_toStartOf="@+id/currentAddressQrCardView"
@@ -77,7 +74,6 @@
                         android:textSize="12sp"
                         tools:text="sffsdfdsf"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:textColor="@color/white"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:background="?selectableItemBackgroundBorderless"
@@ -85,6 +81,14 @@
                         app:layout_constraintTop_toBottomOf="@+id/currentAddressQrCardView"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_width="match_parent"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_menu"
+                    app:popupTheme="?android:toolbarStyle"
+                    app:theme="?android:toolbarStyle"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -94,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="55dp"
-            app:behavior_overlapTop="70dp"
+            app:behavior_overlapTop="25dp"
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
@@ -103,7 +107,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"/>
-    <include
-            layout="@layout/bottom_bar_menu_layout"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:itemBackground="@drawable/nav_item_background"
+            app:itemTextColor="@color/nav_state_list"
+            app:itemIconTint="@color/nav_state_list"
+            app:insetForeground="@android:color/transparent"
+            android:background="?android:colorBackground"
+            android:paddingTop="32dp"
+            app:menu="@menu/activity_main_drawer"/>
+</androidx.drawerlayout.widget.DrawerLayout>

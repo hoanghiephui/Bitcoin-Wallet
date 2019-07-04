@@ -2,7 +2,6 @@ package com.bitcoin.wallet.btc.ui.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
@@ -15,7 +14,6 @@ import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import androidx.core.view.ViewCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
@@ -46,6 +44,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.github.mikephil.charting.utils.Utils.convertDpToPixel
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.init_ads.*
 import kotlinx.android.synthetic.main.item_network_state.*
@@ -81,14 +80,8 @@ class MainAdapter(private val callback: MainCallback,
     var timeSpan = TimeSpan.DAY
     var cryptoCurrency = CryptoCurrency.BTC
     var networkState = NetworkState.LOADING
-    private var mNativeAd: NativeAd? = null
     private var blocksItem: List<BlocksItem>? = null
     private var mHighlightedValues: Array<Highlight> = arrayOf()
-
-    fun onLoadAds(mNativeAd: NativeAd?) {
-        this.mNativeAd = mNativeAd
-        notifyItemChanged(3)
-    }
 
     fun addWalletBance(
         format: MonetaryFormat?,
@@ -120,7 +113,7 @@ class MainAdapter(private val callback: MainCallback,
     }
 
     override fun getItemCount(): Int {
-        return 5 + if (blocksItem != null) 1 else 0
+        return 4 + if (blocksItem != null) 1 else 0
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -265,7 +258,7 @@ class MainAdapter(private val callback: MainCallback,
             R.layout.init_ads -> {
                 if (holder is AdsViewHolder) {
                     holder.apply {
-                        mNativeAd?.let {
+                        /*mNativeAd?.let {
                             val mNativeAdContainer = adViewContainer
                             mNativeAdContainer?.removeAllViews()
 
@@ -289,7 +282,7 @@ class MainAdapter(private val callback: MainCallback,
                                 )
                             )
                         }
-                        adViewContainer.isVisible = mNativeAd != null && mNativeAd?.isAdLoaded == true
+                        adViewContainer.isVisible = mNativeAd != null && mNativeAd?.isAdLoaded == true*/
                     }
                 }
             }
@@ -447,16 +440,16 @@ class MainAdapter(private val callback: MainCallback,
                 0 -> R.layout.item_top_wallet
                 1 -> R.layout.item_top_chart
                 2 -> R.layout.item_last_block
-                3 -> R.layout.init_ads
-                4 -> R.layout.item_top
+                //3 -> R.layout.init_ads
+                3 -> R.layout.item_top
                 else -> R.layout.item_news
             }
         } else {
             return when (position) {
                 0 -> R.layout.item_top_wallet
                 1 -> R.layout.item_top_chart
-                3 -> R.layout.init_ads
-                2 -> R.layout.item_top
+                2 -> R.layout.init_ads
+                //2 -> R.layout.item_top
                 else -> R.layout.item_news
             }
         }
@@ -593,6 +586,7 @@ class MainAdapter(private val callback: MainCallback,
             )
         }
         private var mNativeBannerAd: NativeBannerAd? = null
+        private var adView: com.google.android.gms.ads.AdView? = null
         private var mAdBackgroundColor: Int = 0
         private var mTitleColor: Int = 0
         private var mLinkColor: Int = 0
@@ -621,6 +615,30 @@ class MainAdapter(private val callback: MainCallback,
             }
         }
 
+        private fun loadGoogleAdView() {
+            adView?.destroy()
+            adView = com.google.android.gms.ads.AdView(itemView.context)
+            val adRequest = AdRequest.Builder().build()
+            adView?.let {
+                adContainer.removeAllViews()
+                it.adSize = com.google.android.gms.ads.AdSize.LARGE_BANNER
+                it.adUnitId = itemView.context.getString(R.string.ads_banner_home_ex)
+                adContainer?.addView(it)
+                it.adListener = object : com.google.android.gms.ads.AdListener() {
+                    override fun onAdLoaded() {
+                        super.onAdLoaded()
+                        adContainer.visible()
+                    }
+
+                    override fun onAdFailedToLoad(p0: Int) {
+                        super.onAdFailedToLoad(p0)
+                        adContainer.gone()
+                    }
+                }
+                it.loadAd(adRequest)
+            }
+        }
+
         fun createAndLoadNativeBannerAd(id: String) {
             mNativeBannerAd = NativeBannerAd(itemView.context, id)
 
@@ -634,6 +652,8 @@ class MainAdapter(private val callback: MainCallback,
         fun onDestroyAds(){
             mNativeBannerAd?.destroy()
             mNativeBannerAd = null
+            adView?.destroy()
+            adView = null
         }
 
         private fun reloadAdBannerContainer() {
@@ -682,6 +702,7 @@ class MainAdapter(private val callback: MainCallback,
         }
 
         override fun onError(p0: Ad?, p1: AdError?) {
+            loadGoogleAdView()
         }
 
         override fun onAdLoaded(p0: Ad?) {

@@ -3,8 +3,12 @@ package com.bitcoin.wallet.btc.service;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.*;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -13,25 +17,40 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.text.format.DateUtils;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import com.bitcoin.wallet.btc.*;
+
+import com.bitcoin.wallet.btc.BitcoinApplication;
+import com.bitcoin.wallet.btc.BuildConfig;
+import com.bitcoin.wallet.btc.Constants;
+import com.bitcoin.wallet.btc.FilesWallet;
+import com.bitcoin.wallet.btc.R;
 import com.bitcoin.wallet.btc.data.AddressBookDao;
 import com.bitcoin.wallet.btc.data.AppDatabase;
-import com.bitcoin.wallet.btc.data.ExchangeRate;
-import com.bitcoin.wallet.btc.data.live.SelectedExchangeRateLiveData;
 import com.bitcoin.wallet.btc.data.live.TimeLiveData;
-import com.bitcoin.wallet.btc.data.live.WalletBalanceLiveData;
 import com.bitcoin.wallet.btc.data.live.WalletLiveData;
 import com.bitcoin.wallet.btc.ui.activitys.MainActivity;
 import com.bitcoin.wallet.btc.utils.Configuration;
 import com.bitcoin.wallet.btc.utils.WalletUtils;
 import com.google.common.base.Stopwatch;
-import org.bitcoinj.core.*;
+
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Block;
+import org.bitcoinj.core.BlockChain;
+import org.bitcoinj.core.CheckpointManager;
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.FilteredBlock;
+import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.StoredBlock;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.listeners.AbstractPeerDataEventListener;
 import org.bitcoinj.core.listeners.PeerConnectedEventListener;
 import org.bitcoinj.core.listeners.PeerDataEventListener;
@@ -52,7 +71,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -431,23 +456,6 @@ public class BlockchainService extends LifecycleService {
 
         broadcastPeerState(0);
 
-        final WalletBalanceLiveData walletBalance = new WalletBalanceLiveData(application);
-        final SelectedExchangeRateLiveData exchangeRate = new SelectedExchangeRateLiveData(application);
-        walletBalance.observe(this, new Observer<Coin>() {
-            @Override
-            public void onChanged(final Coin walletBalance) {
-                /*WalletBalanceWidgetProvider.updateWidgets(BlockchainService.this, walletBalance,
-                        exchangeRate.getValue());*/ // TODO: 4/16/19 widget
-            }
-        });
-        exchangeRate.observe(this, new Observer<ExchangeRate>() {
-            @Override
-            public void onChanged(final ExchangeRate exchangeRate) {
-                final Coin balance = walletBalance.getValue();
-                /*if (balance != null)
-                    WalletBalanceWidgetProvider.updateWidgets(BlockchainService.this, balance, exchangeRate);*/
-            }
-        });
         wallet = new WalletLiveData(application);
         wallet.observe(this, new Observer<Wallet>() {
             @Override

@@ -131,6 +131,8 @@
 -dontwarn javax.annotation.**
 # A resource is loaded with a relative path so the package of this class must be preserved.
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
 
 -keep class com.facebook.ads.** { *; }
 -ignorewarnings
@@ -402,8 +404,6 @@
 -dontnote com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
 
 # OkHttp
--dontwarn okhttp3.internal.platform.ConscryptPlatform
--dontnote okhttp3.internal.platform.ConscryptPlatform
 -dontnote okhttp3.internal.platform.AndroidPlatform,okhttp3.internal.platform.AndroidPlatform$CloseGuard
 -dontnote okhttp3.internal.platform.Platform
 

@@ -26,14 +26,19 @@ import androidx.lifecycle.ViewModelProviders
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.Bundle
+import com.bitcoin.wallet.btc.extension.gone
 import com.bitcoin.wallet.btc.extension.observeNotNull
+import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.ui.widget.DialogBuilder
 import com.bitcoin.wallet.btc.utils.CameraManager
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.utils.OnFirstPreDraw
 import com.bitcoin.wallet.btc.viewmodel.ScanViewModel
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
 import com.facebook.ads.AdSize
 import com.facebook.ads.AdView
+import com.google.android.gms.ads.AdRequest
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeReader
@@ -68,6 +73,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
         ViewModelProviders.of(this, viewModelFactory).get(ScanViewModel::class.java)
     }
     private var bannerAdView: AdView? = null
+    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
@@ -162,6 +168,8 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         bannerAdView?.destroy()
         bannerAdView = null
+        adView?.destroy()
+        adView = null
         super.onDestroy()
     }
 
@@ -367,13 +375,42 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
         }
     }
 
+    override fun onError(ad: Ad, error: AdError) {
+        loadGoogleAdView()
+        super.onError(ad, error)
+    }
+
     private fun loadAdView() {
         bannerAdView?.destroy()
         bannerAdView = null
         bannerAdView = AdView(this, getString(R.string.fb_banner_scan), AdSize.BANNER_HEIGHT_50)
         bannerAdView?.let {nonNullBannerAdView ->
             adViewContainer?.addView(nonNullBannerAdView)
+            nonNullBannerAdView.setAdListener(this)
             nonNullBannerAdView.loadAd()
+        }
+    }
+
+    private fun loadGoogleAdView() {
+        adView?.destroy()
+        adView = com.google.android.gms.ads.AdView(this)
+        val adRequest = AdRequest.Builder().build()
+        adView?.let {
+            it.adSize = com.google.android.gms.ads.AdSize.BANNER
+            it.adUnitId = getString(R.string.ads_banner_scan)
+            adViewContainer?.addView(it)
+            it.adListener = object: com.google.android.gms.ads.AdListener() {
+                override fun onAdLoaded() {
+                    super.onAdLoaded()
+                    adViewContainer.visible()
+                }
+
+                override fun onAdFailedToLoad(p0: Int) {
+                    super.onAdFailedToLoad(p0)
+                    adViewContainer.gone()
+                }
+            }
+            it.loadAd(adRequest)
         }
     }
 }
