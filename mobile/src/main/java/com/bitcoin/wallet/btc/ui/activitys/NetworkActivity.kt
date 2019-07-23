@@ -20,13 +20,7 @@ import com.bitcoin.wallet.btc.ui.widget.TopLinearLayoutManager
 import com.bitcoin.wallet.btc.utils.Configuration
 import com.bitcoin.wallet.btc.utils.Utils
 import com.bitcoin.wallet.btc.viewmodel.NetworkViewModel
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
-import com.facebook.ads.AdSize
-import com.facebook.ads.AdView
-import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_network.*
-import kotlinx.android.synthetic.main.init_ads.*
 import kotlinx.android.synthetic.main.item_network_state.*
 import org.bitcoinj.core.Sha256Hash
 
@@ -43,13 +37,11 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
     val config: Configuration by lazy {
         application.config
     }
-    private var bannerAdView: AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_network
     }
     private var isPeer = false
-    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar(getString(R.string.network_monitor))
@@ -86,13 +78,6 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
         })
 
         segmented.setOnCheckedChangeListener(this)
-        loadAdView()
-    }
-
-    override fun onDestroy() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        super.onDestroy()
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
@@ -163,44 +148,5 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
         errorMessageTextView.text = getString(R.string.peer_empty)
         errorMessageTextView.visibility =
             if ((peerAdapter.itemCount == 0 || peers == null) && isPeer) View.VISIBLE else View.GONE
-    }
-
-    override fun onError(ad: Ad, error: AdError) {
-        loadGoogleAdView()
-        super.onError(ad, error)
-    }
-
-    private fun loadAdView() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        bannerAdView = AdView(this, getString(R.string.fb_banner_network), AdSize.BANNER_HEIGHT_50)
-        bannerAdView?.let {nonNullBannerAdView ->
-            adViewContainer?.addView(nonNullBannerAdView)
-            nonNullBannerAdView.setAdListener(this)
-            nonNullBannerAdView.loadAd()
-        }
-    }
-
-    private fun loadGoogleAdView() {
-        adView?.destroy()
-        adView = com.google.android.gms.ads.AdView(this)
-        val adRequest = AdRequest.Builder().build()
-        adView?.let {
-            it.adSize = com.google.android.gms.ads.AdSize.BANNER
-            it.adUnitId = getString(R.string.ads_banner_network)
-            adViewContainer?.addView(it)
-            it.adListener = object: com.google.android.gms.ads.AdListener() {
-                override fun onAdLoaded() {
-                    super.onAdLoaded()
-                    adViewContainer.visible()
-                }
-
-                override fun onAdFailedToLoad(p0: Int) {
-                    super.onAdFailedToLoad(p0)
-                    adViewContainer.gone()
-                }
-            }
-            it.loadAd(adRequest)
-        }
     }
 }

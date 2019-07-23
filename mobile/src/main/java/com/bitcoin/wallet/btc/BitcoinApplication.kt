@@ -10,7 +10,6 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
@@ -18,10 +17,6 @@ import com.bitcoin.wallet.btc.di.components.AppComponent
 import com.bitcoin.wallet.btc.service.BlockchainService
 import com.bitcoin.wallet.btc.utils.Configuration
 import com.bitcoin.wallet.btc.utils.WalletUtils
-import com.facebook.ads.AdSettings
-import com.facebook.ads.AudienceNetworkAds
-import com.facebook.ads.internal.settings.AdInternalSettings
-import com.google.android.gms.ads.MobileAds
 import com.google.common.base.Splitter
 import com.google.common.base.Stopwatch
 import com.google.common.collect.ImmutableList
@@ -45,7 +40,7 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener {
+class BitcoinApplication : DaggerApplication() {
     private val appComponent by lazy { AppComponent.getComponent(this) }
     private val activityManager: ActivityManager by lazy {
         getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -98,23 +93,6 @@ class BitcoinApplication : DaggerApplication(), AudienceNetworkAds.InitListener 
                 .setWorkerFactory(appComponent.daggerWorkerFactory())
                 .build()
         )
-        if (!AudienceNetworkAds.isInitialized(this)) {
-            if (BuildConfig.DEBUG) {
-                AdSettings.turnOnSDKDebugger(this)
-                AdInternalSettings.setTestMode(false)
-            }
-
-            AudienceNetworkAds
-                .buildInitSettings(this)
-                .withInitListener(this)
-                .initialize()
-            AudienceNetworkAds.isInAdsProcess(this)
-        }
-        MobileAds.initialize(this, getString(R.string.app_id))
-    }
-
-    override fun onInitialized(result: AudienceNetworkAds.InitResult?) {
-        Log.d(AudienceNetworkAds.TAG, result?.message)
     }
 
     private fun cleanupFiles() {

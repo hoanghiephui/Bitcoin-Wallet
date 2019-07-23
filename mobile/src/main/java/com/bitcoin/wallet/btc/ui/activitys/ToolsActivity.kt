@@ -7,29 +7,23 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProviders
-import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
-import com.bitcoin.wallet.btc.extension.*
+import com.bitcoin.wallet.btc.extension.getTextString
+import com.bitcoin.wallet.btc.extension.hideKeyboard
+import com.bitcoin.wallet.btc.extension.observeNotNull
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.utils.Utils.convertDate
 import com.bitcoin.wallet.btc.utils.Utils.onGetDate
-import com.bitcoin.wallet.btc.utils.WalletUtils
 import com.bitcoin.wallet.btc.viewmodel.ToolsViewModel
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
-import com.facebook.ads.NativeBannerAdView
-import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
 import kotlinx.android.synthetic.main.activity_tools.*
-import kotlinx.android.synthetic.main.init_ads.*
 import java.text.NumberFormat
 import java.util.*
 
@@ -46,19 +40,24 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
-    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar("Price Converter")
         initSpiner()
         viewModel.priceCoinData.observeNotNull(this) {
-            if (edtUsd.getTextString().isNotEmpty()) {
-                val price =
-                    if (spinner.getItemAtPosition(spinner.selectedItemPosition) == "BTC") it?.data?.bTC?.times(edtUsd.getTextString().toDouble())
-                    else it?.data?.bCH?.times(edtUsd.getTextString().toDouble())
-                price?.let { data ->
-                    edtCoin.text = nf.format(data)
+            try {
+                if (edtUsd.getTextString().isNotEmpty()) {
+                    val price =
+                        if (spinner.getItemAtPosition(spinner.selectedItemPosition) == "BTC") it?.data?.bTC?.times(
+                            edtUsd.getTextString().toDouble()
+                        )
+                        else it?.data?.bCH?.times(edtUsd.getTextString().toDouble())
+                    price?.let { data ->
+                        edtCoin.text = nf.format(data)
+                    }
                 }
+            } catch (ex: NumberFormatException) {
+                Toast.makeText(this, "Typing is error", Toast.LENGTH_SHORT).show()
             }
         }
         viewModel.networkState.observeNotNull(this) {
@@ -93,20 +92,6 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         btnRetry.setOnClickListener {
             viewModel.retryHistoryPriceCoin()
         }
-        mViewType = NativeBannerAdView.Type.HEIGHT_100
-        createAndLoadNativeBannerAd(getString(R.string.fb_banner_native_tools))
-        adViewContainer.apply {
-            gone()
-            background = ContextCompat.getDrawable(this@ToolsActivity, R.drawable.bg_up_next)
-            setPadding(8)
-            Constants.setMargin(this, WalletUtils.dpToPx(context, 10))
-        }
-    }
-
-    override fun onDestroy() {
-        adView?.destroy()
-        adView = null
-        super.onDestroy()
     }
 
     private fun showDate(year: Int, monthOfYear: Int, dayOfMonth: Int, spinnerTheme: Int, maxDate: Calendar?) {
@@ -157,16 +142,22 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         btnCalculate.setOnClickListener {
             it.hideKeyboard()
             if (viewModel.networkState.value?.msg == null) {
-                if (TextUtils.isEmpty(edtUsd.getTextString())) {
-                    Snackbar.make(it, "Enter the amount to convert.", Snackbar.LENGTH_LONG).show()
-                    edtCoin.text = ""
-                    return@setOnClickListener
-                }
-                val price = if (spinner.getItemAtPosition(spinner.selectedItemPosition) == "BTC")
-                    viewModel.priceCoinData.value?.data?.bTC?.times(edtUsd.getTextString().toDouble())
-                else viewModel.priceCoinData.value?.data?.bCH?.times(edtUsd.getTextString().toDouble())
-                price?.let {
-                    edtCoin.text = nf.format(it)
+                try {
+                    if (TextUtils.isEmpty(edtUsd.getTextString())) {
+                        Snackbar.make(it, "Enter the amount to convert.", Snackbar.LENGTH_LONG)
+                            .show()
+                        edtCoin.text = ""
+                        return@setOnClickListener
+                    }
+                    val price =
+                        if (spinner.getItemAtPosition(spinner.selectedItemPosition) == "BTC")
+                            viewModel.priceCoinData.value?.data?.bTC?.times(edtUsd.getTextString().toDouble())
+                        else viewModel.priceCoinData.value?.data?.bCH?.times(edtUsd.getTextString().toDouble())
+                    price?.let {
+                        edtCoin.text = nf.format(it)
+                    }
+                } catch (ex: NumberFormatException) {
+                    Toast.makeText(this, "Typing is error", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 viewModel.retryPriceCoin()
@@ -207,34 +198,6 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         )
         adapterCoin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCoin.adapter = adapterCoin
-    }
-
-    override fun onError(ad: Ad, error: AdError) {
-        loadGoogleAdView()
-        super.onError(ad, error)
-    }
-
-    private fun loadGoogleAdView() {
-        adView?.destroy()
-        adView = com.google.android.gms.ads.AdView(this)
-        val adRequest = AdRequest.Builder().addTestDevice("79398AF8E4D6DF64AFD7003348328251") .build()
-        adView?.let {
-            it.adSize = com.google.android.gms.ads.AdSize.LARGE_BANNER
-            it.adUnitId = getString(R.string.ads_banner_tools)
-            adViewContainer?.addView(it)
-            it.adListener = object: com.google.android.gms.ads.AdListener() {
-                override fun onAdLoaded() {
-                    super.onAdLoaded()
-                    adViewContainer.visible()
-                }
-
-                override fun onAdFailedToLoad(p0: Int) {
-                    super.onAdFailedToLoad(p0)
-                    adViewContainer.gone()
-                }
-            }
-            it.loadAd(adRequest)
-        }
     }
 
     companion object {

@@ -3,7 +3,6 @@ package com.bitcoin.wallet.btc.ui.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.text.Html
 import android.text.Spanned
 import android.text.SpannedString
 import android.text.format.DateUtils
@@ -12,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -80,6 +81,8 @@ class TransactionsWalletAdapter constructor(
                         return false
                     if (oldItem.confidenceTextualColor != newTransactionItem.confidenceTextualColor)
                         return false
+                    if (oldItem.confidenceMessage != newTransactionItem.confidenceMessage)
+                        return false
                     if (oldItem.time != newTransactionItem.time)
                         return false
                     if (oldItem.timeColor != newTransactionItem.timeColor)
@@ -139,7 +142,9 @@ class TransactionsWalletAdapter constructor(
                                 && oldItem.confidenceCircularFillColor == newTransactionItem.confidenceCircularFillColor
                                 && oldItem.confidenceCircularStrokeColor == newTransactionItem.confidenceCircularStrokeColor
                                 && oldItem.confidenceTextual == newTransactionItem.confidenceTextual
-                                && oldItem.confidenceTextualColor == newTransactionItem.confidenceTextualColor)
+                                && oldItem.confidenceTextualColor == newTransactionItem.confidenceTextualColor
+                                && oldItem.confidenceMessage == newTransactionItem.confidenceMessage)
+
                     )
                         changes.add(ChangeType.CONFIDENCE)
                     if (!(oldItem.time == newTransactionItem.time && oldItem.timeColor == newTransactionItem.timeColor))
@@ -233,21 +238,33 @@ class TransactionsWalletAdapter constructor(
             if (warningItem.type == WarningType.BACKUP) {
                 if (itemCount == 2 /* 1 transaction, 1 warning */) {
                     holder.messageView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-                    holder.messageView.text = Html.fromHtml(context.getString(R.string.warning_backup))
+                    holder.messageView.text = HtmlCompat.fromHtml(
+                        context.getString(R.string.warning_backup),
+                        HtmlCompat.FROM_HTML_MODE_COMPACT
+                    )
                 } else {
                     holder.messageView
                         .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_warning_grey_600_24dp, 0, 0, 0)
-                    holder.messageView.text = Html.fromHtml(context.getString(R.string.disclaimer_remind_backup))
+                    holder.messageView.text = HtmlCompat.fromHtml(
+                        context.getString(R.string.disclaimer_remind_backup),
+                        HtmlCompat.FROM_HTML_MODE_COMPACT
+                    )
                 }
             } else if (warningItem.type == WarningType.STORAGE_ENCRYPTION) {
                 holder.messageView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-                holder.messageView.text = Html.fromHtml(context.getString(R.string.warning_storage_encryption))
+                holder.messageView.text = HtmlCompat.fromHtml(
+                    context.getString(R.string.warning_storage_encryption),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                )
             } else if (warningItem.type == WarningType.CHAIN_FORKING) {
                 holder.messageView.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.ic_warning_grey_600_24dp, 0,
                     0, 0
                 )
-                holder.messageView.text = Html.fromHtml(context.getString(R.string.warning_chain_forking))
+                holder.messageView.text = HtmlCompat.fromHtml(
+                    context.getString(R.string.warning_chain_forking),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                )
             }
 
             holder.itemView.setOnClickListener { onClickListener?.onWarningClick(it) }
@@ -303,6 +320,10 @@ class TransactionsWalletAdapter constructor(
 
         fun bindConfidence(item: TransactionItem) {
             imgType.setColorFilter(item.confidenceCircularFillColor)
+            tvConfidenceMessage.isVisible = item.confidenceMessage != null
+            item.confidenceMessage?.let {
+                tvConfidenceMessage.text = it
+            }
             when (item.transaction.confidence.confidenceType) {
                 TransactionConfidence.ConfidenceType.PENDING -> {
                     btnConfirm.background = ContextCompat.getDrawable(itemView.context, R.drawable.bg_pending)
@@ -451,7 +472,7 @@ open class ListItem {
         addressBook: Map<String, AddressBookEntry>?, val feeFormat: MonetaryFormat,
         maxConnectedPeers: Int, val isSelected: Boolean
     ) : ListItem() {
-        val transactionHash: Sha256Hash
+        val transactionHash: Sha256Hash = tx.txId
         val confidenceCircularProgress: Int
         val confidenceCircularMaxProgress: Int
         val confidenceCircularSize: Int
@@ -476,13 +497,11 @@ open class ListItem {
         val message: Spanned?
         val messageColor: Int
         val messageSingleLine: Boolean
-        val transaction: Transaction
+        val transaction: Transaction = tx
         var isSend = false
+        var confidenceMessage: Spanned?
 
         init {
-            this.transactionHash = tx.txId
-            this.transaction = tx
-            val res = context.resources
             val colorSignificant = ContextCompat.getColor(context, R.color.fg_significant)
             val colorLessSignificant = ContextCompat.getColor(context, R.color.fg_less_significant)
             val colorInsignificant = ContextCompat.getColor(context, R.color.fg_insignificant)
@@ -527,6 +546,12 @@ open class ListItem {
                 this.confidenceCircularStrokeColor = Color.TRANSPARENT
                 this.confidenceTextual = null
                 this.confidenceTextualColor = 0
+                this.confidenceMessage = if (sent && confidence.numBroadcastPeers() == 0)
+                    SpannedString.valueOf(
+                        context.getString(R.string.transaction_row_confidence_message_sent_unbroadcasted)
+                    )
+                else
+                    null
             } else if (confidenceType == TransactionConfidence.ConfidenceType.IN_CONFLICT) {
                 this.confidenceTextual = CONFIDENCE_SYMBOL_IN_CONFLICT
                 this.confidenceTextualColor = colorError
@@ -536,6 +561,7 @@ open class ListItem {
                 this.confidenceCircularSize = 0
                 this.confidenceCircularFillColor = 0
                 this.confidenceCircularStrokeColor = 0
+                this.confidenceMessage = null
             } else if (confidenceType == TransactionConfidence.ConfidenceType.BUILDING) {
                 this.confidenceCircularMaxProgress = if (tx.isCoinBase)
                     Constants.NETWORK_PARAMETERS.spendableCoinbaseDepth
@@ -551,6 +577,17 @@ open class ListItem {
                 this.confidenceCircularStrokeColor = Color.TRANSPARENT
                 this.confidenceTextual = null
                 this.confidenceTextualColor = 0
+                this.confidenceMessage = if (isSelected)
+                    SpannedString.valueOf(
+                        context.getString(
+                            if (sent)
+                                R.string.transaction_row_confidence_message_sent_successful
+                            else
+                                R.string.transaction_row_confidence_message_received_successful
+                        )
+                    )
+                else
+                    null
             } else if (confidenceType == TransactionConfidence.ConfidenceType.DEAD) {
                 this.confidenceTextual = CONFIDENCE_SYMBOL_DEAD
                 this.confidenceTextualColor = colorError
@@ -560,6 +597,15 @@ open class ListItem {
                 this.confidenceCircularSize = 0
                 this.confidenceCircularFillColor = 0
                 this.confidenceCircularStrokeColor = 0
+                this.confidenceMessage = SpannedString
+                    .valueOf(
+                        context.getString(
+                            if (sent)
+                                R.string.transaction_row_confidence_message_sent_failed
+                            else
+                                R.string.transaction_row_confidence_message_received_failed
+                        )
+                    )
             } else {
                 this.confidenceTextual = CONFIDENCE_SYMBOL_UNKNOWN
                 this.confidenceTextualColor = colorInsignificant
@@ -569,6 +615,7 @@ open class ListItem {
                 this.confidenceCircularSize = 0
                 this.confidenceCircularFillColor = 0
                 this.confidenceCircularStrokeColor = 0
+                this.confidenceMessage = null
             }
 
             // time
@@ -670,8 +717,8 @@ open class ListItem {
 
             // message
             if (purpose == Transaction.Purpose.KEY_ROTATION) {
-                this.message = Html
-                    .fromHtml(context.getString(R.string.transaction_purpose))
+                this.message = HtmlCompat
+                    .fromHtml(context.getString(R.string.transaction_purpose), HtmlCompat.FROM_HTML_MODE_COMPACT)
                 this.messageColor = colorSignificant
                 this.messageSingleLine = false
             } else if (purpose == Transaction.Purpose.RAISE_FEE) {

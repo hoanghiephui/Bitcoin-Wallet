@@ -66,10 +66,6 @@ class WalletBalanceLiveData @JvmOverloads constructor(
         postValue(wallet?.getBalance(balanceType))
     }
 
-    fun stopJobLoadBlance() {
-        viewModelScope.coroutineContext.cancel()
-    }
-
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (Configuration.PREFS_KEY_BTC_PRECISION == key)
             load()

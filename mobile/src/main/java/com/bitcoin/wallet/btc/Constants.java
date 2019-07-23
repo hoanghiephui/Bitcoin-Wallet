@@ -53,7 +53,7 @@ public class Constants {
     public static final int PEER_TIMEOUT_MS = 15 * (int) DateUtils.SECOND_IN_MILLIS;
     public static final MonetaryFormat LOCAL_FORMAT = new MonetaryFormat().noCode().minDecimals(2).optionalDecimals();
     public static final String PREFIX_ALMOST_EQUAL_TO = Character.toString(CHAR_ALMOST_EQUAL_TO) + CHAR_THIN_SPACE;
-    public static final Coin TOO_MUCH_BALANCE_THRESHOLD = Coin.COIN.divide(4);
+    public static final Coin TOO_MUCH_BALANCE_THRESHOLD = Coin.COIN.divide(8);
     public static final int MAX_NUM_CONFIRMATIONS = 7;
     public static final long DELAYED_TRANSACTION_THRESHOLD_MS = 2 * DateUtils.HOUR_IN_MILLIS;
     public static final BaseEncoding HEX = BaseEncoding.base16().lowerCase();

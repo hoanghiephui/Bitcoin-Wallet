@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.observeNotNull
@@ -16,14 +17,9 @@ import com.bitcoin.wallet.btc.ui.adapter.StoriesMoreAdapter
 import com.bitcoin.wallet.btc.ui.widget.DividerItemDecoration
 import com.bitcoin.wallet.btc.utils.Utils
 import com.bitcoin.wallet.btc.viewmodel.StoryViewModel
-import com.facebook.ads.AdSize
-import com.facebook.ads.AdView
 import kotlinx.android.synthetic.main.activity_list.*
-import kotlinx.android.synthetic.main.init_ads.*
 
 class StoryActivity : BaseActivity() {
-    private var bannerAdView: AdView? = null
-
     private val storiesMoreAdapter by lazy {
         StoriesMoreAdapter(
             retryCallback = {
@@ -82,24 +78,6 @@ class StoryActivity : BaseActivity() {
 
         freshlayout.setOnRefreshListener {
             viewModel.refreshNews()
-        }
-
-        loadAdView()
-    }
-
-    override fun onDestroy() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        super.onDestroy()
-    }
-
-    private fun loadAdView() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        bannerAdView = AdView(this, getString(R.string.fb_banner_news), AdSize.BANNER_HEIGHT_50)
-        bannerAdView?.let {nonNullBannerAdView ->
-            adViewContainer?.addView(nonNullBannerAdView)
-            nonNullBannerAdView.loadAd()
         }
     }
 

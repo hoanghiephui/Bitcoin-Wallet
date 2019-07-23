@@ -15,6 +15,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.CryptoCurrency
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.TimeSpan
@@ -33,8 +34,6 @@ import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.utils.InputParser
 import com.bitcoin.wallet.btc.utils.Utils
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
-import com.facebook.ads.*
-import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.init_ads_two.*
@@ -50,11 +49,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     private var timeSpan = TimeSpan.DAY
     private var cryptoCurrency = CryptoCurrency.BTC
 
-    private var bannerAdView: AdView? = null
-    private var adView: com.google.android.gms.ads.AdView? = null
-
     private val mainAdapter by lazy {
-        MainAdapter(this, baseActivity().isDarkMode)
+        MainAdapter(this)
     }
 
     val config: Configuration by lazy {
@@ -132,8 +128,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 content?.let { HelpDialogFragment.show(baseActivity(), it) }
             }
         })
-        //createAndLoadNativeAds(getString(R.string.fb_native_home))
-        loadAdView()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -252,14 +246,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         return true
     }
 
-    override fun onDestroy() {
-        bannerAdView?.destroy()
-        adView?.destroy()
-        bannerAdView = null
-        adView = null
-        super.onDestroy()
-    }
-
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tvWarrning -> {
@@ -360,42 +346,6 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             CryptoCurrency.BCH -> "45f99e13-b522-57d7-8058-c57bf92fe7a3"
             CryptoCurrency.XLM -> "13b83335-5ede-595b-821e-5bcdfa80560f"
             CryptoCurrency.PAX -> ""
-        }
-    }
-
-    private fun loadAdView() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        bannerAdView = AdView(this.activity, getString(R.string.fb_banner_dashboard), AdSize.BANNER_HEIGHT_50)
-        bannerAdView?.let {nonNullBannerAdView ->
-            adViewContainers?.addView(nonNullBannerAdView)
-            nonNullBannerAdView.setAdListener(object : AdListener {
-                override fun onAdClicked(p0: Ad?) {
-                }
-
-                override fun onError(p0: Ad?, p1: AdError?) {
-                    loadGoogleAdView()
-                }
-
-                override fun onAdLoaded(p0: Ad?) {
-                }
-
-                override fun onLoggingImpression(p0: Ad?) {
-                }
-            })
-            nonNullBannerAdView.loadAd()
-        }
-    }
-
-    private fun loadGoogleAdView() {
-        adView?.destroy()
-        adView = com.google.android.gms.ads.AdView(baseActivity())
-        val adRequest = AdRequest.Builder().build()
-        adView?.let {
-            it.adSize = com.google.android.gms.ads.AdSize.BANNER
-            it.adUnitId = getString(R.string.ads_home)
-            adViewContainers?.addView(it)
-            it.loadAd(adRequest)
         }
     }
 

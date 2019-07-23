@@ -9,21 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.data.ExchangeRatesProvider
-import com.bitcoin.wallet.btc.extension.gone
 import com.bitcoin.wallet.btc.extension.hideKeyboard
-import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.service.BlockchainState
 import com.bitcoin.wallet.btc.ui.adapter.ExchangeRatesAdapter
 import com.bitcoin.wallet.btc.utils.Configuration
 import com.bitcoin.wallet.btc.viewmodel.ExchangeRatesViewModel
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
-import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_exchange_rate.*
-import kotlinx.android.synthetic.main.init_ads.*
 import org.bitcoinj.core.Coin
 
 class ExchangeRatesActivity : BaseActivity(), ExchangeRatesAdapter.OnClickListener,
@@ -37,7 +32,6 @@ class ExchangeRatesActivity : BaseActivity(), ExchangeRatesAdapter.OnClickListen
     private val exAdapter: ExchangeRatesAdapter by lazy {
         ExchangeRatesAdapter(this)
     }
-    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_exchange_rate
@@ -85,12 +79,9 @@ class ExchangeRatesActivity : BaseActivity(), ExchangeRatesAdapter.OnClickListen
         config.registerOnSharedPreferenceChangeListener(this)
         viewModel.balance.observe(this, Observer<Coin> { maybeSubmitList() })
         viewModel.blockchainState.observe(this, Observer<BlockchainState> { maybeSubmitList() })
-        createAndLoadNativeBannerAd(getString(R.string.fb_banner_native_exchange))
     }
 
     override fun onDestroy() {
-        adView?.destroy()
-        adView = null
         super.onDestroy()
         config.unregisterOnSharedPreferenceChangeListener(this)
     }
@@ -118,11 +109,6 @@ class ExchangeRatesActivity : BaseActivity(), ExchangeRatesAdapter.OnClickListen
             maybeSubmitList()
     }
 
-    override fun onError(ad: Ad, error: AdError) {
-        loadGoogleAdView()
-        super.onError(ad, error)
-    }
-
     private fun maybeSubmitList() {
         val exchangeRates = viewModel.exchangeRates.value
         if (exchangeRates != null) {
@@ -132,29 +118,6 @@ class ExchangeRatesActivity : BaseActivity(), ExchangeRatesAdapter.OnClickListen
                     viewModel.blockchainState.value, config.exchangeCurrencyCode, config.btcBase
                 )
             )
-        }
-    }
-
-    private fun loadGoogleAdView() {
-        adView?.destroy()
-        adView = com.google.android.gms.ads.AdView(this)
-        val adRequest = AdRequest.Builder().build()
-        adView?.let {
-            it.adSize = com.google.android.gms.ads.AdSize.BANNER
-            it.adUnitId = getString(R.string.ads_banner_exchange_rate)
-            adViewContainer?.addView(it)
-            it.adListener = object: com.google.android.gms.ads.AdListener() {
-                override fun onAdLoaded() {
-                    super.onAdLoaded()
-                    adViewContainer.visible()
-                }
-
-                override fun onAdFailedToLoad(p0: Int) {
-                    super.onAdFailedToLoad(p0)
-                    adViewContainer.gone()
-                }
-            }
-            it.loadAd(adRequest)
         }
     }
 }

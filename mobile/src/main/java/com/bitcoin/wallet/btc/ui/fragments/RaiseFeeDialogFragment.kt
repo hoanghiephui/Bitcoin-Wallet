@@ -180,9 +180,9 @@ class RaiseFeeDialogFragment : DaggerDialogFragment() {
 
         if (wallet?.isEncrypted == true) {
             object : DeriveKeyTask(backgroundHandler, application!!.scryptIterationsTarget()) {
-                override fun onSuccess(encryptionKey: KeyParameter, wasChanged: Boolean) {
-                    if (wasChanged)
-                        WalletUtils.autoBackupWallet(activity!!, wallet)
+                override fun onSuccess(encryptionKey: KeyParameter, changed: Boolean) {
+                    if (changed)
+                        WalletUtils.autoBackupWallet(activity, wallet)
                     doRaiseFee(encryptionKey)
                 }
             }.deriveKey(wallet!!, passwordView!!.text.toString().trim { it <= ' ' })

@@ -24,6 +24,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
@@ -40,8 +41,6 @@ import com.bitcoin.wallet.btc.ui.widget.CurrencyCalculatorLink
 import com.bitcoin.wallet.btc.ui.widget.DialogBuilder
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.SendViewModel
-import com.facebook.ads.*
-import com.google.android.gms.ads.AdRequest
 import com.google.common.base.Joiner
 import kotlinx.android.synthetic.main.activity_send_coin.*
 import kotlinx.android.synthetic.main.init_ads.*
@@ -83,8 +82,6 @@ class SendCoinActivity : BaseActivity() {
         minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
-    private var mNativeAd: NativeAd? = null
-    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_send_coin
@@ -92,7 +89,6 @@ class SendCoinActivity : BaseActivity() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar("Send Bitcoin")
-        createAndLoadNativeAd()
         backgroundThread = HandlerThread("backgroundThread", Process.THREAD_PRIORITY_BACKGROUND).also {
             it.start()
             backgroundHandler = Handler(it.looper)
@@ -289,10 +285,6 @@ class SendCoinActivity : BaseActivity() {
         handler.removeCallbacksAndMessages(null)
         backgroundThread?.looper?.quit()
         viewModel.sentTransaction?.confidence?.removeEventListener(sentTransactionConfidenceListener)
-        mNativeAd?.destroy()
-        mNativeAd = null
-        adView?.destroy()
-        adView = null
         super.onDestroy()
     }
 
@@ -1181,80 +1173,6 @@ class SendCoinActivity : BaseActivity() {
                 }
 
             }
-        }
-    }
-
-    override fun onAdLoaded(ad: Ad) {
-        reloadAdContainer()
-        super.onAdLoaded(ad)
-    }
-
-    override fun onError(ad: Ad, error: AdError) {
-        loadGoogleAdView()
-        super.onError(ad, error)
-    }
-
-    ///ads
-    private fun createAndLoadNativeAd() {
-        mNativeAd = NativeAd(this, getString(R.string.fb_native_send))
-        mNativeAd?.setAdListener(this)
-        mNativeAd?.loadAd()
-        adViewContainer.apply {
-            gone()
-            background = ContextCompat.getDrawable(this@SendCoinActivity, R.drawable.bg_up_next)
-            setPadding(8)
-            Constants.setMarginStartEnd(this, WalletUtils.dpToPx(context, 10))
-        }
-    }
-
-    private fun reloadAdContainer() {
-        mNativeAd?.let {
-            val mNativeAdContainer = adViewContainer
-            mNativeAdContainer?.removeAllViews()
-
-            // Create a NativeAdViewAttributes object and set the attributes
-            val attributes = NativeAdViewAttributes(this)
-                //.setBackgroundColor(itemView.context.getColorFromAttr(android.R.attr.colorBackground))
-                .setTitleTextColor(getColorFromAttr(R.attr.colorBgItemDrawer))
-                .setDescriptionTextColor(getColorFromAttr(R.attr.colorMenu))
-                .setButtonBorderColor(getColorFromAttr(R.attr.colorAccent))
-                .setButtonTextColor(ContextCompat.getColor(this, R.color.white))
-                .setButtonColor(getColorFromAttr(R.attr.invertedColorAlpha2))
-
-            // Use NativeAdView.render to generate the ad View
-            val mAdView = NativeAdView.render(this, it, attributes)
-
-            mNativeAdContainer?.addView(
-                mAdView,
-                ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    (Resources.getSystem().displayMetrics.density * 200).toInt()
-                )
-            )
-        }
-        adViewContainer.isVisible = mNativeAd != null && mNativeAd?.isAdLoaded == true
-    }
-
-    private fun loadGoogleAdView() {
-        adView?.destroy()
-        adView = com.google.android.gms.ads.AdView(this)
-        val adRequest = AdRequest.Builder().build()
-        adView?.let {
-            it.adSize = com.google.android.gms.ads.AdSize.LARGE_BANNER
-            it.adUnitId = getString(R.string.ads_banner_send)
-            adViewContainer?.addView(it)
-            it.adListener = object: com.google.android.gms.ads.AdListener() {
-                override fun onAdLoaded() {
-                    super.onAdLoaded()
-                    adViewContainer.visible()
-                }
-
-                override fun onAdFailedToLoad(p0: Int) {
-                    super.onAdFailedToLoad(p0)
-                    adViewContainer.gone()
-                }
-            }
-            it.loadAd(adRequest)
         }
     }
 

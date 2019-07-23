@@ -38,9 +38,9 @@
 
     <application
             android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:icon="${appIcon}"
+            android:label="${appName}"
+            android:roundIcon="${appIconRound}"
             android:name="com.bitcoin.wallet.btc.BitcoinApplication"
             android:supportsRtl="true"
             android:networkSecurityConfig="@xml/network_security_config"
@@ -52,7 +52,7 @@
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.MainActivity"
                 android:label="@string/app_name"
-                android:theme="@style/AppTheme.Light"
+                android:theme="@style/AppTheme.Dark"
                 android:screenOrientation="portrait"
                 android:launchMode="singleTop">
             <intent-filter>
@@ -64,27 +64,27 @@
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.ExchangeRatesActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.WalletTransactionsActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.NetworkActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.AddressActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.ScanActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.SendCoinActivity"
-                android:theme="@style/AppTheme.Light">
+                android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -108,40 +108,40 @@
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.RequestCoinActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.SettingActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name="com.bitcoin.wallet.btc.ui.activitys.AboutActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name=".ui.activitys.SweepWalletActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
         <activity
                 android:name=".ui.activitys.StoryActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity android:name=".ui.activitys.TransactionsBlockActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name=".ui.activitys.ExplorerActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name=".ui.activitys.ExplorerDetailActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
         <activity
                 android:name=".ui.activitys.BlocksActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <activity
                 android:name=".ui.activitys.ToolsActivity"
-                android:theme="@style/AppTheme.Light"/>
+                android:theme="@style/AppTheme.Dark"/>
 
         <provider
                 android:name="com.bitcoin.wallet.btc.data.ExchangeRatesProvider"
@@ -171,10 +171,6 @@
         <meta-data
                 android:name="firebase_crashlytics_collection_enabled"
                 android:value="${enableCrashReporting}"/>
-
-        <meta-data
-                android:name="com.google.android.gms.ads.APPLICATION_ID"
-                android:value="@string/app_id"/>
 
         <provider
                 android:name="androidx.work.impl.WorkManagerInitializer"

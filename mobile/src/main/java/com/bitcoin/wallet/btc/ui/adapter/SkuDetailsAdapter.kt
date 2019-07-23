@@ -108,8 +108,12 @@ open class SkuDetailsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bind(item: AugmentedSkuDetails?) {
             item?.apply {
                 itemView.apply {
-                    val name = title?.substring(0, title.indexOf("("))
-                    sku_title.text = name
+                    title?.let {
+                        if (it.isNotEmpty() && it.contains("(")) {
+                            val name = it.substring(0, it.indexOf("("))
+                            sku_title.text = name
+                        }
+                    }
                     sku_description.text = description
                     sku_price.text = price
                     sku_image.setImageResource(R.drawable.ic_launcher_foreground)

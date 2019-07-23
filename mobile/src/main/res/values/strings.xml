@@ -415,4 +415,10 @@
     <string name="about_credits_moshi_title">Moshi, a JSON library</string>
     <string name="about_credits_guava_title">Guava, a collection of useful helpers</string>
     <string name="about_market_app_title">%s page</string>
+
+    <string name="transaction_row_confidence_message_sent_unbroadcasted">This payment has not been transmitted yet.</string>
+    <string name="transaction_row_confidence_message_received_successful">This payment has been credited to your wallet.</string>
+    <string name="transaction_row_confidence_message_sent_successful">Your payment was successful. It has arrived at the payee.</string>
+    <string name="transaction_row_confidence_message_received_failed">This payment has failed.</string>
+    <string name="transaction_row_confidence_message_sent_failed">Your payment has failed.</string>
 </resources>

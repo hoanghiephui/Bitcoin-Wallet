@@ -3,12 +3,8 @@ package com.bitcoin.wallet.btc.service;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -17,19 +13,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.text.format.DateUtils;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import com.bitcoin.wallet.btc.BitcoinApplication;
-import com.bitcoin.wallet.btc.BuildConfig;
-import com.bitcoin.wallet.btc.Constants;
-import com.bitcoin.wallet.btc.FilesWallet;
-import com.bitcoin.wallet.btc.R;
+import com.bitcoin.wallet.btc.*;
 import com.bitcoin.wallet.btc.data.AddressBookDao;
 import com.bitcoin.wallet.btc.data.AppDatabase;
 import com.bitcoin.wallet.btc.data.live.TimeLiveData;
@@ -38,19 +28,7 @@ import com.bitcoin.wallet.btc.ui.activitys.MainActivity;
 import com.bitcoin.wallet.btc.utils.Configuration;
 import com.bitcoin.wallet.btc.utils.WalletUtils;
 import com.google.common.base.Stopwatch;
-
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Block;
-import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.CheckpointManager;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.FilteredBlock;
-import org.bitcoinj.core.Peer;
-import org.bitcoinj.core.PeerGroup;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.StoredBlock;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
+import org.bitcoinj.core.*;
 import org.bitcoinj.core.listeners.AbstractPeerDataEventListener;
 import org.bitcoinj.core.listeners.PeerConnectedEventListener;
 import org.bitcoinj.core.listeners.PeerDataEventListener;
@@ -71,13 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -535,51 +507,55 @@ public class BlockchainService extends LifecycleService {
 
             @Override
             public void onChanged(final Date time) {
-                final int chainHeight = blockChain.getBestChainHeight();
+                try {
+                    final int chainHeight = blockChain.getBestChainHeight();
 
-                if (lastChainHeight > 0) {
-                    final int numBlocksDownloaded = chainHeight - lastChainHeight;
-                    final int numTransactionsReceived = transactionsReceived.getAndSet(0);
+                    if (lastChainHeight > 0) {
+                        final int numBlocksDownloaded = chainHeight - lastChainHeight;
+                        final int numTransactionsReceived = transactionsReceived.getAndSet(0);
 
-                    // push history
-                    activityHistory.add(0, new ActivityHistoryEntry(numTransactionsReceived, numBlocksDownloaded));
+                        // push history
+                        activityHistory.add(0, new ActivityHistoryEntry(numTransactionsReceived, numBlocksDownloaded));
 
-                    // trim
-                    while (activityHistory.size() > MAX_HISTORY_SIZE)
-                        activityHistory.remove(activityHistory.size() - 1);
+                        // trim
+                        while (activityHistory.size() > MAX_HISTORY_SIZE)
+                            activityHistory.remove(activityHistory.size() - 1);
 
-                    // print
-                    final StringBuilder builder = new StringBuilder();
-                    for (final ActivityHistoryEntry entry : activityHistory) {
-                        if (builder.length() > 0)
-                            builder.append(", ");
-                        builder.append(entry);
-                    }
+                        // print
+                        final StringBuilder builder = new StringBuilder();
+                        for (final ActivityHistoryEntry entry : activityHistory) {
+                            if (builder.length() > 0)
+                                builder.append(", ");
+                            builder.append(entry);
+                        }
 
-                    // determine if block and transaction activity is idling
-                    boolean isIdle = false;
-                    if (activityHistory.size() >= MIN_COLLECT_HISTORY) {
-                        isIdle = true;
-                        for (int i = 0; i < activityHistory.size(); i++) {
-                            final ActivityHistoryEntry entry = activityHistory.get(i);
-                            final boolean blocksActive = entry.numBlocksDownloaded > 0 && i <= IDLE_BLOCK_TIMEOUT_MIN;
-                            final boolean transactionsActive = entry.numTransactionsReceived > 0
-                                    && i <= IDLE_TRANSACTION_TIMEOUT_MIN;
+                        // determine if block and transaction activity is idling
+                        boolean isIdle = false;
+                        if (activityHistory.size() >= MIN_COLLECT_HISTORY) {
+                            isIdle = true;
+                            for (int i = 0; i < activityHistory.size(); i++) {
+                                final ActivityHistoryEntry entry = activityHistory.get(i);
+                                final boolean blocksActive = entry.numBlocksDownloaded > 0 && i <= IDLE_BLOCK_TIMEOUT_MIN;
+                                final boolean transactionsActive = entry.numTransactionsReceived > 0
+                                        && i <= IDLE_TRANSACTION_TIMEOUT_MIN;
 
-                            if (blocksActive || transactionsActive) {
-                                isIdle = false;
-                                break;
+                                if (blocksActive || transactionsActive) {
+                                    isIdle = false;
+                                    break;
+                                }
                             }
+                        }
+
+                        // if idling, shutdown service
+                        if (isIdle) {
+                            stopSelf();
                         }
                     }
 
-                    // if idling, shutdown service
-                    if (isIdle) {
-                        stopSelf();
-                    }
+                    lastChainHeight = chainHeight;
+                } catch (NullPointerException ex) {
+                    lastChainHeight = 0;
                 }
-
-                lastChainHeight = chainHeight;
             }
 
             final class ActivityHistoryEntry {
@@ -614,12 +590,6 @@ public class BlockchainService extends LifecycleService {
 
                 // consistency check
                 final int walletLastBlockSeenHeight = wallet.getLastBlockSeenHeight();
-                final int bestChainHeight = blockChain.getBestChainHeight();
-                if (walletLastBlockSeenHeight != -1 && walletLastBlockSeenHeight != bestChainHeight) {
-                    final String message = "wallet/blockchain out of sync: " + walletLastBlockSeenHeight + "/"
-                            + bestChainHeight;
-
-                }
 
                 peerGroup = new PeerGroup(Constants.NETWORK_PARAMETERS, blockChain);
 

@@ -80,15 +80,12 @@ public abstract class InputParser {
                             Qr.decodeDecompressBinary(input));
 
                     handleDirectTransaction(tx);
-                } catch (final IOException x) {
+                } catch (final IOException | ProtocolException x) {
                     //log.info("i/o error while fetching transaction", x);
 
                     error(R.string.input_parser_invalid_transaction, x.getMessage());
-                } catch (final ProtocolException x) {
-                    //log.info("got invalid transaction", x);
+                } //log.info("got invalid transaction", x);
 
-                    error(R.string.input_parser_invalid_transaction, x.getMessage());
-                }
             } else {
                 try {
                     handlePrivateKey(DumpedPrivateKey.fromBase58(Constants.NETWORK_PARAMETERS, input));
@@ -268,13 +265,9 @@ public abstract class InputParser {
                         "cannot handle payment url: " + paymentIntent.paymentUrl);
 
             return paymentIntent;
-        } catch (final InvalidProtocolBufferException x) {
+        } catch (final InvalidProtocolBufferException | UninitializedMessageException x) {
             throw new PaymentProtocolException(x);
-        } catch (final UninitializedMessageException x) {
-            throw new PaymentProtocolException(x);
-        } catch (final FileNotFoundException x) {
-            throw new RuntimeException(x);
-        } catch (final KeyStoreException x) {
+        } catch (final FileNotFoundException | KeyStoreException x) {
             throw new RuntimeException(x);
         }
     }

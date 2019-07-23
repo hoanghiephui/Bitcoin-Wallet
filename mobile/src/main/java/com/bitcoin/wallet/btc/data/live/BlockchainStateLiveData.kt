@@ -20,7 +20,9 @@ class BlockchainStateLiveData(private val application: BitcoinApplication) : Liv
 
     override fun onActive() {
         broadcastManager.registerReceiver(receiver, IntentFilter(BlockchainService.ACTION_BLOCKCHAIN_STATE))
-        application.bindService(Intent(application, BlockchainService::class.java), this, Context.BIND_AUTO_CREATE)
+        if (application != null) {
+            application.bindService(Intent(application, BlockchainService::class.java), this, Context.BIND_AUTO_CREATE)
+        }
     }
 
     override fun onInactive() {

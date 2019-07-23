@@ -99,7 +99,7 @@
                 android:layout_marginLeft="8dp"
                 android:contentDescription="@null"
                 android:rotation="180"
-                android:src="@drawable/ic_arrow_drop_up_grey_600_24dp"
+                app:srcCompat="@drawable/ic_arrow_drop_up_grey_600_24dp"
                 android:tint="@color/product_green_medium"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/textview_price"

@@ -13,14 +13,9 @@ import com.bitcoin.wallet.btc.model.SummaryModel
 import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.ui.adapter.TransactionsBlockAdapter
 import com.bitcoin.wallet.btc.viewmodel.TransactionViewModel
-import com.facebook.ads.AdSize
-import com.facebook.ads.AdView
 import kotlinx.android.synthetic.main.activity_list.*
-import kotlinx.android.synthetic.main.init_ads.*
 
 class TransactionsBlockActivity : BaseActivity() {
-    private var bannerAdView: AdView? = null
-
     private val transactionsBlockAdapter by lazy {
         TransactionsBlockAdapter(retryCallback = {
             viewModel.retryTransactions()
@@ -78,7 +73,6 @@ class TransactionsBlockActivity : BaseActivity() {
             freshlayout.isRefreshing = freshlayout.isRefreshing && it == NetworkState.LOADING
         }
         loadApi()
-        loadAdView()
         freshlayout.setOnRefreshListener {
             loadApi()
         }
@@ -87,22 +81,6 @@ class TransactionsBlockActivity : BaseActivity() {
     private fun loadApi() {
         val hash = intent.getStringExtra("hash")
         viewModel.onGetTransactions("https://blockchain.info/rawblock/$hash?api_key=$API_KEY")
-    }
-
-    override fun onDestroy() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        super.onDestroy()
-    }
-
-    private fun loadAdView() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        bannerAdView = AdView(this, getString(R.string.fb_banner_transaction_block), AdSize.BANNER_HEIGHT_50)
-        bannerAdView?.let {nonNullBannerAdView ->
-            adViewContainer?.addView(nonNullBannerAdView)
-            nonNullBannerAdView.loadAd()
-        }
     }
 
     companion object {

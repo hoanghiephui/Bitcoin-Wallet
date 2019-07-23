@@ -19,11 +19,12 @@
             android:tint="?attr/colorMenu"
             tools:tint="@color/bg_action_bar"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
             android:text="TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/timeView"
+            style="@style/TextAppearance.Subtitle1"
             app:layout_constraintStart_toEndOf="@+id/imgType"
             android:layout_marginStart="8dp"
             app:layout_constraintTop_toTopOf="@+id/imgType"
@@ -44,7 +45,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
             tools:text="373 CONFIRMATIONS"
             android:text="PENDING"
             android:layout_width="wrap_content"
@@ -59,14 +60,28 @@
             app:layout_constraintStart_toStartOf="@+id/timeView"
             android:layout_marginTop="4dp"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvConfidenceMessage"
+            style="@style/TextAppearance.Subtitle2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="22dp"
+            android:alpha="0.6"
+            android:textSize="@dimen/font_size_small"
+            app:layout_constraintEnd_toEndOf="@+id/transaction_row_menu"
+            app:layout_constraintStart_toStartOf="@+id/timeView"
+            app:layout_constraintTop_toBottomOf="@+id/btnConfirm"
+            tools:text="@string/transaction_row_confidence_message_sent_unbroadcasted"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
             android:text="TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/addressView"
-            app:layout_constraintTop_toBottomOf="@+id/btnConfirm"
+            style="@style/TextAppearance.Subtitle2"
             app:layout_constraintStart_toStartOf="@+id/timeView"
             android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@+id/tvConfidenceMessage"
             tools:text="@tools:sample/full_names"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
@@ -74,26 +89,29 @@
             android:layout_marginEnd="22dp"
             />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/valueView"
+            style="@style/TextAppearance.Subtitle1.Medium"
             app:layout_constraintTop_toTopOf="@+id/transaction_row_menu"
             app:layout_constraintEnd_toStartOf="@+id/transaction_row_menu"
             app:layout_constraintBottom_toBottomOf="@+id/transaction_row_menu"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
             android:text="TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/fiatView"
+            style="@style/TextAppearance.Subtitle1"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/valueView"
             android:maxLines="2"
             tools:text="@tools:sample/us_phones"
             app:layout_constraintTop_toBottomOf="@+id/valueView"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
             android:text="@string/transaction_fee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,6 +120,7 @@
             android:layout_marginTop="8dp"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
+            style="@style/TextAppearance.Subtitle2"
             app:layout_constraintTop_toBottomOf="@+id/addressView"
             />
 
@@ -110,6 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/feeView"
+            style="@style/TextAppearance.Subtitle1.Medium"
             app:layout_constraintEnd_toEndOf="@+id/transaction_row_menu"
             android:layout_marginEnd="22dp"
             app:layout_constraintTop_toTopOf="@+id/textView7"
@@ -121,11 +141,12 @@
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="feeView,textView7"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
             tools:text="TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/messageView"
+            style="@style/TextAppearance.Subtitle2"
             app:layout_constraintStart_toStartOf="@+id/textView7"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/textView7"

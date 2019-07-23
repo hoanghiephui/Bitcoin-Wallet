@@ -35,13 +35,7 @@ import com.bitcoin.wallet.btc.ui.fragments.*
 import com.bitcoin.wallet.btc.ui.widget.TopLinearLayoutManager
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.WalletTransactionsViewModel
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
-import com.facebook.ads.AdSize
-import com.facebook.ads.AdView
-import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.activity_wallet_transaction.*
-import kotlinx.android.synthetic.main.init_ads.*
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Sha256Hash
 import org.bitcoinj.core.Transaction
@@ -63,8 +57,6 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
     private val config: Configuration by lazy {
         application.config
     }
-    private var bannerAdView: AdView? = null
-    private var adView: com.google.android.gms.ads.AdView? = null
 
     override fun layoutRes(): Int {
         return R.layout.activity_wallet_transaction
@@ -167,20 +159,11 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
         })
         viewModel.setDirection(null)
         listenClickViews(btnRequestCoin)
-        loadAdView()
     }
 
     override fun onResume() {
         super.onResume()
         warning()?.let { viewModel.setWarning(it) }
-    }
-
-    override fun onDestroy() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        adView?.destroy()
-        adView = null
-        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -340,34 +323,6 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                 startActivity(Intent(this, RequestCoinActivity::class.java))
                 finish()
             }
-        }
-    }
-
-    override fun onError(ad: Ad, error: AdError) {
-        super.onError(ad, error)
-        loadGoogleAdView()
-    }
-
-    private fun loadAdView() {
-        bannerAdView?.destroy()
-        bannerAdView = null
-        bannerAdView = AdView(this, getString(R.string.fb_banner_transaction), AdSize.BANNER_HEIGHT_50)
-        bannerAdView?.let {nonNullBannerAdView ->
-            adViewContainer?.addView(nonNullBannerAdView)
-            nonNullBannerAdView.setAdListener(this)
-            nonNullBannerAdView.loadAd()
-        }
-    }
-
-    private fun loadGoogleAdView() {
-        adView?.destroy()
-        adView = com.google.android.gms.ads.AdView(this)
-        val adRequest = AdRequest.Builder().build()
-        adView?.let {
-            it.adSize = com.google.android.gms.ads.AdSize.SMART_BANNER
-            it.adUnitId = getString(R.string.ads_wallet_transactions)
-            adViewContainer?.addView(it)
-            it.loadAd(adRequest)
         }
     }
 
