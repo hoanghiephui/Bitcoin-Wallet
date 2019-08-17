@@ -70,7 +70,8 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
             itemAnimator = TransactionsWalletAdapter.ItemAnimator()
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             addItemDecoration(object : RecyclerView.ItemDecoration() {
-                private val PADDING = 2 * resources.getDimensionPixelOffset(R.dimen.card_padding_vertical)
+                private val PADDING =
+                    2 * resources.getDimensionPixelOffset(R.dimen.card_padding_vertical)
 
                 override fun getItemOffsets(
                     outRect: Rect, view: View, parent: RecyclerView,
@@ -130,7 +131,8 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
         viewModel.showReportIssueDialog.observe(this, object : Event.Observer<String>() {
             override fun onEvent(content: String?) {
                 content?.let {
-                    ReportIssueDialog.show(this@WalletTransactionsActivity, R.string.report_transaction,
+                    ReportIssueDialog.show(
+                        this@WalletTransactionsActivity, R.string.report_transaction,
                         R.string.report_issue_mes, "Reported issue", it
                     )
                 }
@@ -141,22 +143,24 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
             BackupDialog.show(this)
         }
 
-        viewModel.backupWalletStatus.observe(this, object : Event.Observer<BackupDialog.BackUpStatus>() {
-            override fun onEvent(content: BackupDialog.BackUpStatus?) {
-                content?.let {
-                    onShowSnackbar(
-                        if (it.isStatus)
-                            Html.fromHtml(getString(R.string.export_success, it.mes)).toString()
-                        else getString(R.string.export_failure, it.mes)
-                        , object : CallbackSnack {
-                            override fun onOke() {
+        viewModel.backupWalletStatus.observe(
+            this,
+            object : Event.Observer<BackupDialog.BackUpStatus>() {
+                override fun onEvent(content: BackupDialog.BackUpStatus?) {
+                    content?.let {
+                        onShowSnackbar(
+                            if (it.isStatus)
+                                Html.fromHtml(getString(R.string.export_success, it.mes)).toString()
+                            else getString(R.string.export_failure, it.mes)
+                            , object : CallbackSnack {
+                                override fun onOke() {
 
-                            }
-                        }, 10
-                    )
+                                }
+                            }, 10
+                        )
+                    }
                 }
-            }
-        })
+            })
         viewModel.setDirection(null)
         listenClickViews(btnRequestCoin)
     }
@@ -278,7 +282,11 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                                     )
                                 )
                             } catch (ex: Exception) {
-                                Toast.makeText(this@WalletTransactionsActivity, "Error the browse", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this@WalletTransactionsActivity,
+                                    "Error the browse",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     }
@@ -290,7 +298,8 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
             private fun handleReportIssue(tx: Transaction) {
                 val contextualData = StringBuilder()
                 try {
-                    contextualData.append(tx.getValue(wallet).toFriendlyString()).append(" total value")
+                    contextualData.append(tx.getValue(wallet).toFriendlyString())
+                        .append(" total value")
                 } catch (x: ScriptException) {
                     contextualData.append(x.message)
                 }
@@ -298,6 +307,19 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                 contextualData.append('\n')
                 if (tx.hasConfidence())
                     contextualData.append("  confidence: ").append(tx.confidence).append('\n')
+                val blockExplorers = resources
+                    .getStringArray(R.array.preferences_block_explorer_values)
+                for (blockExplorer in blockExplorers) {
+                    contextualData
+                        .append(
+                            Uri.withAppendedPath(
+                                Uri.parse(blockExplorer),
+                                "tx/" + tx.txId.toString()
+                            )
+                        )
+                        .append('\n')
+                }
+
                 contextualData.append(tx.toString())
 
                 viewModel.showReportIssueDialog.value = Event(contextualData.toString())
