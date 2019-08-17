@@ -326,11 +326,11 @@ class BitcoinApplication : DaggerApplication() {
     }
 
     fun maxConnectedPeers(): Int {
-        return if (activityManager.isLowRamDevice) 4 else 6
+        return if (activityManager.memoryClass <= 128) 4 else 6
     }
 
     fun scryptIterationsTarget(): Int {
-        return if (activityManager.isLowRamDevice)
+        return if (activityManager.memoryClass <= 128 || Build.SUPPORTED_64_BIT_ABIS.isEmpty())
             Constants.SCRYPT_ITERATIONS_TARGET_LOWRAM
         else
             Constants.SCRYPT_ITERATIONS_TARGET
