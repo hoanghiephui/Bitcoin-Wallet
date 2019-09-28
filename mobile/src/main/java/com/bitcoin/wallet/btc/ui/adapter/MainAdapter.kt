@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.item_top.*
 import kotlinx.android.synthetic.main.item_top_chart.*
 import kotlinx.android.synthetic.main.item_top_wallet.*
 import org.bitcoinj.core.Coin
+import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.utils.MonetaryFormat
 import java.math.RoundingMode
 import java.text.NumberFormat
@@ -474,7 +475,7 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
         private fun initViewBalance() {
             walletBalanceBtc.setPrefixScaleX(0.9f)
             wallet_balance_local.setInsignificantRelativeSize(1f)
-            wallet_balance_local.setStrikeThru(BuildConfig.TEST_NET)
+            wallet_balance_local.setStrikeThru(Constants.NETWORK_PARAMETERS.id != NetworkParameters.ID_MAINNET)
             walletBalanceBtc.setStrikeThru(false)
             viewBalance.setOnClickListener {
                 callback.onClickExchange()

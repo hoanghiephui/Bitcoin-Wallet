@@ -40,9 +40,7 @@ class DaggerWorkerFactory @Inject constructor(
                 }
             }
         }
-        if (provider == null) {
-            throw IllegalArgumentException("Missing binding for $workerClassName")
-        }
+        requireNotNull(provider) { "Missing binding for $workerClassName" }
 
         provider.get()
     } catch (e: Exception) {

@@ -16,6 +16,7 @@ import com.bitcoin.wallet.btc.extension.inflate
 import com.bitcoin.wallet.btc.service.BlockchainState
 import com.bitcoin.wallet.btc.ui.widget.CurrencyTextView
 import org.bitcoinj.core.Coin
+import org.bitcoinj.core.NetworkParameters
 import org.bitcoinj.utils.Fiat
 import java.util.*
 
@@ -53,7 +54,8 @@ class ExchangeRatesAdapter(private val onClickListener: OnClickListener?) :
             if (listItem.balanceAsFiat.smallestUnitExponent() >= 0) {
                 holder.walletView.setAmount(listItem.balanceAsFiat)
             }
-            holder.walletView.setStrikeThru(false)
+            holder.walletView.setStrikeThru(!Constants.NETWORK_PARAMETERS.id.equals(
+                NetworkParameters.ID_MAINNET))
         } else {
             holder.walletView.text = "n/a"
             holder.walletView.setStrikeThru(false)

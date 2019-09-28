@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.extension.setBottomSheetCallback
 import com.github.zagum.expandicon.ExpandIconView
@@ -19,16 +18,16 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment(), HasSupportFragmentInjector {
+abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment(), HasAndroidInjector {
 
     @Inject
-    lateinit var childFragmentInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var childFragmentInjector: DispatchingAndroidInjector<Any>
 
     private var disposal = CompositeDisposable()
     var bottomSheetBehavior: BottomSheetBehavior<View>? = null
@@ -43,12 +42,17 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment(), HasS
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val contextThemeWrapper = ContextThemeWrapper(context, context?.theme)
         val themeAwareInflater = inflater.cloneInContext(contextThemeWrapper)
         val view = themeAwareInflater.inflate(layoutRes(), container, false)
-        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        view.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 onGlobalLayoutChanged(view)
@@ -112,8 +116,14 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment(), HasS
             bottomSheetBehavior?.setBottomSheetCallback({ newState ->
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) dialog?.cancel()
                 when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> toggleArrow?.setState(ExpandIconView.MORE, true)
-                    BottomSheetBehavior.STATE_COLLAPSED -> toggleArrow?.setState(ExpandIconView.LESS, true)
+                    BottomSheetBehavior.STATE_EXPANDED -> toggleArrow?.setState(
+                        ExpandIconView.MORE,
+                        true
+                    )
+                    BottomSheetBehavior.STATE_COLLAPSED -> toggleArrow?.setState(
+                        ExpandIconView.LESS,
+                        true
+                    )
                     else -> toggleArrow?.setFraction(0.5f, false)
                 }
             })
@@ -134,5 +144,7 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment(), HasS
     }
 
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment>? = this.childFragmentInjector
+    override fun androidInjector(): AndroidInjector<Any> {
+        return this.childFragmentInjector
+    }
 }

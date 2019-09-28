@@ -140,9 +140,9 @@ class MainActivity : BaseActivity(), InstallStateUpdatedListener {
             BlockchainService.start(this@MainActivity, true)
         }, 1000)
         if (application.config.nofity) {
-            NotifyWorker.enqueue("BTC", API_KEY)
+            NotifyWorker.enqueue("BTC", API_KEY, application)
         } else {
-            NotifyWorker.clearNotify()
+            NotifyWorker.clearNotify(application)
         }
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             appUpdateManager?.appUpdateInfo

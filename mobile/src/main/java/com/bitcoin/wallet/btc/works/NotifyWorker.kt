@@ -54,13 +54,13 @@ class NotifyWorker @Inject constructor(
 
     companion object {
 
-        fun clearNotify() {
-            val workManager = WorkManager.getInstance()
+        fun clearNotify(application: Application) {
+            val workManager = WorkManager.getInstance(application)
             workManager.cancelAllWork()
         }
 
-        fun enqueue(base: String, key: String) {
-            val workManager = WorkManager.getInstance()
+        fun enqueue(base: String, key: String, application: Application) {
+            val workManager = WorkManager.getInstance(application)
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
