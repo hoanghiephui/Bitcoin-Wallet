@@ -21,8 +21,7 @@
         <item>@string/precision_labels_0_6</item>
     </string-array>
     <string-array name="preferences_block_explorer_values">
-        <item>https://blockexplorer.com/</item>
-        <item>https://live.blockcypher.com/btc-testnet/</item>
+        <item>https://blockchair.com/bitcoin/</item>
     </string-array>
     <string-array name="preferences_block_explorer_labels">
         <item>blockchain.info</item>

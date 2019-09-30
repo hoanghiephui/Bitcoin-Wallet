@@ -304,9 +304,8 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                     contextualData.append(x.message)
                 }
 
-                contextualData.append('\n')
                 if (tx.hasConfidence())
-                    contextualData.append("  confidence: ").append(tx.confidence).append('\n')
+                    contextualData.append(" confidence: ").append(tx.confidence).append('\n')
                 val blockExplorers = resources
                     .getStringArray(R.array.preferences_block_explorer_values)
                 for (blockExplorer in blockExplorers) {
@@ -314,7 +313,7 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                         .append(
                             Uri.withAppendedPath(
                                 Uri.parse(blockExplorer),
-                                "tx/" + tx.txId.toString()
+                                "transaction/" + tx.txId.toString()
                             )
                         )
                         .append('\n')
