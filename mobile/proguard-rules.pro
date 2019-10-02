@@ -2,12 +2,6 @@
 # ads google
 -keep class com.google.** { *; }
 
--dontskipnonpubliclibraryclasses
--dontoptimize
--dontpreverify
--dontobfuscate
--verbose
-
 -keepattributes *Annotation*
 -keep class androidx.appcompat.widget.SearchView { *; }
 -keep public class com.google.android.gms.* { public *; }
@@ -315,11 +309,6 @@
 -dontwarn kotlin.reflect.jvm.internal.**
 -keep class android.arch.lifecycle.** {*;}
 
--dontskipnonpubliclibraryclasses
--dontoptimize
--dontpreverify
--dontobfuscate
--verbose
 
 -keepclassmembers class * implements java.io.Serializable {
     private static final java.io.ObjectStreamField[] serialPersistentFields;

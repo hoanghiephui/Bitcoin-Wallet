@@ -1,17 +1,24 @@
 package com.bitcoin.wallet.btc.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.TypefaceSpan;
-import android.widget.Toast;
+
 import com.bitcoin.wallet.btc.Constants;
 import com.bitcoin.wallet.btc.FilesWallet;
 import com.bitcoin.wallet.btc.service.BlockchainService;
 import com.google.common.base.Stopwatch;
-import org.bitcoinj.core.*;
+
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptException;
 import org.bitcoinj.wallet.Protos;
@@ -19,8 +26,13 @@ import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.WalletProtobufSerializer;
 
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.annotation.Nullable;
-import java.io.*;
 
 public class WalletUtils {
     public static final FileFilter BACKUP_FILE_FILTER = file -> {
@@ -210,4 +222,14 @@ public class WalletUtils {
         }
         return (int) (dp * (dpi / 160.0));
     }
+
+    public static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
 }

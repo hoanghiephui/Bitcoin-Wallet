@@ -11,11 +11,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.CryptoCurrency
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.TimeSpan
@@ -29,14 +29,11 @@ import com.bitcoin.wallet.btc.service.BlockchainState
 import com.bitcoin.wallet.btc.ui.activitys.*
 import com.bitcoin.wallet.btc.ui.activitys.ScanActivity.Companion.REQUEST_CODE_SCAN
 import com.bitcoin.wallet.btc.ui.adapter.MainAdapter
-import com.bitcoin.wallet.btc.utils.Configuration
-import com.bitcoin.wallet.btc.utils.Event
-import com.bitcoin.wallet.btc.utils.InputParser
-import com.bitcoin.wallet.btc.utils.Utils
+import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.init_ads_two.*
+import kotlinx.android.synthetic.main.item_top_transaction.*
 import org.bitcoinj.core.PrefixedChecksummedBytes
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.VerificationException
@@ -71,7 +68,11 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
         baseActivity().setSupportActionBar(toolbar)
         baseActivity().supportActionBar?.title = ""
         val toggle = ActionBarDrawerToggle(
-            baseActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            baseActivity(),
+            drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -110,7 +111,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                             setAction("OK") {
                                 this.dismiss()
                             }
-                            val text = this.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                            val text =
+                                this.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                             text.setLines(10)
                             val params = this.view.layoutParams
                             this.view.layoutParams = params
@@ -237,7 +239,29 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 MakePurchaseDialogFragment.show(baseActivity())
             }
             R.id.menu_explorer -> {
-                ExplorerActivity.open(baseActivity())
+                if (WalletUtils.isPackageInstalled(
+                        "com.blockchain.bitcoin.explorer",
+                        baseActivity().packageManager
+                    )
+                ) {
+                    val launchIntent =
+                        baseActivity().packageManager.getLaunchIntentForPackage("com.blockchain.bitcoin.explorer")
+                    startActivity(launchIntent)
+                } else {
+                    AlertDialog.Builder(baseActivity()).apply {
+                        setMessage("You need to open Google Play")
+                        setPositiveButton("OK") { dialog, _ ->
+                            Intent(Intent.ACTION_VIEW).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                data = Uri.parse("market://details?id=" + "com.blockchain.bitcoin.explorer")
+                                startActivity(this)
+                            }
+                            dialog.dismiss()
+                        }
+                        setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+                    }.create().show()
+                }
+                //ExplorerActivity.open(baseActivity())
             }
             R.id.menu_tools -> {
                 ToolsActivity.open(baseActivity())
