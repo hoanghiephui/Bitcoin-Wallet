@@ -238,36 +238,37 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             R.id.menu_sub -> {
                 MakePurchaseDialogFragment.show(baseActivity())
             }
-            R.id.menu_explorer -> {
-                if (WalletUtils.isPackageInstalled(
-                        "com.blockchain.bitcoin.explorer",
-                        baseActivity().packageManager
-                    )
-                ) {
-                    val launchIntent =
-                        baseActivity().packageManager.getLaunchIntentForPackage("com.blockchain.bitcoin.explorer")
-                    startActivity(launchIntent)
-                } else {
-                    AlertDialog.Builder(baseActivity()).apply {
-                        setMessage("You need to open Google Play")
-                        setPositiveButton("OK") { dialog, _ ->
-                            Intent(Intent.ACTION_VIEW).apply {
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                data = Uri.parse("market://details?id=" + "com.blockchain.bitcoin.explorer")
-                                startActivity(this)
-                            }
-                            dialog.dismiss()
-                        }
-                        setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-                    }.create().show()
-                }
+            R.id.menu_explorer, R.id.menu_tools -> {
+                openNewApp()
                 //ExplorerActivity.open(baseActivity())
-            }
-            R.id.menu_tools -> {
-                ToolsActivity.open(baseActivity())
             }
         }
         return true
+    }
+
+    private fun openNewApp() {
+        if (WalletUtils.isPackageInstalled(
+                "com.blockchain.bitcoin.explorer",
+                baseActivity().packageManager
+            )
+        ) {
+            val launchIntent =
+                baseActivity().packageManager.getLaunchIntentForPackage("com.blockchain.bitcoin.explorer")
+            startActivity(launchIntent)
+        } else {
+            AlertDialog.Builder(baseActivity()).apply {
+                setMessage("You need to open Google Play")
+                setPositiveButton("OK") { dialog, _ ->
+                    Intent(Intent.ACTION_VIEW).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        data = Uri.parse("market://details?id=" + "com.blockchain.bitcoin.explorer")
+                        startActivity(this)
+                    }
+                    dialog.dismiss()
+                }
+                setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+            }.create().show()
+        }
     }
 
     override fun onClick(v: View?) {
@@ -503,7 +504,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                     startActivity(Intent(requireActivity(), ExchangeRatesActivity::class.java))
                 }
                 R.id.menu_tools -> {
-                    ToolsActivity.open(baseActivity())
+                    openNewApp()
                 }
             }
             return@setNavigationItemSelectedListener true
