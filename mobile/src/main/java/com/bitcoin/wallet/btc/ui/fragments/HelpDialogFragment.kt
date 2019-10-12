@@ -9,7 +9,7 @@ import com.bitcoin.wallet.btc.base.BaseBottomSheetDialogFragment
 import com.bitcoin.wallet.btc.extension.Bundle
 import kotlinx.android.synthetic.main.dialog_help.*
 
-class HelpDialogFragment: BaseBottomSheetDialogFragment() {
+class HelpDialogFragment : BaseBottomSheetDialogFragment() {
     override fun layoutRes(): Int {
         return R.layout.dialog_help
     }
@@ -25,7 +25,10 @@ class HelpDialogFragment: BaseBottomSheetDialogFragment() {
             fragment.arguments = Bundle {
                 putInt("content", content)
             }
-            fragment.show(activity.supportFragmentManager, HelpDialogFragment::class.java.simpleName)
+            fragment.show(
+                activity.supportFragmentManager,
+                HelpDialogFragment::class.java.simpleName
+            )
         }
     }
 }

@@ -7,7 +7,8 @@ import com.bitcoin.wallet.btc.repository.ToolsRepository
 import com.bitcoin.wallet.btc.utils.Event
 import javax.inject.Inject
 
-class ToolsViewModel @Inject constructor(repository: ToolsRepository) : BaseViewModel<ToolsRepository>(repository) {
+class ToolsViewModel @Inject constructor(repository: ToolsRepository) :
+    BaseViewModel<ToolsRepository>(repository) {
     //get price coin
     private val priceCoinRequestData = MutableLiveData<Event<Void>>()
     private val priceCoinResult = Transformations.map(priceCoinRequestData) {
@@ -24,7 +25,7 @@ class ToolsViewModel @Inject constructor(repository: ToolsRepository) : BaseView
      * @method retry get coins
      */
     fun retryPriceCoin() {
-        priceCoinResult?.value?.retry?.invoke()
+        priceCoinResult.value?.retry?.invoke()
     }
 
     //get history price
@@ -43,6 +44,6 @@ class ToolsViewModel @Inject constructor(repository: ToolsRepository) : BaseView
      * @method retry get history coins
      */
     fun retryHistoryPriceCoin() {
-        historyPriceCoinResult?.value?.retry?.invoke()
+        historyPriceCoinResult.value?.retry?.invoke()
     }
 }

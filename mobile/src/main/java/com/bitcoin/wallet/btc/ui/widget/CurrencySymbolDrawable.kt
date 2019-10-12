@@ -7,7 +7,8 @@ import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 import com.bitcoin.wallet.btc.Constants
 
-class CurrencySymbolDrawable(symbol: String, textSize: Float, color: Int, private val y: Float) : Drawable() {
+class CurrencySymbolDrawable(symbol: String, textSize: Float, color: Int, private val y: Float) :
+    Drawable() {
     private val paint = Paint()
     private val symbol: String
 

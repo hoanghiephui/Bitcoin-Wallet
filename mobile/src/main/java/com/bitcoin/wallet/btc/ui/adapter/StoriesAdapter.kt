@@ -13,17 +13,18 @@ import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_news.*
 
-class StoriesAdapter(private val callback: MainAdapter.MainCallback) : ListAdapter<DataItem, StoriesAdapter.StoriesViewHolder>(
-    object : DiffUtil.ItemCallback<DataItem>() {
-        override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
-            return oldItem.id == newItem.id
-        }
+class StoriesAdapter(private val callback: MainAdapter.MainCallback) :
+    ListAdapter<DataItem, StoriesAdapter.StoriesViewHolder>(
+        object : DiffUtil.ItemCallback<DataItem>() {
+            override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-        override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
-            return oldItem == newItem
+            override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
+                return oldItem == newItem
+            }
         }
-    }
-) {
+    ) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoriesViewHolder {

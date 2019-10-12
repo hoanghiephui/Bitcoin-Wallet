@@ -25,7 +25,7 @@ import com.bitcoin.wallet.btc.utils.ResolveDnsTask
 import java.net.InetAddress
 import java.util.*
 
-class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
+class SettingFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
 
     lateinit var sharedPreferences: SharedPreferences
     private var config: Configuration? = null
@@ -147,7 +147,8 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
             trustedPeerPreference?.setSummary(R.string.trusted_peer_summary)
             trustedPeerOnlyPreference?.isEnabled = false
         } else {
-            trustedPeerPreference?.summary = trustedPeer + "\n[" + getString(R.string.trusted_peer_resolve_progress) + "]"
+            trustedPeerPreference?.summary =
+                trustedPeer + "\n[" + getString(R.string.trusted_peer_resolve_progress) + "]"
             trustedPeerOnlyPreference?.isEnabled = true
 
             object : ResolveDnsTask(backgroundHandler) {
@@ -170,7 +171,8 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
         val dialog = DialogBuilder(requireContext())
         dialog.setTitle(R.string.initiate_reset)
         dialog.setMessage(R.string.initiate_reset_message)
-        dialog.setPositiveButton(R.string.initiate_reset_btn
+        dialog.setPositiveButton(
+            R.string.initiate_reset_btn
         ) { _, _ ->
             BlockchainService.resetBlockchain(activity)
             activity?.finish()
@@ -183,13 +185,16 @@ class SettingFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChange
         if (activity == null) {
             return
         }
-        val activeKeyChain = (activity?.application as BitcoinApplication).getWallet().activeKeyChain
+        val activeKeyChain =
+            (activity?.application as BitcoinApplication).getWallet().activeKeyChain
         val extendedKey = activeKeyChain.watchingKey
         val outputScriptType = activeKeyChain.outputScriptType
         val creationTimeSeconds = extendedKey.creationTimeSeconds
         val base58 = String.format(
-            Locale.US, "%s?c=%d&h=bip32",
-            extendedKey.serializePubB58(Constants.NETWORK_PARAMETERS, outputScriptType), creationTimeSeconds
+            Locale.US,
+            "%s?c=%d&h=bip32",
+            extendedKey.serializePubB58(Constants.NETWORK_PARAMETERS, outputScriptType),
+            creationTimeSeconds
         )
         activity?.let {
             BitmapBottomDialog.show(it, Qr.bitmap(base58))

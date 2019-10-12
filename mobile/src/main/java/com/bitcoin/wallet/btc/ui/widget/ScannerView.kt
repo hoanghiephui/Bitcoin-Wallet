@@ -7,7 +7,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.bitcoin.wallet.btc.R
 import com.google.zxing.ResultPoint
-import java.util.HashMap
+import java.util.*
 
 class ScannerView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
@@ -54,7 +54,12 @@ class ScannerView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         this.frame = frame
         matrixs.setRectToRect(framePreview, RectF(frame), Matrix.ScaleToFit.FILL)
         matrixs.postRotate((-displayRotation).toFloat(), frame.exactCenterX(), frame.exactCenterY())
-        matrixs.postScale((if (cameraFlip) -1 else 1).toFloat(), 1f, frame.exactCenterX(), frame.exactCenterY())
+        matrixs.postScale(
+            (if (cameraFlip) -1 else 1).toFloat(),
+            1f,
+            frame.exactCenterX(),
+            frame.exactCenterY()
+        )
         matrixs.postRotate(cameraRotation.toFloat(), frame.exactCenterX(), frame.exactCenterY())
 
         invalidate()
@@ -86,7 +91,13 @@ class ScannerView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         // draw mask darkened
         maskPaint.color = if (isResult) maskResultColor else maskColor
         canvas.drawRect(0f, 0f, width.toFloat(), frame!!.top.toFloat(), maskPaint)
-        canvas.drawRect(0f, frame!!.top.toFloat(), frame!!.left.toFloat(), (frame!!.bottom + 1).toFloat(), maskPaint)
+        canvas.drawRect(
+            0f,
+            frame!!.top.toFloat(),
+            frame!!.left.toFloat(),
+            (frame!!.bottom + 1).toFloat(),
+            maskPaint
+        )
         canvas.drawRect(
             (frame!!.right + 1).toFloat(),
             frame!!.top.toFloat(),
@@ -94,7 +105,13 @@ class ScannerView(context: Context, attrs: AttributeSet) : View(context, attrs) 
             (frame!!.bottom + 1).toFloat(),
             maskPaint
         )
-        canvas.drawRect(0f, (frame!!.bottom + 1).toFloat(), width.toFloat(), height.toFloat(), maskPaint)
+        canvas.drawRect(
+            0f,
+            (frame!!.bottom + 1).toFloat(),
+            width.toFloat(),
+            height.toFloat(),
+            maskPaint
+        )
 
         if (isResult) {
             laserPaint.color = dotResultColor

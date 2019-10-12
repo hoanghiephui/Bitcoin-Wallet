@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.transition.TransitionManager
-import com.bitcoin.wallet.btc.ui.widget.AnchorSheetBehavior
 import com.bitcoin.wallet.btc.R
+import com.bitcoin.wallet.btc.ui.widget.AnchorSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 

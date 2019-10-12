@@ -55,7 +55,10 @@ class ReportIssueDialog : BaseBottomSheetDialogFragment() {
             try {
                 text.append("\n\n\n=== application info ===\n\n")
                 val applicationInfo =
-                    appendApplicationInfo(StringBuilder(), (activity as WalletTransactionsActivity).application)
+                    appendApplicationInfo(
+                        StringBuilder(),
+                        (activity as WalletTransactionsActivity).application
+                    )
 
                 text.append(applicationInfo)
             } catch (x: IOException) {
@@ -97,7 +100,10 @@ class ReportIssueDialog : BaseBottomSheetDialogFragment() {
     }
 
     @Throws(IOException::class)
-    private fun appendApplicationInfo(report: Appendable, application: BitcoinApplication): Appendable {
+    private fun appendApplicationInfo(
+        report: Appendable,
+        application: BitcoinApplication
+    ): Appendable {
         val pi = application.packageInfo
         val configuration = application.config
         val calendar = GregorianCalendar(UTC)
@@ -107,18 +113,44 @@ class ReportIssueDialog : BaseBottomSheetDialogFragment() {
         report.append("Test/Prod: " + (if (Constants.TEST) "test" else "prod") + "\n")
         report.append("Timezone: " + TimeZone.getDefault().id + "\n")
         calendar.timeInMillis = System.currentTimeMillis()
-        report.append("Time: " + String.format(Locale.US, "%tF %tT %tZ", calendar, calendar, calendar) + "\n")
+        report.append(
+            "Time: " + String.format(
+                Locale.US,
+                "%tF %tT %tZ",
+                calendar,
+                calendar,
+                calendar
+            ) + "\n"
+        )
         calendar.timeInMillis = BitcoinApplication.TIME_CREATE_APPLICATION
         report.append(
-            "Time of launch: " + String.format(Locale.US, "%tF %tT %tZ", calendar, calendar, calendar) + "\n"
+            "Time of launch: " + String.format(
+                Locale.US,
+                "%tF %tT %tZ",
+                calendar,
+                calendar,
+                calendar
+            ) + "\n"
         )
         calendar.timeInMillis = pi.lastUpdateTime
         report.append(
-            "Time of last update: " + String.format(Locale.US, "%tF %tT %tZ", calendar, calendar, calendar) + "\n"
+            "Time of last update: " + String.format(
+                Locale.US,
+                "%tF %tT %tZ",
+                calendar,
+                calendar,
+                calendar
+            ) + "\n"
         )
         calendar.timeInMillis = pi.firstInstallTime
         report.append(
-            "Time of first install: " + String.format(Locale.US, "%tF %tT %tZ", calendar, calendar, calendar)
+            "Time of first install: " + String.format(
+                Locale.US,
+                "%tF %tT %tZ",
+                calendar,
+                calendar,
+                calendar
+            )
                     + "\n"
         )
         val lastBackupTime = configuration.getLastBackupTime()

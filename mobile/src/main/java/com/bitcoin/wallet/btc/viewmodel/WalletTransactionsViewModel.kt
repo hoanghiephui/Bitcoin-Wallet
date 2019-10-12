@@ -28,7 +28,8 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.Comparator
 
-class WalletTransactionsViewModel @Inject constructor(private val application: Application) : ViewModel() {
+class WalletTransactionsViewModel @Inject constructor(private val application: Application) :
+    ViewModel() {
     enum class Direction {
         RECEIVED, SENT
     }
@@ -61,6 +62,7 @@ class WalletTransactionsViewModel @Inject constructor(private val application: A
     val showEditAddressBookEntryDialog = MutableLiveData<Event<Address>>()
     val showReportIssueDialog = MutableLiveData<Event<String>>()
     val showBackupWalletDialog = MutableLiveData<Event<Void>>()
+
     init {
         this.list.addSource(
             transactions
@@ -89,7 +91,7 @@ class WalletTransactionsViewModel @Inject constructor(private val application: A
         this.selectedTransaction.value = selectedTransaction
     }
 
-    fun setWarning(warning: WarningType) {
+    fun setWarning(warning: WarningType?) {
         this.warning.value = warning
     }
 

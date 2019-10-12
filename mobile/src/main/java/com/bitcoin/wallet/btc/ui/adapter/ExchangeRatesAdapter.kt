@@ -54,8 +54,11 @@ class ExchangeRatesAdapter(private val onClickListener: OnClickListener?) :
             if (listItem.balanceAsFiat.smallestUnitExponent() >= 0) {
                 holder.walletView.setAmount(listItem.balanceAsFiat)
             }
-            holder.walletView.setStrikeThru(!Constants.NETWORK_PARAMETERS.id.equals(
-                NetworkParameters.ID_MAINNET))
+            holder.walletView.setStrikeThru(
+                !Constants.NETWORK_PARAMETERS.id.equals(
+                    NetworkParameters.ID_MAINNET
+                )
+            )
         } else {
             holder.walletView.text = "n/a"
             holder.walletView.setStrikeThru(false)
@@ -105,13 +108,20 @@ class ExchangeRatesAdapter(private val onClickListener: OnClickListener?) :
                 val exchangeRate = ExchangeRatesProvider.getExchangeRate(cursor)
                 val baseRateAsFiat = exchangeRate.rate.coinToFiat(rateBase)
                 val baseRateMinDecimals = if (!rateBase.isLessThan(Coin.COIN)) 2 else 4
-                val balanceAsFiat = if (balance != null && (blockchainState == null || !blockchainState.replaying))
-                    exchangeRate.rate.coinToFiat(balance)
-                else
-                    null
+                val balanceAsFiat =
+                    if (balance != null && (blockchainState == null || !blockchainState.replaying))
+                        exchangeRate.rate.coinToFiat(balance)
+                    else
+                        null
                 val isDefaultCurrency = exchangeRate.currencyCode == defaultCurrency
                 items.add(
-                    ListItem(exchangeRate, baseRateAsFiat, baseRateMinDecimals, balanceAsFiat, isDefaultCurrency)
+                    ListItem(
+                        exchangeRate,
+                        baseRateAsFiat,
+                        baseRateMinDecimals,
+                        balanceAsFiat,
+                        isDefaultCurrency
+                    )
                 )
             }
             return items

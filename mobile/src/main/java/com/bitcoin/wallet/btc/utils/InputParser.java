@@ -2,7 +2,9 @@ package com.bitcoin.wallet.btc.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
+
 import androidx.annotation.Nullable;
+
 import com.bitcoin.wallet.btc.Constants;
 import com.bitcoin.wallet.btc.R;
 import com.bitcoin.wallet.btc.data.PaymentIntent;
@@ -11,8 +13,16 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.UninitializedMessageException;
+
 import org.bitcoin.protocols.payments.Protos;
-import org.bitcoinj.core.*;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.LegacyAddress;
+import org.bitcoinj.core.PrefixedChecksummedBytes;
+import org.bitcoinj.core.ProtocolException;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.crypto.BIP38PrivateKey;
 import org.bitcoinj.crypto.TrustStoreLoader;
 import org.bitcoinj.protocols.payments.PaymentProtocol;
@@ -33,6 +43,99 @@ import java.util.regex.Pattern;
 
 public abstract class InputParser {
     //private static final Logger log = LoggerFactory.getLogger(InputParser.class); todo log
+
+    private static final Pattern PATTERN_TRANSACTION = Pattern
+            .compile("[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$\\*\\+\\-\\.\\/\\:]{100,}");
+
+    public static PaymentIntent parsePaymentRequest(final byte[] serializedPaymentRequest)
+            throws PaymentProtocolException {
+        try {
+            if (serializedPaymentRequest.length > 50000)
+                throw new PaymentProtocolException("payment request too big: " + serializedPaymentRequest.length);
+
+            final Protos.PaymentRequest paymentRequest = Protos.PaymentRequest.parseFrom(serializedPaymentRequest);
+
+            final String pkiName;
+            final String pkiCaName;
+            if (!"none".equals(paymentRequest.getPkiType())) {
+                final KeyStore keystore = new TrustStoreLoader.DefaultTrustStoreLoader().getKeyStore();
+                final PaymentProtocol.PkiVerificationData verificationData = PaymentProtocol.verifyPaymentRequestPki(paymentRequest,
+                        keystore);
+                pkiName = verificationData.displayName;
+                pkiCaName = verificationData.rootAuthorityName;
+            } else {
+                pkiName = null;
+                pkiCaName = null;
+            }
+
+            final PaymentSession paymentSession = PaymentProtocol.parsePaymentRequest(paymentRequest);
+
+            if (paymentSession.isExpired())
+                throw new PaymentProtocolException.Expired("payment details expired: current time " + new Date()
+                        + " after expiry time " + paymentSession.getExpires());
+
+            if (!paymentSession.getNetworkParameters().equals(Constants.NETWORK_PARAMETERS))
+                throw new PaymentProtocolException.InvalidNetwork(
+                        "cannot handle payment request network: " + paymentSession.getNetworkParameters());
+
+            final ArrayList<PaymentIntent.Output> outputs = new ArrayList<PaymentIntent.Output>(1);
+            for (final PaymentProtocol.Output output : paymentSession.getOutputs())
+                outputs.add(PaymentIntent.Output.valueOf(output));
+
+            final String memo = paymentSession.getMemo();
+
+            final String paymentUrl = paymentSession.getPaymentUrl();
+
+            final byte[] merchantData = paymentSession.getMerchantData();
+
+            final byte[] paymentRequestHash = Hashing.sha256().hashBytes(serializedPaymentRequest).asBytes();
+
+            final PaymentIntent paymentIntent = new PaymentIntent(PaymentIntent.Standard.BIP70, pkiName, pkiCaName,
+                    outputs.toArray(new PaymentIntent.Output[0]), memo, paymentUrl, merchantData, null,
+                    paymentRequestHash);
+
+            if (paymentIntent.hasPaymentUrl() && !paymentIntent.isSupportedPaymentUrl())
+                throw new PaymentProtocolException.InvalidPaymentURL(
+                        "cannot handle payment url: " + paymentIntent.paymentUrl);
+
+            return paymentIntent;
+        } catch (final InvalidProtocolBufferException | UninitializedMessageException x) {
+            throw new PaymentProtocolException(x);
+        } catch (final FileNotFoundException | KeyStoreException x) {
+            throw new RuntimeException(x);
+        }
+    }
+
+    public abstract void parse();
+
+    protected final void parseAndHandlePaymentRequest(final byte[] serializedPaymentRequest)
+            throws PaymentProtocolException {
+        final PaymentIntent paymentIntent = parsePaymentRequest(serializedPaymentRequest);
+
+        handlePaymentIntent(paymentIntent);
+    }
+
+    protected abstract void handlePaymentIntent(PaymentIntent paymentIntent);
+
+    protected abstract void handleDirectTransaction(Transaction transaction) throws VerificationException;
+
+    protected abstract void error(int messageResId, Object... messageArgs);
+
+    protected void cannotClassify(final String input) {
+        // log.info("cannot classify: '{}'", input);
+
+        error(R.string.input_parser_cannot_classify, input);
+    }
+
+    protected void dialog(final Context context, @Nullable final DialogInterface.OnClickListener dismissListener, final int titleResId,
+                          final int messageResId, final Object... messageArgs) {
+        final DialogBuilder dialog = new DialogBuilder(context);
+        if (titleResId != 0)
+            dialog.setTitle(titleResId);
+        dialog.setMessage(context.getString(messageResId, messageArgs));
+        dialog.singleDismissButton(dismissListener);
+        dialog.show();
+    }
 
     public abstract static class StringInputParser extends InputParser {
         private final String input;
@@ -203,97 +306,4 @@ public abstract class InputParser {
             throw new UnsupportedOperationException();
         }
     }
-
-    public abstract void parse();
-
-    protected final void parseAndHandlePaymentRequest(final byte[] serializedPaymentRequest)
-            throws PaymentProtocolException {
-        final PaymentIntent paymentIntent = parsePaymentRequest(serializedPaymentRequest);
-
-        handlePaymentIntent(paymentIntent);
-    }
-
-    public static PaymentIntent parsePaymentRequest(final byte[] serializedPaymentRequest)
-            throws PaymentProtocolException {
-        try {
-            if (serializedPaymentRequest.length > 50000)
-                throw new PaymentProtocolException("payment request too big: " + serializedPaymentRequest.length);
-
-            final Protos.PaymentRequest paymentRequest = Protos.PaymentRequest.parseFrom(serializedPaymentRequest);
-
-            final String pkiName;
-            final String pkiCaName;
-            if (!"none".equals(paymentRequest.getPkiType())) {
-                final KeyStore keystore = new TrustStoreLoader.DefaultTrustStoreLoader().getKeyStore();
-                final PaymentProtocol.PkiVerificationData verificationData = PaymentProtocol.verifyPaymentRequestPki(paymentRequest,
-                        keystore);
-                pkiName = verificationData.displayName;
-                pkiCaName = verificationData.rootAuthorityName;
-            } else {
-                pkiName = null;
-                pkiCaName = null;
-            }
-
-            final PaymentSession paymentSession = PaymentProtocol.parsePaymentRequest(paymentRequest);
-
-            if (paymentSession.isExpired())
-                throw new PaymentProtocolException.Expired("payment details expired: current time " + new Date()
-                        + " after expiry time " + paymentSession.getExpires());
-
-            if (!paymentSession.getNetworkParameters().equals(Constants.NETWORK_PARAMETERS))
-                throw new PaymentProtocolException.InvalidNetwork(
-                        "cannot handle payment request network: " + paymentSession.getNetworkParameters());
-
-            final ArrayList<PaymentIntent.Output> outputs = new ArrayList<PaymentIntent.Output>(1);
-            for (final PaymentProtocol.Output output : paymentSession.getOutputs())
-                outputs.add(PaymentIntent.Output.valueOf(output));
-
-            final String memo = paymentSession.getMemo();
-
-            final String paymentUrl = paymentSession.getPaymentUrl();
-
-            final byte[] merchantData = paymentSession.getMerchantData();
-
-            final byte[] paymentRequestHash = Hashing.sha256().hashBytes(serializedPaymentRequest).asBytes();
-
-            final PaymentIntent paymentIntent = new PaymentIntent(PaymentIntent.Standard.BIP70, pkiName, pkiCaName,
-                    outputs.toArray(new PaymentIntent.Output[0]), memo, paymentUrl, merchantData, null,
-                    paymentRequestHash);
-
-            if (paymentIntent.hasPaymentUrl() && !paymentIntent.isSupportedPaymentUrl())
-                throw new PaymentProtocolException.InvalidPaymentURL(
-                        "cannot handle payment url: " + paymentIntent.paymentUrl);
-
-            return paymentIntent;
-        } catch (final InvalidProtocolBufferException | UninitializedMessageException x) {
-            throw new PaymentProtocolException(x);
-        } catch (final FileNotFoundException | KeyStoreException x) {
-            throw new RuntimeException(x);
-        }
-    }
-
-    protected abstract void handlePaymentIntent(PaymentIntent paymentIntent);
-
-    protected abstract void handleDirectTransaction(Transaction transaction) throws VerificationException;
-
-    protected abstract void error(int messageResId, Object... messageArgs);
-
-    protected void cannotClassify(final String input) {
-        // log.info("cannot classify: '{}'", input);
-
-        error(R.string.input_parser_cannot_classify, input);
-    }
-
-    protected void dialog(final Context context, @Nullable final DialogInterface.OnClickListener dismissListener, final int titleResId,
-                          final int messageResId, final Object... messageArgs) {
-        final DialogBuilder dialog = new DialogBuilder(context);
-        if (titleResId != 0)
-            dialog.setTitle(titleResId);
-        dialog.setMessage(context.getString(messageResId, messageArgs));
-        dialog.singleDismissButton(dismissListener);
-        dialog.show();
-    }
-
-    private static final Pattern PATTERN_TRANSACTION = Pattern
-            .compile("[0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$\\*\\+\\-\\.\\/\\:]{100,}");
 }

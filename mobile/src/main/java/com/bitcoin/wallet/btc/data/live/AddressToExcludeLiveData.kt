@@ -26,7 +26,12 @@ class AddressToExcludeLiveData(application: BitcoinApplication) :
 
                 val addresses = HashSet<String>(derivedKeys.size + randomKeys.size)
                 for (key in Iterables.concat(derivedKeys, randomKeys))
-                    addresses.add(LegacyAddress.fromKey(Constants.NETWORK_PARAMETERS, key).toString())
+                    addresses.add(
+                        LegacyAddress.fromKey(
+                            Constants.NETWORK_PARAMETERS,
+                            key
+                        ).toString()
+                    )
                 postValue(addresses)
             }
         }

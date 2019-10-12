@@ -11,7 +11,10 @@ import org.bitcoinj.crypto.KeyCrypterException
 import org.bitcoinj.wallet.SendRequest
 import org.bitcoinj.wallet.Wallet
 
-abstract class SendCoinsOfflineTask(private val wallet: Wallet?, private val backgroundHandler: Handler?) {
+abstract class SendCoinsOfflineTask(
+    private val wallet: Wallet?,
+    private val backgroundHandler: Handler?
+) {
     private val callbackHandler: Handler = Handler(Looper.myLooper())
 
     fun sendCoinsOffline(sendRequest: SendRequest) {
@@ -27,11 +30,11 @@ abstract class SendCoinsOfflineTask(private val wallet: Wallet?, private val bac
             } catch (x: InsufficientMoneyException) {
                 val missing = x.missing
                 if (missing != null)
-                    //log.info("send failed, {} missing", missing.toFriendlyString())
+                //log.info("send failed, {} missing", missing.toFriendlyString())
                 else
-                    //log.info("send failed, insufficient coins")
+                //log.info("send failed, insufficient coins")
 
-                callbackHandler.post { onInsufficientMoney(x.missing) }
+                    callbackHandler.post { onInsufficientMoney(x.missing) }
             } catch (x: ECKey.KeyIsEncryptedException) {
                 //log.info("send failed, key is encrypted: {}", x.message)
 

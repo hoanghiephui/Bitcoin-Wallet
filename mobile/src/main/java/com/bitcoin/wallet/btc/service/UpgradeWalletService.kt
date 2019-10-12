@@ -59,7 +59,10 @@ class UpgradeWalletService : IntentService(UpgradeWalletService::class.java.name
 
     companion object {
         fun startUpgrade(context: Context) {
-            ContextCompat.startForegroundService(context, Intent(context, UpgradeWalletService::class.java))
+            ContextCompat.startForegroundService(
+                context,
+                Intent(context, UpgradeWalletService::class.java)
+            )
         }
     }
 }

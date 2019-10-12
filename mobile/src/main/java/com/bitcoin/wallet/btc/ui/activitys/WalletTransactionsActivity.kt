@@ -9,13 +9,13 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -150,7 +150,10 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
                     content?.let {
                         onShowSnackbar(
                             if (it.isStatus)
-                                Html.fromHtml(getString(R.string.export_success, it.mes)).toString()
+                                HtmlCompat.fromHtml(
+                                    getString(R.string.export_success, it.mes),
+                                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                                ).toString()
                             else getString(R.string.export_failure, it.mes)
                             , object : CallbackSnack {
                                 override fun onOke() {
@@ -167,7 +170,7 @@ class WalletTransactionsActivity : BaseActivity(), OnClickListener, View.OnClick
 
     override fun onResume() {
         super.onResume()
-        warning()?.let { viewModel.setWarning(it) }
+        viewModel.setWarning(warning())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -103,7 +103,8 @@ class RaiseFeeDialogFragment : DaggerDialogFragment() {
         super.onCreate(savedInstanceState)
         viewModel.dynamicFees.observeNotNull(this) {
             val size = transaction?.messageSize?.plus(192)
-            feeRaise = size?.toLong()?.let { it1 -> it[FeeCategory.PRIORITY]?.multiply(it1)?.divide(1000) }
+            feeRaise =
+                size?.toLong()?.let { it1 -> it[FeeCategory.PRIORITY]?.multiply(it1)?.divide(1000) }
             updateView()
         }
 
@@ -252,7 +253,8 @@ class RaiseFeeDialogFragment : DaggerDialogFragment() {
             messageView!!.setText(R.string.raise_fee_cant_raise)
             passwordGroup!!.visibility = View.GONE
         } else {
-            messageView!!.text = getString(R.string.raise_fee_meg, config!!.format.format(feeRaise!!))
+            messageView!!.text =
+                getString(R.string.raise_fee_meg, config!!.format.format(feeRaise!!))
             passwordGroup!!.visibility = if (needsPassword) View.VISIBLE else View.GONE
         }
 
@@ -260,7 +262,11 @@ class RaiseFeeDialogFragment : DaggerDialogFragment() {
             positiveButton!!.setText(R.string.raise)
             positiveButton!!.isEnabled =
                 ((!needsPassword || passwordView!!.text.toString().trim { it <= ' ' }.length > 0)
-                        && feeRaise != null && findSpendableOutput(wallet, transaction!!, feeRaise) != null)
+                        && feeRaise != null && findSpendableOutput(
+                    wallet,
+                    transaction!!,
+                    feeRaise
+                ) != null)
             negativeButton!!.isEnabled = true
         } else if (state == State.DECRYPTING) {
             positiveButton!!.setText(R.string.state_decrypting_)

@@ -24,6 +24,7 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
 
     @LayoutRes
     abstract fun layoutRes(): Int
+
     var isDarkMode: Boolean = false
 
     abstract fun onActivityCreated(savedInstanceState: Bundle?)
@@ -32,14 +33,24 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             isDarkMode = sharedPreferences.getBoolean("dark", false)
         }
-        setTheme(if (sharedPreferences.getBoolean("dark", false)) R.style.AppTheme_Dark else R.style.AppTheme_Light)
+        setTheme(
+            if (sharedPreferences.getBoolean(
+                    "dark",
+                    false
+                )
+            ) R.style.AppTheme_Dark else R.style.AppTheme_Light
+        )
         super.onCreate(savedInstanceState)
         val layoutRes = layoutRes()
         if (layoutRes > 0) setContentView(layoutRes)
         onActivityCreated(savedInstanceState)
     }
 
-    fun setupToolbar(title: String, menuId: Int? = null, onMenuItemClick: ((item: MenuItem) -> Unit)? = null) {
+    fun setupToolbar(
+        title: String,
+        menuId: Int? = null,
+        onMenuItemClick: ((item: MenuItem) -> Unit)? = null
+    ) {
         findViewById<Toolbar?>(R.id.toolbar)?.apply {
             val titleText = findViewById<TextView?>(R.id.toolbarTitle)
             if (titleText != null) {
@@ -60,7 +71,11 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
         }
     }
 
-    fun setupToolbar(resId: Int, menuId: Int? = null, onMenuItemClick: ((item: MenuItem) -> Unit)? = null) {
+    fun setupToolbar(
+        resId: Int,
+        menuId: Int? = null,
+        onMenuItemClick: ((item: MenuItem) -> Unit)? = null
+    ) {
         setupToolbar(getString(resId), menuId, onMenuItemClick)
     }
 
@@ -78,7 +93,8 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
                 this.dismiss()
                 callbackSnack.onOke()
             }
-            val text = this.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            val text =
+                this.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
             text.setLines(line)
             val params = this.view.layoutParams
             this.view.layoutParams = params

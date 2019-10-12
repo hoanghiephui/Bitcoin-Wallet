@@ -4,7 +4,7 @@ import android.os.AsyncTask
 import android.os.Handler
 import androidx.lifecycle.LiveData
 import java.net.InetAddress
-import java.util.HashMap
+import java.util.*
 
 class HostNameLiveData : LiveData<HashMap<InetAddress, String>>() {
     private val handler = Handler()

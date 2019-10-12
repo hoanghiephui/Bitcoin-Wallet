@@ -1,14 +1,24 @@
 package com.bitcoin.wallet.btc.crypto;
 
 import com.google.common.io.BaseEncoding;
-import org.bouncycastle.crypto.*;
+
+import org.bouncycastle.crypto.BufferedBlockCipher;
+import org.bouncycastle.crypto.CipherParameters;
+import org.bouncycastle.crypto.DataLengthException;
+import org.bouncycastle.crypto.InvalidCipherTextException;
+import org.bouncycastle.crypto.PBEParametersGenerator;
 import org.bouncycastle.crypto.engines.AESFastEngine;
 import org.bouncycastle.crypto.generators.OpenSSLPBEParametersGenerator;
 import org.bouncycastle.crypto.modes.CBCBlockCipher;
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -46,25 +56,35 @@ public class Crypto {
      * OpenSSL salted prefix bytes - also used as magic number for encrypted key file.
      */
     private static final byte[] OPENSSL_SALTED_BYTES = OPENSSL_SALTED_TEXT.getBytes(StandardCharsets.UTF_8);
-
+    private static final int NUMBER_OF_CHARACTERS_TO_MATCH_IN_OPENSSL_MAGIC_TEXT = 10;
     /**
      * Magic text that appears at the beginning of every OpenSSL encrypted file. Used in identifying encrypted
      * key files.
      */
     private static final String OPENSSL_MAGIC_TEXT = BASE64_ENCRYPT.encode(Crypto.OPENSSL_SALTED_BYTES).substring(0,
             Crypto.NUMBER_OF_CHARACTERS_TO_MATCH_IN_OPENSSL_MAGIC_TEXT);
+    public final static FileFilter OPENSSL_FILE_FILTER = new FileFilter() {
+        private final char[] buf = new char[OPENSSL_MAGIC_TEXT.length()];
 
-    private static final int NUMBER_OF_CHARACTERS_TO_MATCH_IN_OPENSSL_MAGIC_TEXT = 10;
-
+        @Override
+        public boolean accept(final File file) {
+            try (final Reader in = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+                if (in.read(buf) == -1)
+                    return false;
+                final String str = new String(buf);
+                return str.equals(OPENSSL_MAGIC_TEXT);
+            } catch (final IOException x) {
+                return false;
+            }
+        }
+    };
     private static final SecureRandom secureRandom = new SecureRandom();
 
     /**
      * Get password and generate key and iv.
      *
-     * @param password
-     *            The password to use in key generation
-     * @param salt
-     *            The salt to use in key generation
+     * @param password The password to use in key generation
+     * @param salt     The salt to use in key generation
      * @return The CipherParameters containing the created key
      */
     private static CipherParameters getAESPasswordKey(final char[] password, final byte[] salt) {
@@ -79,10 +99,8 @@ public class Crypto {
     /**
      * Password based encryption using AES - CBC 256 bits.
      *
-     * @param plainText
-     *            The text to encrypt
-     * @param password
-     *            The password to use for encryption
+     * @param plainText The text to encrypt
+     * @param password  The password to use for encryption
      * @return The encrypted string
      * @throws IOException
      */
@@ -95,10 +113,8 @@ public class Crypto {
     /**
      * Password based encryption using AES - CBC 256 bits.
      *
-     * @param plainTextAsBytes
-     *            The bytes to encrypt
-     * @param password
-     *            The password to use for encryption
+     * @param plainTextAsBytes The bytes to encrypt
+     * @param password         The password to use for encryption
      * @return The encrypted string
      * @throws IOException
      */
@@ -114,10 +130,8 @@ public class Crypto {
     /**
      * Password based encryption using AES - CBC 256 bits.
      *
-     * @param plainTextAsBytes
-     *            The bytes to encrypt
-     * @param password
-     *            The password to use for encryption
+     * @param plainTextAsBytes The bytes to encrypt
+     * @param password         The password to use for encryption
      * @return SALT_LENGTH bytes of salt followed by the encrypted bytes.
      * @throws IOException
      */
@@ -146,10 +160,8 @@ public class Crypto {
     /**
      * Decrypt text previously encrypted with this class.
      *
-     * @param textToDecode
-     *            The code to decrypt
-     * @param password
-     *            password to use for decryption
+     * @param textToDecode The code to decrypt
+     * @param password     password to use for decryption
      * @return The decrypted text
      * @throws IOException
      */
@@ -162,10 +174,8 @@ public class Crypto {
     /**
      * Decrypt bytes previously encrypted with this class.
      *
-     * @param textToDecode
-     *            The code to decrypt
-     * @param password
-     *            password to use for decryption
+     * @param textToDecode The code to decrypt
+     * @param password     password to use for decryption
      * @return The decrypted bytes
      * @throws IOException
      */
@@ -194,10 +204,8 @@ public class Crypto {
     /**
      * Decrypt bytes previously encrypted with this class.
      *
-     * @param bytesToDecode
-     *            The bytes to decrypt
-     * @param password
-     *            password to use for decryption
+     * @param bytesToDecode The bytes to decrypt
+     * @param password      password to use for decryption
      * @return The decrypted bytes
      * @throws IOException
      */
@@ -237,20 +245,4 @@ public class Crypto {
 
         return result;
     }
-
-    public final static FileFilter OPENSSL_FILE_FILTER = new FileFilter() {
-        private final char[] buf = new char[OPENSSL_MAGIC_TEXT.length()];
-
-        @Override
-        public boolean accept(final File file) {
-            try (final Reader in = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
-                if (in.read(buf) == -1)
-                    return false;
-                final String str = new String(buf);
-                return str.equals(OPENSSL_MAGIC_TEXT);
-            } catch (final IOException x) {
-                return false;
-            }
-        }
-    };
 }

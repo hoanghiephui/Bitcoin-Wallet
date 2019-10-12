@@ -10,7 +10,8 @@ import io.reactivex.Completable
 import io.reactivex.functions.Action
 import javax.inject.Inject
 
-class TransactionsBlockRepository @Inject constructor(private val api: BlockchainEndpoint) : BaseRepository<Any>() {
+class TransactionsBlockRepository @Inject constructor(private val api: BlockchainEndpoint) :
+    BaseRepository<Any>() {
     override fun insertResultIntoDb(body: Any) {
     }
 

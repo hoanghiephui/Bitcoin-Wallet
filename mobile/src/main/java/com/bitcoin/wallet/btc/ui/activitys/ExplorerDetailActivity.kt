@@ -25,7 +25,11 @@ class ExplorerDetailActivity : BaseActivity() {
         TransactionsExtraAdapter(retryCallback = {
             viewModel.retryTransaction()
         }, showQrCode = {
-            WalletAddressBottomDialog.show(this, Address.fromString(Constants.NETWORK_PARAMETERS, it), null)
+            WalletAddressBottomDialog.show(
+                this,
+                Address.fromString(Constants.NETWORK_PARAMETERS, it),
+                null
+            )
         }, clickTransactionId = {
             it?.let { it1 -> open(this, it1) }
         })

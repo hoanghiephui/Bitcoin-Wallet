@@ -33,7 +33,6 @@ import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.item_top_transaction.*
 import org.bitcoinj.core.PrefixedChecksummedBytes
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.VerificationException

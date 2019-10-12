@@ -16,13 +16,7 @@
 package com.bitcoin.wallet.btc.repository.localdb
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.*
 
 /**
  * No update methods necessary since for each table there is ever expecting one row, hence why

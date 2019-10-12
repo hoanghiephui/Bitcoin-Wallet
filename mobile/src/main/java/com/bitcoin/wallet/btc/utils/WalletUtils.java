@@ -196,6 +196,23 @@ public class WalletUtils {
         return transaction.getOutputs().size() > 20;
     }
 
+    public static int dpToPx(Context context, int dp) {
+        int dpi = context.getResources().getDisplayMetrics().densityDpi;
+        if (dpi == 0) {
+            return 0;
+        }
+        return (int) (dp * (dpi / 160.0));
+    }
+
+    public static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
     private static class MonospaceSpan extends TypefaceSpan {
         public MonospaceSpan() {
             super("monospace");
@@ -212,23 +229,6 @@ public class WalletUtils {
         @Override
         public int hashCode() {
             return 0;
-        }
-    }
-
-    public static int dpToPx(Context context, int dp) {
-        int dpi = context.getResources().getDisplayMetrics().densityDpi;
-        if (dpi == 0) {
-            return 0;
-        }
-        return (int) (dp * (dpi / 160.0));
-    }
-
-    public static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
-        try {
-            packageManager.getPackageInfo(packageName, 0);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
         }
     }
 

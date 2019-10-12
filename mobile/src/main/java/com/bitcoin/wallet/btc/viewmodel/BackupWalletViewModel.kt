@@ -7,7 +7,7 @@ import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.data.live.WalletLiveData
 import javax.inject.Inject
 
-class BackupWalletViewModel @Inject constructor(val application: Application): ViewModel() {
+class BackupWalletViewModel @Inject constructor(val application: Application) : ViewModel() {
     val wallet: WalletLiveData by lazy {
         WalletLiveData(application as BitcoinApplication)
     }

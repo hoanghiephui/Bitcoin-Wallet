@@ -10,7 +10,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
-class RestoreWalletViewModel @Inject constructor(application: Application): AndroidViewModel(application) {
+class RestoreWalletViewModel @Inject constructor(application: Application) :
+    AndroidViewModel(application) {
     private val viewModelScope = CoroutineScope(Job() + Dispatchers.Main)
     val balance: WalletBalanceLiveData by lazy {
         WalletBalanceLiveData(application as BitcoinApplication, viewModelScope)

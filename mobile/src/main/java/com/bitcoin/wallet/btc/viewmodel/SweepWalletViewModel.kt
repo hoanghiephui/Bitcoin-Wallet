@@ -10,12 +10,13 @@ import org.bitcoinj.core.Transaction
 import org.bitcoinj.wallet.Wallet
 import javax.inject.Inject
 
-class SweepWalletViewModel @Inject constructor(private val application: Application): ViewModel() {
+class SweepWalletViewModel @Inject constructor(private val application: Application) : ViewModel() {
     enum class State {
         DECODE_KEY, // ask for password
         CONFIRM_SWEEP, // displays balance and asks for confirmation
         PREPARATION, SENDING, SENT, FAILED // sending states
     }
+
     val dynamicFees by lazy {
         DynamicFeeLiveData(application as BitcoinApplication)
     }

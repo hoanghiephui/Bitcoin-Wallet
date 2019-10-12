@@ -26,7 +26,8 @@ class NetworkViewHolder(
         //loading and retry
         retryLoadingButton.visibility =
             if (networkState?.status == Status.FAILED && isShowButton) View.VISIBLE else View.GONE
-        loadingProgressBar.visibility = if (networkState?.status == Status.RUNNING) View.VISIBLE else View.GONE
+        loadingProgressBar.visibility =
+            if (networkState?.status == Status.RUNNING) View.VISIBLE else View.GONE
         //error message
         errorMessageTextView.visibility = if (networkState?.msg != null) View.VISIBLE else View.GONE
         networkState?.msg?.let {
@@ -38,11 +39,17 @@ class NetworkViewHolder(
         }
         if (position <= 0) {
             viewState.layoutParams =
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
             viewState.requestLayout()
         } else {
             viewState.layoutParams =
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             viewState.requestLayout()
         }
     }

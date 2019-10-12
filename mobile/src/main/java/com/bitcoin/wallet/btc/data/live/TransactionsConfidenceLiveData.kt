@@ -6,7 +6,8 @@ import org.bitcoinj.core.listeners.TransactionConfidenceEventListener
 import org.bitcoinj.utils.Threading
 import org.bitcoinj.wallet.Wallet
 
-class TransactionsConfidenceLiveData(application: BitcoinApplication) : BaseWalletLiveData<Void>(application),
+class TransactionsConfidenceLiveData(application: BitcoinApplication) :
+    BaseWalletLiveData<Void>(application),
     TransactionConfidenceEventListener {
 
     override fun onWalletActive(wallet: Wallet?) {

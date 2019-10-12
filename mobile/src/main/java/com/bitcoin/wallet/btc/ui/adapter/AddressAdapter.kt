@@ -14,9 +14,10 @@ import kotlinx.android.synthetic.main.item_address_old.*
 import kotlinx.android.synthetic.main.item_wallet_address.*
 import org.bitcoinj.core.Address
 import org.bitcoinj.wallet.Wallet
-import java.util.ArrayList
+import java.util.*
 
-class AddressAdapter(private val callback: AddressCallback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AddressAdapter(private val callback: AddressCallback) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val derivedAddresses = ArrayList<Address>()
     private val randomAddresses = ArrayList<Address>()
     private var wallet: Wallet? = null
@@ -87,8 +88,14 @@ class AddressAdapter(private val callback: AddressCallback) : RecyclerView.Adapt
                                 Constants.ADDRESS_FORMAT_LINE_SIZE, false
                             )
                             tvAddress.setTextColor(
-                                if (isRotateKey) ContextCompat.getColor(itemView.context, R.color.fg_insignificant)
-                                else ContextCompat.getColor(itemView.context, R.color.colorAccentBlack)
+                                if (isRotateKey) ContextCompat.getColor(
+                                    itemView.context,
+                                    R.color.fg_insignificant
+                                )
+                                else ContextCompat.getColor(
+                                    itemView.context,
+                                    R.color.colorAccentBlack
+                                )
                             )
                         }
                         if (addressBook != null) {
@@ -96,8 +103,14 @@ class AddressAdapter(private val callback: AddressCallback) : RecyclerView.Adapt
                             if (entry != null) {
                                 labelView.text = entry.label
                                 labelView.setTextColor(
-                                    if (isRotateKey) ContextCompat.getColor(itemView.context, R.color.fg_insignificant)
-                                    else ContextCompat.getColor(itemView.context, R.color.fg_less_significant)
+                                    if (isRotateKey) ContextCompat.getColor(
+                                        itemView.context,
+                                        R.color.fg_insignificant
+                                    )
+                                    else ContextCompat.getColor(
+                                        itemView.context,
+                                        R.color.fg_less_significant
+                                    )
                                 )
                             } else {
                                 labelView.setText(R.string.address_unlabeled)
@@ -110,10 +123,21 @@ class AddressAdapter(private val callback: AddressCallback) : RecyclerView.Adapt
                             }
                         } else {
                             labelView.setText(R.string.address_unlabeled)
-                            labelView.setTextColor(ContextCompat.getColor(itemView.context, R.color.fg_insignificant))
+                            labelView.setTextColor(
+                                ContextCompat.getColor(
+                                    itemView.context,
+                                    R.color.fg_insignificant
+                                )
+                            )
                         }
                         tvMessage.visibility = if (isRotateKey) View.VISIBLE else View.GONE
-                        btnMore.setOnClickListener { callback.onClickItem(layoutPosition, it, address) }
+                        btnMore.setOnClickListener {
+                            callback.onClickItem(
+                                layoutPosition,
+                                it,
+                                address
+                            )
+                        }
                     }
                 }
             }
@@ -139,7 +163,8 @@ class AddressAdapter(private val callback: AddressCallback) : RecyclerView.Adapt
             get() = itemView
     }
 
-    class AddressOldViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class AddressOldViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
     }

@@ -94,7 +94,13 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         }
     }
 
-    private fun showDate(year: Int, monthOfYear: Int, dayOfMonth: Int, spinnerTheme: Int, maxDate: Calendar?) {
+    private fun showDate(
+        year: Int,
+        monthOfYear: Int,
+        dayOfMonth: Int,
+        spinnerTheme: Int,
+        maxDate: Calendar?
+    ) {
         if (maxDate != null) {
             val maxDay = maxDate.get(Calendar.DAY_OF_MONTH)
             val maxMonth = maxDate.get(Calendar.MONTH)
@@ -133,9 +139,11 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
         tvDate.text = convertDate(
             time, "MM/dd/yyyy", "yyyy-MM-dd"
         )
-        viewModel.onGetHistoryPriceCoin(convertDate(
-            time, "yyyy-MM-dd", "yyyy-MM-dd"
-        ))
+        viewModel.onGetHistoryPriceCoin(
+            convertDate(
+                time, "yyyy-MM-dd", "yyyy-MM-dd"
+            )
+        )
     }
 
     private fun logicPriceCoin() {
@@ -168,7 +176,12 @@ class ToolsActivity : BaseActivity(), DatePickerDialog.OnDateSetListener {
 
             }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
 
                 if (TextUtils.isEmpty(edtUsd.getTextString()) || viewModel.networkState.value == NetworkState.LOADING) {
                     return

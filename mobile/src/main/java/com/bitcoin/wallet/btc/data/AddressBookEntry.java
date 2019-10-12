@@ -1,4 +1,3 @@
-
 package com.bitcoin.wallet.btc.data;
 
 import androidx.annotation.NonNull;
@@ -25,14 +24,6 @@ public class AddressBookEntry {
         this.label = label;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
     public static Map<String, AddressBookEntry> asMap(final List<AddressBookEntry> entries) {
         if (entries == null)
             return null;
@@ -40,5 +31,13 @@ public class AddressBookEntry {
         for (final AddressBookEntry entry : entries)
             addressBook.put(entry.getAddress(), entry);
         return addressBook;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

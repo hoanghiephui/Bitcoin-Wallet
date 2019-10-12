@@ -14,10 +14,15 @@ class MonetarySpannable : SpannableString {
     constructor(
         format: MonetaryFormat?, signed: Boolean,
         monetary: Monetary?
-    ) : super(format(format, signed, monetary)) {
-    }
+    ) : super(format(format, signed, monetary))
 
-    constructor(format: MonetaryFormat?, monetary: Monetary?) : super(format(format, false, monetary)) {}
+    constructor(format: MonetaryFormat?, monetary: Monetary?) : super(
+        format(
+            format,
+            false,
+            monetary
+        )
+    )
 
     fun applyMarkup(
         prefixSpans: Array<Any>?,

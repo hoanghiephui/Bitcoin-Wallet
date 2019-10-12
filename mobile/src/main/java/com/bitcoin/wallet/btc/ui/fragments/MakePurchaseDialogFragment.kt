@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseBottomSheetDialogFragment
 import com.bitcoin.wallet.btc.extension.observeNotNull
-import com.bitcoin.wallet.btc.repository.NetworkState
 import com.bitcoin.wallet.btc.repository.localdb.AugmentedSkuDetails
 import com.bitcoin.wallet.btc.ui.adapter.SkuDetailsAdapter
 import com.bitcoin.wallet.btc.viewmodel.BillingViewModel
@@ -46,7 +44,12 @@ class MakePurchaseDialogFragment : BaseBottomSheetDialogFragment() {
         }
         with(recyclerView) {
             layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             setHasFixedSize(true)
             adapter = subsAdapter
         }
@@ -60,13 +63,19 @@ class MakePurchaseDialogFragment : BaseBottomSheetDialogFragment() {
 
     private fun onPurchase(view: View, item: AugmentedSkuDetails) {
         billingViewModel.makePurchase(activity as Activity, item)
-        Log.d(MakePurchaseDialogFragment::class.java.simpleName, "starting purchase flow for SkuDetail:\n ${item}")
+        Log.d(
+            MakePurchaseDialogFragment::class.java.simpleName,
+            "starting purchase flow for SkuDetail:\n ${item}"
+        )
     }
 
     companion object {
         fun show(activity: FragmentActivity) {
             MakePurchaseDialogFragment().apply {
-                show(activity.supportFragmentManager, MakePurchaseDialogFragment::class.java.simpleName)
+                show(
+                    activity.supportFragmentManager,
+                    MakePurchaseDialogFragment::class.java.simpleName
+                )
             }
         }
     }

@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.observeNotNull
@@ -40,8 +39,12 @@ class StoryActivity : BaseActivity() {
                                     Uri.parse(it)
                                 )
                             )
-                        }catch (ex: ActivityNotFoundException) {
-                            Toast.makeText(this, "You need to allow the browser to access website", Toast.LENGTH_SHORT).show()
+                        } catch (ex: ActivityNotFoundException) {
+                            Toast.makeText(
+                                this,
+                                "You need to allow the browser to access website",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
@@ -61,7 +64,13 @@ class StoryActivity : BaseActivity() {
         recyClear.apply {
             layoutManager = LinearLayoutManager(this@StoryActivity)
             setHasFixedSize(true)
-            addItemDecoration(DividerItemDecoration(this@StoryActivity, DividerItemDecoration.VERTICAL, false))
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@StoryActivity,
+                    DividerItemDecoration.VERTICAL,
+                    false
+                )
+            )
             adapter = storiesMoreAdapter
         }
         viewModel.newsData.observeNotNull(this) {

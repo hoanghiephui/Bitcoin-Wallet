@@ -3,6 +3,7 @@ package com.bitcoin.wallet.btc.data;
 import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Looper;
+
 import com.bitcoin.wallet.btc.Constants;
 import com.bitcoin.wallet.btc.FilesWallet;
 import com.bitcoin.wallet.btc.R;
@@ -14,16 +15,18 @@ import com.google.common.hash.Hashing;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.Moshi;
-import okio.BufferedSink;
-import okio.BufferedSource;
-import okio.Okio;
-import org.bitcoinj.core.*;
+
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.LegacyAddress;
+import org.bitcoinj.core.SegwitAddress;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.UTXO;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.utils.ContextPropagatingThreadFactory;
 
-import javax.net.SocketFactory;
-import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,21 +38,56 @@ import java.nio.charset.StandardCharsets;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import okio.BufferedSink;
+import okio.BufferedSource;
+import okio.Okio;
 
 /**
  * @author Andreas Schildbach
  */
 public final class RequestWalletBalanceTask {
+    private static final X509TrustManager TRUST_ALL_CERTIFICATES = new X509TrustManager() {
+        @Override
+        public void checkClientTrusted(final X509Certificate[] chain, final String authType)
+                throws CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(final X509Certificate[] chain, final String authType)
+                throws CertificateException {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+    };
     private final Handler backgroundHandler;
     private final Handler callbackHandler;
     private final ResultCallback resultCallback;
-    public interface ResultCallback {
-        void onResult(Set<UTXO> utxos);
-
-        void onFail(int messageResId, Object... messageArgs);
-    }
 
     public RequestWalletBalanceTask(final Handler backgroundHandler, final ResultCallback resultCallback) {
         this.backgroundHandler = backgroundHandler;
@@ -57,40 +95,30 @@ public final class RequestWalletBalanceTask {
         this.resultCallback = resultCallback;
     }
 
-    public static class JsonRpcRequest {
-        public final int id;
-        public final String method;
-        public final String[] params;
+    private static List<ElectrumServer> loadElectrumServers(final InputStream is) {
+        final Splitter splitter = Splitter.on(':').trimResults();
+        final List<ElectrumServer> servers = new LinkedList<>();
+        String line = null;
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            while (true) {
+                line = reader.readLine();
+                if (line == null)
+                    break;
+                line = line.trim();
+                if (line.length() == 0 || line.charAt(0) == '#')
+                    continue;
 
-        private static transient int idCounter = 0;
-
-        public JsonRpcRequest(final String method, final String[] params) {
-            this(idCounter++, method, params);
+                final Iterator<String> i = splitter.split(line).iterator();
+                final String type = i.next();
+                final String host = i.next();
+                final String port = i.hasNext() ? Strings.emptyToNull(i.next()) : null;
+                final String fingerprint = i.hasNext() ? Strings.emptyToNull(i.next()) : null;
+                servers.add(new ElectrumServer(type, host, port, fingerprint));
+            }
+        } catch (final Exception x) {
+            throw new RuntimeException("Error while parsing: '" + line + "'", x);
         }
-
-        public JsonRpcRequest(final int id, final String method, final String[] params) {
-            this.id = id;
-            this.method = method;
-            this.params = params;
-        }
-    }
-
-    public static class JsonRpcResponse {
-        public int id;
-        public Utxo[] result;
-        public Error error;
-
-        public static class Utxo {
-            public String tx_hash;
-            public int tx_pos;
-            public long value;
-            public int height;
-        }
-
-        public static class Error {
-            public int code;
-            public String message;
-        }
+        return servers;
     }
 
     public void requestWalletBalance(final AssetManager assets, final ECKey key) {
@@ -104,11 +132,11 @@ public final class RequestWalletBalanceTask {
                 final String addressesStr;
                 if (key.isCompressed()) {
                     final Address segwitAddress = SegwitAddress.fromKey(Constants.NETWORK_PARAMETERS, key);
-                    outputScripts = new Script[] { ScriptBuilder.createP2PKHOutputScript(legacyAddress.getHash()),
-                            ScriptBuilder.createP2WPKHOutputScript(segwitAddress.getHash()) };
+                    outputScripts = new Script[]{ScriptBuilder.createP2PKHOutputScript(legacyAddress.getHash()),
+                            ScriptBuilder.createP2WPKHOutputScript(segwitAddress.getHash())};
                     addressesStr = legacyAddress.toString() + "," + segwitAddress.toString();
                 } else {
-                    outputScripts = new Script[] { ScriptBuilder.createP2PKHOutputScript(legacyAddress.getHash()) };
+                    outputScripts = new Script[]{ScriptBuilder.createP2PKHOutputScript(legacyAddress.getHash())};
                     addressesStr = legacyAddress.toString();
                 }
 
@@ -129,8 +157,8 @@ public final class RequestWalletBalanceTask {
                                 for (final Script outputScript : outputScripts) {
                                     requestAdapter.toJson(sink, new JsonRpcRequest(
                                             outputScript.getScriptType().ordinal(), "blockchain.scripthash.listunspent",
-                                            new String[] { Constants.HEX.encode(
-                                                    Sha256Hash.of(outputScript.getProgram()).getReversedBytes()) }));
+                                            new String[]{Constants.HEX.encode(
+                                                    Sha256Hash.of(outputScript.getProgram()).getReversedBytes())}));
                                     sink.writeUtf8("\n").flush();
                                 }
                                 final JsonAdapter<JsonRpcResponse> responseAdapter = moshi
@@ -200,7 +228,7 @@ public final class RequestWalletBalanceTask {
                 }
 
                 final int trustThreshold = servers.size() / 2;
-                for (final Iterator<Multiset.Entry<UTXO>> i = countedUtxos.entrySet().iterator(); i.hasNext();) {
+                for (final Iterator<Multiset.Entry<UTXO>> i = countedUtxos.entrySet().iterator(); i.hasNext(); ) {
                     final Multiset.Entry<UTXO> entry = i.next();
                     if (entry.getCount() < trustThreshold)
                         i.remove();
@@ -265,15 +293,78 @@ public final class RequestWalletBalanceTask {
         });
     }
 
-    public static class ElectrumServer {
-        public enum Type {
-            TCP, TLS
+    private SSLSocketFactory sslTrustAllCertificates() {
+        try {
+            final SSLContext context = SSLContext.getInstance("SSL");
+            context.init(null, new TrustManager[]{TRUST_ALL_CERTIFICATES}, null);
+            final SSLSocketFactory socketFactory = context.getSocketFactory();
+            return socketFactory;
+        } catch (final Exception x) {
+            throw new RuntimeException(x);
+        }
+    }
+
+    private String sslCertificateFingerprint(final Certificate certificate) {
+        try {
+            return Hashing.sha256().newHasher().putBytes(certificate.getEncoded()).hash().toString();
+        } catch (final Exception x) {
+            throw new RuntimeException(x);
+        }
+    }
+
+    public InputStream open(final AssetManager assets, final String filename) {
+        try {
+            return assets.open(filename);
+        } catch (final IOException x) {
+            throw new RuntimeException(x);
+        }
+    }
+
+    public interface ResultCallback {
+        void onResult(Set<UTXO> utxos);
+
+        void onFail(int messageResId, Object... messageArgs);
+    }
+
+    public static class JsonRpcRequest {
+        private static transient int idCounter = 0;
+        public final int id;
+        public final String method;
+        public final String[] params;
+
+        public JsonRpcRequest(final String method, final String[] params) {
+            this(idCounter++, method, params);
         }
 
+        public JsonRpcRequest(final int id, final String method, final String[] params) {
+            this.id = id;
+            this.method = method;
+            this.params = params;
+        }
+    }
+
+    public static class JsonRpcResponse {
+        public int id;
+        public Utxo[] result;
+        public Error error;
+
+        public static class Utxo {
+            public String tx_hash;
+            public int tx_pos;
+            public long value;
+            public int height;
+        }
+
+        public static class Error {
+            public int code;
+            public String message;
+        }
+    }
+
+    public static class ElectrumServer {
         public final InetSocketAddress socketAddress;
         public final Type type;
         public final String certificateFingerprint;
-
         public ElectrumServer(final String type, final String host, final String port,
                               final String certificateFingerprint) {
             this.type = Type.valueOf(type.toUpperCase());
@@ -289,75 +380,9 @@ public final class RequestWalletBalanceTask {
                 throw new IllegalStateException("Cannot handle: " + type);
             this.certificateFingerprint = certificateFingerprint;
         }
-    }
 
-    private static List<ElectrumServer> loadElectrumServers(final InputStream is) {
-        final Splitter splitter = Splitter.on(':').trimResults();
-        final List<ElectrumServer> servers = new LinkedList<>();
-        String line = null;
-        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-            while (true) {
-                line = reader.readLine();
-                if (line == null)
-                    break;
-                line = line.trim();
-                if (line.length() == 0 || line.charAt(0) == '#')
-                    continue;
-
-                final Iterator<String> i = splitter.split(line).iterator();
-                final String type = i.next();
-                final String host = i.next();
-                final String port = i.hasNext() ? Strings.emptyToNull(i.next()) : null;
-                final String fingerprint = i.hasNext() ? Strings.emptyToNull(i.next()) : null;
-                servers.add(new ElectrumServer(type, host, port, fingerprint));
-            }
-        } catch (final Exception x) {
-            throw new RuntimeException("Error while parsing: '" + line + "'", x);
-        }
-        return servers;
-    }
-
-    private SSLSocketFactory sslTrustAllCertificates() {
-        try {
-            final SSLContext context = SSLContext.getInstance("SSL");
-            context.init(null, new TrustManager[] { TRUST_ALL_CERTIFICATES }, null);
-            final SSLSocketFactory socketFactory = context.getSocketFactory();
-            return socketFactory;
-        } catch (final Exception x) {
-            throw new RuntimeException(x);
-        }
-    }
-
-    private static final X509TrustManager TRUST_ALL_CERTIFICATES = new X509TrustManager() {
-        @Override
-        public void checkClientTrusted(final X509Certificate[] chain, final String authType)
-                throws CertificateException {
-        }
-
-        @Override
-        public void checkServerTrusted(final X509Certificate[] chain, final String authType)
-                throws CertificateException {
-        }
-
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[0];
-        }
-    };
-
-    private String sslCertificateFingerprint(final Certificate certificate) {
-        try {
-            return Hashing.sha256().newHasher().putBytes(certificate.getEncoded()).hash().toString();
-        } catch (final Exception x) {
-            throw new RuntimeException(x);
-        }
-    }
-
-    public InputStream open(final AssetManager assets, final String filename) {
-        try {
-            return assets.open(filename);
-        } catch (final IOException x) {
-            throw new RuntimeException(x);
+        public enum Type {
+            TCP, TLS
         }
     }
 }

@@ -57,25 +57,27 @@ class MainActivity : BaseActivity(), InstallStateUpdatedListener {
                 replace(R.id.container, MainFragment(), MainFragment.TAG)
             }
         }
-        viewModel.backupWalletStatus.observe(this, object : Event.Observer<BackupDialog.BackUpStatus>() {
-            override fun onEvent(content: BackupDialog.BackUpStatus?) {
-                content?.let {
-                    onShowSnackbar(
-                        if (it.isStatus)
-                            HtmlCompat.fromHtml(
-                                getString(R.string.export_success, it.mes),
-                                FROM_HTML_MODE_COMPACT
-                            ).toString()
-                        else getString(R.string.export_failure, it.mes)
-                        , object : CallbackSnack {
-                            override fun onOke() {
+        viewModel.backupWalletStatus.observe(
+            this,
+            object : Event.Observer<BackupDialog.BackUpStatus>() {
+                override fun onEvent(content: BackupDialog.BackUpStatus?) {
+                    content?.let {
+                        onShowSnackbar(
+                            if (it.isStatus)
+                                HtmlCompat.fromHtml(
+                                    getString(R.string.export_success, it.mes),
+                                    FROM_HTML_MODE_COMPACT
+                                ).toString()
+                            else getString(R.string.export_failure, it.mes)
+                            , object : CallbackSnack {
+                                override fun onOke() {
 
-                            }
-                        }, 10
-                    )
+                                }
+                            }, 10
+                        )
+                    }
                 }
-            }
-        })
+            })
 
         viewModel.showFailureDialog.observeNotNull(this) {
             val title = getString(R.string.import_failure, it.contentOrThrow)
@@ -192,9 +194,10 @@ class MainActivity : BaseActivity(), InstallStateUpdatedListener {
     }
 
     override fun onBackPressed() {
-        (supportFragmentManager.findFragmentByTag(MainFragment.TAG) as? MainFragment)?.onBackPressed()?.isTrue {
-            super.onBackPressed()
-        }
+        (supportFragmentManager.findFragmentByTag(MainFragment.TAG) as? MainFragment)?.onBackPressed()
+            ?.isTrue {
+                super.onBackPressed()
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -7,7 +7,8 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
 
-open class ImportListener(private val passwordView: TextView, private val button: Button) : TextWatcher,
+open class ImportListener(private val passwordView: TextView, private val button: Button) :
+    TextWatcher,
     AdapterView.OnItemSelectedListener {
 
     init {

@@ -66,7 +66,8 @@ class NotifyWorker @Inject constructor(
                 .build()
             workManager.enqueueUniquePeriodicWork(
                 base,
-                ExistingPeriodicWorkPolicy.KEEP, PeriodicWorkRequest.Builder(NotifyWorker::class.java, 20, TimeUnit.MINUTES)
+                ExistingPeriodicWorkPolicy.KEEP,
+                PeriodicWorkRequest.Builder(NotifyWorker::class.java, 20, TimeUnit.MINUTES)
                     .setInputData(
                         Data.Builder()
                             .putString("base", base)
@@ -86,20 +87,23 @@ class NotifyWorker @Inject constructor(
                 val name = VERBOSE_NOTIFICATION_CHANNEL_NAME
                 val description = VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
                 val importance = NotificationManager.IMPORTANCE_HIGH
-                @SuppressLint("WrongConstant") val channel = NotificationChannel(CHANNEL_ID, name, importance)
+                @SuppressLint("WrongConstant") val channel =
+                    NotificationChannel(CHANNEL_ID, name, importance)
                 channel.description = description
                 channel.enableVibration(true)
                 channel.lightColor = Color.GRAY
                 channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
                 // Add the channel
-                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
                 notificationManager.createNotificationChannel(channel)
             }
             val intent = Intent(context, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            val pendingIntent =
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
             // Create the notification
             val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notify)

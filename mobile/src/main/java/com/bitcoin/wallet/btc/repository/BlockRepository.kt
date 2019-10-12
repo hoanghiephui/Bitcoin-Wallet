@@ -25,6 +25,7 @@ class BlockRepository @Inject constructor(
             .setEnablePlaceholders(false)
             .build()
     }
+
     fun onGetBlocks(currentDay: String): Listing<BlocksItem> {
         val sourceFactory = BlockDataSourceFactory(api, compositeDisposable, currentDay)
         val pagedList = sourceFactory.toLiveData(config = config)

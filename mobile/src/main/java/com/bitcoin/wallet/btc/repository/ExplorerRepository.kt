@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
-import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.api.BitcoinEndpoints
 import com.bitcoin.wallet.btc.base.BaseRepository
 import com.bitcoin.wallet.btc.extension.addTo
@@ -14,7 +13,6 @@ import com.bitcoin.wallet.btc.repository.data.Listing
 import com.bitcoin.wallet.btc.repository.data.TransactionsDataSourceFactory
 import io.reactivex.Completable
 import io.reactivex.functions.Action
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ExplorerRepository @Inject constructor(
@@ -83,6 +81,7 @@ class ExplorerRepository @Inject constructor(
             .setEnablePlaceholders(false)
             .build()
     }
+
     fun onGetTransactions(block: String): Listing<Any> {
         val sourceFactory = TransactionsDataSourceFactory(api, compositeDisposable, block)
         val pagedList = sourceFactory.toLiveData(config = config)

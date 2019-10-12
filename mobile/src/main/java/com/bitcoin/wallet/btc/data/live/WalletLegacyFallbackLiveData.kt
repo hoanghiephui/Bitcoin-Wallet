@@ -6,7 +6,8 @@ import com.bitcoin.wallet.btc.Constants
 import org.bitcoinj.script.Script
 import org.bitcoinj.wallet.Wallet
 
-class WalletLegacyFallbackLiveData(application: BitcoinApplication) : BaseWalletLiveData<Boolean>(application) {
+class WalletLegacyFallbackLiveData(application: BitcoinApplication) :
+    BaseWalletLiveData<Boolean>(application) {
 
     override fun onWalletActive(wallet: Wallet?) {
         load()

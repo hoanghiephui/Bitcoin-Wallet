@@ -6,7 +6,8 @@ import com.bitcoin.wallet.btc.base.BaseViewModel
 import com.bitcoin.wallet.btc.repository.BlockRepository
 import javax.inject.Inject
 
-class BlocksViewModel @Inject constructor(repository: BlockRepository) : BaseViewModel<BlockRepository>(repository) {
+class BlocksViewModel @Inject constructor(repository: BlockRepository) :
+    BaseViewModel<BlockRepository>(repository) {
     //get list transaction
     private val blockRequestData = MutableLiveData<String>()
     private val blockResult = Transformations.map(blockRequestData) {
@@ -24,10 +25,10 @@ class BlocksViewModel @Inject constructor(repository: BlockRepository) : BaseVie
      * @method retry get list blocks
      */
     fun retryBlock() {
-        blockResult?.value?.retry?.invoke()
+        blockResult.value?.retry?.invoke()
     }
 
     fun refreshBlock() {
-        blockResult?.value?.refresh?.invoke()
+        blockResult.value?.refresh?.invoke()
     }
 }

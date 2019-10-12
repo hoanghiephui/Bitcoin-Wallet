@@ -14,8 +14,10 @@ import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener
 import org.bitcoinj.wallet.listeners.WalletReorganizeEventListener
 
-class CurrentAddressLiveData(application: BitcoinApplication,
-                             private val viewModelScope: CoroutineScope) : BaseWalletLiveData<Address>(application) {
+class CurrentAddressLiveData(
+    application: BitcoinApplication,
+    private val viewModelScope: CoroutineScope
+) : BaseWalletLiveData<Address>(application) {
 
     private val walletListener = WalletListener()
 
@@ -59,7 +61,8 @@ class CurrentAddressLiveData(application: BitcoinApplication,
         postValue(wallet?.currentReceiveAddress())
     }
 
-    private inner class WalletListener : WalletCoinsReceivedEventListener, WalletCoinsSentEventListener,
+    private inner class WalletListener : WalletCoinsReceivedEventListener,
+        WalletCoinsSentEventListener,
         WalletReorganizeEventListener, WalletChangeEventListener {
         override fun onCoinsReceived(
             wallet: Wallet, tx: Transaction, prevBalance: Coin,

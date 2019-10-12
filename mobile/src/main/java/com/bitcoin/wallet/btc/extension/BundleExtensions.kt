@@ -1,4 +1,3 @@
-
 package com.bitcoin.wallet.btc.extension
 
 import android.os.Bundle
@@ -52,13 +51,17 @@ inline fun <reified T : Parcelable> Bundle.getNullableTypedArray(key: String): A
 }
 
 @JvmName("putIntegerArrayList")
-operator fun Bundle.set(key: String, value: ArrayList<Int>): ArrayList<Int> = value.apply { putIntegerArrayList(key, value) }
+operator fun Bundle.set(key: String, value: ArrayList<Int>): ArrayList<Int> =
+    value.apply { putIntegerArrayList(key, value) }
 
 @JvmName("putStringArrayList")
-operator fun Bundle.set(key: String, value: ArrayList<String>): ArrayList<String> = value.apply { putStringArrayList(key, value) }
+operator fun Bundle.set(key: String, value: ArrayList<String>): ArrayList<String> =
+    value.apply { putStringArrayList(key, value) }
 
 @JvmName("putCharSequenceArrayList")
-operator fun Bundle.set(key: String, value: ArrayList<CharSequence>): ArrayList<CharSequence> = value.apply { putCharSequenceArrayList(key, value) }
+operator fun Bundle.set(key: String, value: ArrayList<CharSequence>): ArrayList<CharSequence> =
+    value.apply { putCharSequenceArrayList(key, value) }
 
 @JvmName("putParcelableArrayList")
-operator fun Bundle.set(key: String, value: ArrayList<Parcelable>): ArrayList<Parcelable> = value.apply { putParcelableArrayList(key, value) }
+operator fun Bundle.set(key: String, value: ArrayList<Parcelable>): ArrayList<Parcelable> =
+    value.apply { putParcelableArrayList(key, value) }

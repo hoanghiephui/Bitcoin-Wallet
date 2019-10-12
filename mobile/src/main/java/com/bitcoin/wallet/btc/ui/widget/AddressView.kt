@@ -17,7 +17,11 @@ class AddressView : ConstraintLayout {
         initializeViews()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         initializeViews()
     }
 

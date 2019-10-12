@@ -26,7 +26,7 @@ class StoryViewModel @Inject constructor(storyRepository: StoryRepository) :
      * @method retry get list news
      */
     fun retryNews() {
-        newsResult?.value?.retry?.invoke()
+        newsResult.value?.retry?.invoke()
     }
 
     fun refreshNews() {

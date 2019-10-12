@@ -96,7 +96,8 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
                 return@post
             }
             activity?.let {
-                val oldKey = if (oldPassword != null) wallet.keyCrypter?.deriveKey(oldPassword) else null
+                val oldKey =
+                    if (oldPassword != null) wallet.keyCrypter?.deriveKey(oldPassword) else null
                 val keyCrypter =
                     KeyCrypterScrypt((it.application as BitcoinApplication).scryptIterationsTarget())
                 val newKey = if (newPassword != null) keyCrypter.deriveKey(newPassword) else null
@@ -163,16 +164,36 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
             if (state == State.INPUT && passwordLength > 0) View.VISIBLE else View.INVISIBLE
         if (passwordLength < 4) {
             passwordMismatchView.setText(R.string.encrypt_strength_weak)
-            passwordMismatchView.setTextColor(ContextCompat.getColor(requireContext(), R.color.fg_error))
+            passwordMismatchView.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.fg_error
+                )
+            )
         } else if (passwordLength < 6) {
             passwordMismatchView.setText(R.string.encrypt_keys_dialog_password_strength_fair)
-            passwordMismatchView.setTextColor(ContextCompat.getColor(requireContext(), R.color.scan_dot))
+            passwordMismatchView.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.scan_dot
+                )
+            )
         } else if (passwordLength < 8) {
             passwordMismatchView.setText(R.string.encrypt_kstrength_good)
-            passwordMismatchView.setTextColor(ContextCompat.getColor(requireContext(), R.color.fg_less_significant))
+            passwordMismatchView.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.fg_less_significant
+                )
+            )
         } else {
             passwordMismatchView.setText(R.string.encrypt_strength_strong)
-            passwordMismatchView.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_coin))
+            passwordMismatchView.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.color_coin
+                )
+            )
         }
 
         if (state == State.INPUT) {
@@ -205,7 +226,10 @@ class EncryptKeysDialogFragment : BaseBottomSheetDialogFragment() {
         fun show(activity: AppCompatActivity) {
             val fragment = EncryptKeysDialogFragment()
             fragment.isCancelable = false
-            fragment.show(activity.supportFragmentManager, EncryptKeysDialogFragment::class.java.simpleName)
+            fragment.show(
+                activity.supportFragmentManager,
+                EncryptKeysDialogFragment::class.java.simpleName
+            )
         }
     }
 }

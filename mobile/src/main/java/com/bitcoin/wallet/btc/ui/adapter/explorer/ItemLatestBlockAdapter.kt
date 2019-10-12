@@ -86,13 +86,15 @@ class ItemLatestBlockAdapter(
         }
     }
 
-    class HeaderBlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class HeaderBlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         /** Returns the root holder view. */
         override val containerView: View?
             get() = itemView
     }
 
-    class ItemLatestBlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class ItemLatestBlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
     }

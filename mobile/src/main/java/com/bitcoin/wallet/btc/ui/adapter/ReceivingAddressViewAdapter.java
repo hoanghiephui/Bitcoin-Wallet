@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
+
 import com.bitcoin.wallet.btc.Constants;
 import com.bitcoin.wallet.btc.R;
 import com.bitcoin.wallet.btc.data.AddressBookDao;
 import com.bitcoin.wallet.btc.data.AddressBookEntry;
 import com.bitcoin.wallet.btc.utils.WalletUtils;
 import com.bitcoin.wallet.btc.viewmodel.SendViewModel;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

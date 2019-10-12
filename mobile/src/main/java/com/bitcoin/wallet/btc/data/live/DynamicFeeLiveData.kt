@@ -14,7 +14,6 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
 import okhttp3.internal.http.toHttpDateString
-import okhttp3.internal.toHexString
 import org.bitcoinj.core.Coin
 import java.io.*
 import java.net.HttpURLConnection
@@ -61,7 +60,8 @@ class DynamicFeeLiveData(application: BitcoinApplication) : LiveData<Map<FeeCate
         request.header("User-Agent", userAgent)
         if (targetFile.exists())
             Date(targetFile.lastModified()).toHttpDateString()?.let {
-                request.header("If-Modified-Since",
+                request.header(
+                    "If-Modified-Since",
                     it
                 )
             }

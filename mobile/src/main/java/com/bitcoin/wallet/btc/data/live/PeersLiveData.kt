@@ -8,9 +8,11 @@ import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.service.BlockchainService
 import org.bitcoinj.core.Peer
 
-class PeersLiveData constructor(private val application: BitcoinApplication) : LiveData<List<Peer>>(),
+class PeersLiveData constructor(private val application: BitcoinApplication) :
+    LiveData<List<Peer>>(),
     ServiceConnection {
-    private val broadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(application)
+    private val broadcastManager: LocalBroadcastManager =
+        LocalBroadcastManager.getInstance(application)
     private var blockchainService: BlockchainService? = null
 
     private val broadcastReceiver = object : BroadcastReceiver() {
@@ -21,8 +23,15 @@ class PeersLiveData constructor(private val application: BitcoinApplication) : L
     }
 
     override fun onActive() {
-        broadcastManager.registerReceiver(broadcastReceiver, IntentFilter(BlockchainService.ACTION_PEER_STATE))
-        application.bindService(Intent(application, BlockchainService::class.java), this, Context.BIND_AUTO_CREATE)
+        broadcastManager.registerReceiver(
+            broadcastReceiver,
+            IntentFilter(BlockchainService.ACTION_PEER_STATE)
+        )
+        application.bindService(
+            Intent(application, BlockchainService::class.java),
+            this,
+            Context.BIND_AUTO_CREATE
+        )
     }
 
     override fun onInactive() {

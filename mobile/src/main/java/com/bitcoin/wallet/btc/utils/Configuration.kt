@@ -87,7 +87,10 @@ class Configuration constructor(private val prefs: SharedPreferences) {
 
     var exchangeCurrencyCode: String
         get() = prefs.getString(PREFS_KEY_EXCHANGE_CURRENCY, "") ?: "usd"
-        set(exchangeCurrencyCode) = prefs.edit().putString(PREFS_KEY_EXCHANGE_CURRENCY, exchangeCurrencyCode).apply()
+        set(exchangeCurrencyCode) = prefs.edit().putString(
+            PREFS_KEY_EXCHANGE_CURRENCY,
+            exchangeCurrencyCode
+        ).apply()
 
     val lastUsedAgo: Long
         get() {
@@ -101,11 +104,15 @@ class Configuration constructor(private val prefs: SharedPreferences) {
 
     var cachedExchangeRate: ExchangeRate?
         get() {
-            if (prefs.contains(PREFS_KEY_CACHED_EXCHANGE_CURRENCY) && prefs.contains(PREFS_KEY_CACHED_EXCHANGE_RATE_COIN)
+            if (prefs.contains(PREFS_KEY_CACHED_EXCHANGE_CURRENCY) && prefs.contains(
+                    PREFS_KEY_CACHED_EXCHANGE_RATE_COIN
+                )
                 && prefs.contains(PREFS_KEY_CACHED_EXCHANGE_RATE_FIAT)
             ) {
-                val cachedExchangeCurrency = prefs.getString(PREFS_KEY_CACHED_EXCHANGE_CURRENCY, null)
-                val cachedExchangeRateCoin = Coin.valueOf(prefs.getLong(PREFS_KEY_CACHED_EXCHANGE_RATE_COIN, 0))
+                val cachedExchangeCurrency =
+                    prefs.getString(PREFS_KEY_CACHED_EXCHANGE_CURRENCY, null)
+                val cachedExchangeRateCoin =
+                    Coin.valueOf(prefs.getLong(PREFS_KEY_CACHED_EXCHANGE_RATE_COIN, 0))
                 val cachedExchangeRateFiat = Fiat.valueOf(
                     cachedExchangeCurrency,
                     prefs.getLong(PREFS_KEY_CACHED_EXCHANGE_RATE_FIAT, 0)
@@ -121,14 +128,23 @@ class Configuration constructor(private val prefs: SharedPreferences) {
         set(cachedExchangeRate) {
             val edit = prefs.edit()
             edit.putString(PREFS_KEY_CACHED_EXCHANGE_CURRENCY, cachedExchangeRate?.currencyCode)
-            edit.putLong(PREFS_KEY_CACHED_EXCHANGE_RATE_COIN, cachedExchangeRate?.rate?.coin?.value ?: 0)
-            edit.putLong(PREFS_KEY_CACHED_EXCHANGE_RATE_FIAT, cachedExchangeRate?.rate?.fiat?.value ?: 0)
+            edit.putLong(
+                PREFS_KEY_CACHED_EXCHANGE_RATE_COIN,
+                cachedExchangeRate?.rate?.coin?.value ?: 0
+            )
+            edit.putLong(
+                PREFS_KEY_CACHED_EXCHANGE_RATE_FIAT,
+                cachedExchangeRate?.rate?.fiat?.value ?: 0
+            )
             edit.apply()
         }
 
     var lastExchangeDirection: Boolean
         get() = prefs.getBoolean(PREFS_KEY_LAST_EXCHANGE_DIRECTION, true)
-        set(exchangeDirection) = prefs.edit().putBoolean(PREFS_KEY_LAST_EXCHANGE_DIRECTION, exchangeDirection).apply()
+        set(exchangeDirection) = prefs.edit().putBoolean(
+            PREFS_KEY_LAST_EXCHANGE_DIRECTION,
+            exchangeDirection
+        ).apply()
 
     init {
 

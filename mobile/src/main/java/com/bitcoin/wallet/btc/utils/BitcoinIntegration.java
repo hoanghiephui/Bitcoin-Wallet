@@ -12,14 +12,13 @@ public class BitcoinIntegration {
     private static final String INTENT_EXTRA_TRANSACTION_HASH = "transaction_hash";
 
     private static final String MIMETYPE_PAYMENTREQUEST = "application/bitcoin-paymentrequest"; // BIP 71
+    private static final int SATOSHIS_PER_COIN = 100000000;
 
     /**
      * Request any amount of Bitcoins (probably a donation) from user, without feedback from the app.
      *
-     * @param context
-     *            Android context
-     * @param address
-     *            Bitcoin address
+     * @param context Android context
+     * @param address Bitcoin address
      */
     public static void request(final Context context, final String address) {
         final Intent intent = makeBitcoinUriIntent(address, null);
@@ -30,12 +29,9 @@ public class BitcoinIntegration {
     /**
      * Request specific amount of Bitcoins from user, without feedback from the app.
      *
-     * @param context
-     *            Android context
-     * @param address
-     *            Bitcoin address
-     * @param amount
-     *            Bitcoin amount in satoshis
+     * @param context Android context
+     * @param address Bitcoin address
+     * @param amount  Bitcoin amount in satoshis
      */
     public static void request(final Context context, final String address, final long amount) {
         final Intent intent = makeBitcoinUriIntent(address, amount);
@@ -46,10 +42,8 @@ public class BitcoinIntegration {
     /**
      * Request payment from user, without feedback from the app.
      *
-     * @param context
-     *            Android context
-     * @param paymentRequest
-     *            BIP70 formatted payment request
+     * @param context        Android context
+     * @param paymentRequest BIP70 formatted payment request
      */
     public static void request(final Context context, final byte[] paymentRequest) {
         final Intent intent = makePaymentRequestIntent(paymentRequest);
@@ -62,17 +56,14 @@ public class BitcoinIntegration {
      * intent can be received by overriding . Result indicates
      * either {@link Activity#RESULT_OK} or {@link Activity#RESULT_CANCELED}. In the success case, use
      * {@link #transactionHashFromResult(Intent)} to read the transaction hash from the intent.
-     *
+     * <p>
      * Warning: A success indication is no guarantee! To be on the safe side, you must drive your own Bitcoin
      * infrastructure and validate the transaction.
      *
-     * @param activity
-     *            Calling Android activity
-     * @param requestCode
-     *            Code identifying the call when  is called
-     *            back
-     * @param address
-     *            Bitcoin address
+     * @param activity    Calling Android activity
+     * @param requestCode Code identifying the call when  is called
+     *                    back
+     * @param address     Bitcoin address
      */
     public static void requestForResult(final Activity activity, final int requestCode, final String address) {
         final Intent intent = makeBitcoinUriIntent(address, null);
@@ -85,17 +76,14 @@ public class BitcoinIntegration {
      * received by overriding . Result indicates either
      * {@link Activity#RESULT_OK} or {@link Activity#RESULT_CANCELED}. In the success case, use
      * {@link #transactionHashFromResult(Intent)} to read the transaction hash from the intent.
-     *
+     * <p>
      * Warning: A success indication is no guarantee! To be on the safe side, you must drive your own Bitcoin
      * infrastructure and validate the transaction.
      *
-     * @param activity
-     *            Calling Android activity
-     * @param requestCode
-     *            Code identifying the call when  is called
-     *            back
-     * @param address
-     *            Bitcoin address
+     * @param activity    Calling Android activity
+     * @param requestCode Code identifying the call when  is called
+     *                    back
+     * @param address     Bitcoin address
      */
     public static void requestForResult(final Activity activity, final int requestCode, final String address,
                                         final long amount) {
@@ -109,17 +97,14 @@ public class BitcoinIntegration {
      * . Result indicates either {@link Activity#RESULT_OK} or
      * {@link Activity#RESULT_CANCELED}. In the success case, use {@link #transactionHashFromResult(Intent)}
      * to read the transaction hash from the intent.
-     *
+     * <p>
      * Warning: A success indication is no guarantee! To be on the safe side, you must drive your own Bitcoin
      * infrastructure and validate the transaction.
      *
-     * @param activity
-     *            Calling Android activity
-     * @param requestCode
-     *            Code identifying the call when  is called
-     *            back
-     * @param paymentRequest
-     *            BIP70 formatted payment request
+     * @param activity       Calling Android activity
+     * @param requestCode    Code identifying the call when  is called
+     *                       back
+     * @param paymentRequest BIP70 formatted payment request
      */
     public static void requestForResult(final Activity activity, final int requestCode, final byte[] paymentRequest) {
         final Intent intent = makePaymentRequestIntent(paymentRequest);
@@ -130,8 +115,7 @@ public class BitcoinIntegration {
     /**
      * Get payment request from intent. Meant for usage by applications accepting payment requests.
      *
-     * @param intent
-     *            intent
+     * @param intent intent
      * @return payment request or null
      */
     public static byte[] paymentRequestFromIntent(final Intent intent) {
@@ -141,10 +125,8 @@ public class BitcoinIntegration {
     /**
      * Put BIP70 payment message into result intent. Meant for usage by Bitcoin wallet applications.
      *
-     * @param result
-     *            result intent
-     * @param payment
-     *            payment message
+     * @param result  result intent
+     * @param payment payment message
      */
     public static void paymentToResult(final Intent result, final byte[] payment) {
         result.putExtra(INTENT_EXTRA_PAYMENT, payment);
@@ -153,12 +135,11 @@ public class BitcoinIntegration {
     /**
      * Get BIP70 payment message from result intent. Meant for usage by applications initiating a Bitcoin
      * payment.
-     *
+     * <p>
      * You can use the transactions contained in the payment to validate the payment. For this, you need your
      * own Bitcoin infrastructure though. There is no guarantee that the payment will ever confirm.
      *
-     * @param result
-     *            result intent
+     * @param result result intent
      * @return payment message
      */
     public static byte[] paymentFromResult(final Intent result) {
@@ -170,10 +151,8 @@ public class BitcoinIntegration {
     /**
      * Put transaction hash into result intent. Meant for usage by Bitcoin wallet applications.
      *
-     * @param result
-     *            result intent
-     * @param txHash
-     *            transaction hash
+     * @param result result intent
+     * @param txHash transaction hash
      */
     public static void transactionHashToResult(final Intent result, final String txHash) {
         result.putExtra(INTENT_EXTRA_TRANSACTION_HASH, txHash);
@@ -181,13 +160,12 @@ public class BitcoinIntegration {
 
     /**
      * Get transaction hash from result intent. Meant for usage by applications initiating a Bitcoin payment.
-     *
+     * <p>
      * You can use this hash to request the transaction from the Bitcoin network, in order to validate. For
      * this, you need your own Bitcoin infrastructure though. There is no guarantee that the transaction has
      * ever been broadcasted to the Bitcoin network.
      *
-     * @param result
-     *            result intent
+     * @param result result intent
      * @return transaction hash
      */
     public static String transactionHashFromResult(final Intent result) {
@@ -195,8 +173,6 @@ public class BitcoinIntegration {
 
         return txHash;
     }
-
-    private static final int SATOSHIS_PER_COIN = 100000000;
 
     private static Intent makeBitcoinUriIntent(final String address, final Long amount) {
         final StringBuilder uri = new StringBuilder("bitcoin:");

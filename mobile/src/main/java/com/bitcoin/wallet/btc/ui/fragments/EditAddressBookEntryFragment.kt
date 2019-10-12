@@ -36,7 +36,8 @@ class EditAddressBookEntryFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val args = arguments
-        val address = Address.fromString(Constants.NETWORK_PARAMETERS, args!!.getString(KEY_ADDRESS)!!)
+        val address =
+            Address.fromString(Constants.NETWORK_PARAMETERS, args!!.getString(KEY_ADDRESS)!!)
         val suggestedAddressLabel = args.getString(KEY_SUGGESTED_ADDRESS_LABEL)
 
         val inflater = LayoutInflater.from(activity)

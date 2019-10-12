@@ -27,15 +27,15 @@ abstract class BaseDialogFragment : DaggerDialogFragment() {
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.ThemeOverlay_AppCompat_Dialog_Alert)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val contextThemeWrapper = ContextThemeWrapper(requireContext(), requireContext().theme)
         val themeAwareInflater = inflater.cloneInContext(contextThemeWrapper)
         return themeAwareInflater.inflate(layoutRes(), container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -46,7 +46,11 @@ abstract class BaseDialogFragment : DaggerDialogFragment() {
 
     fun dismissDialog() = dialog?.dismiss()
 
-    fun setupToolbar(title: String, menuId: Int? = null, onMenuItemClick: ((item: MenuItem) -> Unit)? = null) {
+    fun setupToolbar(
+        title: String,
+        menuId: Int? = null,
+        onMenuItemClick: ((item: MenuItem) -> Unit)? = null
+    ) {
         view?.findViewById<Toolbar?>(R.id.toolbar)?.apply {
             navigationIcon = getDrawable(R.drawable.ic_clear)
             val titleText = findViewById<TextView?>(R.id.toolbarTitle)

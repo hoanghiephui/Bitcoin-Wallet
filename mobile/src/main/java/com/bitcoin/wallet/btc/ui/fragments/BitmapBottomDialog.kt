@@ -21,14 +21,18 @@ class BitmapBottomDialog : BottomSheetDialogFragment() {
         mDialog = activity?.let { BottomSheetDialog(it, R.style.BottomDialog) }
         mDialog?.setContentView(R.layout.dialog_barcode)
 
-        mDialog?.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
+        mDialog?.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
         mDialog?.window?.setGravity(Gravity.BOTTOM)
         val bitmap = arguments?.getParcelable<Bitmap>("bitmap")
         val image = mDialog?.findViewById<AppCompatImageView>(R.id.imgQrCode)
         image?.setImageBitmap(bitmap)
 
         mDialog?.setOnShowListener {
-            val bottomSheet = mDialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val bottomSheet =
+                mDialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
             BottomSheetBehavior.from(bottomSheet).isFitToContents = true
         }

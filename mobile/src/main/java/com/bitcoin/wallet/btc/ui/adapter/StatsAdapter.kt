@@ -32,18 +32,38 @@ class StatsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = itemList[position]
-        when(getItemViewType(position)) {
+        when (getItemViewType(position)) {
             R.layout.item_stats -> {
                 if (holder is StatViewHolder && item is StatData) {
                     holder.apply {
                         tvTitle.text = item.title
                         tvValue.text = item.value
-                        if (position % 2 ==0) {
-                            tvTitle.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorInvertedDarkThemeAlpha2))
-                            tvValue.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorInvertedDarkThemeAlpha2))
+                        if (position % 2 == 0) {
+                            tvTitle.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    itemView.context,
+                                    R.color.colorInvertedDarkThemeAlpha2
+                                )
+                            )
+                            tvValue.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    itemView.context,
+                                    R.color.colorInvertedDarkThemeAlpha2
+                                )
+                            )
                         } else {
-                            tvTitle.setBackgroundColor(ContextCompat.getColor(itemView.context, android.R.color.transparent))
-                            tvValue.setBackgroundColor(ContextCompat.getColor(itemView.context, android.R.color.transparent))
+                            tvTitle.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    itemView.context,
+                                    android.R.color.transparent
+                                )
+                            )
+                            tvValue.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    itemView.context,
+                                    android.R.color.transparent
+                                )
+                            )
                         }
                     }
                 }

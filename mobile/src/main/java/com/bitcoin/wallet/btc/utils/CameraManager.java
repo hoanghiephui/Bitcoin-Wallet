@@ -5,10 +5,15 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Camera;
 import android.view.TextureView;
+
 import com.google.zxing.PlanarYUVLuminanceSource;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class CameraManager {
     private static final int MIN_FRAME_SIZE = 240;

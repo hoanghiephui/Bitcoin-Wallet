@@ -1,11 +1,7 @@
 package com.bitcoin.wallet.btc.extension
 
 import androidx.annotation.MainThread
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 
 @MainThread
 fun <X, Y> LiveData<X>.map(func: (X) -> Y): LiveData<Y> {
@@ -166,7 +162,10 @@ fun <X, Y> LiveData<X>.withLatestFrom(source: LiveData<Y>): LiveData<Y> {
 }
 
 @MainThread
-fun <X, Y, Z> LiveData<X>.withLatestFrom(source: LiveData<Y>, resultSelector: (Pair<X, Y>) -> Z): LiveData<Z> {
+fun <X, Y, Z> LiveData<X>.withLatestFrom(
+    source: LiveData<Y>,
+    resultSelector: (Pair<X, Y>) -> Z
+): LiveData<Z> {
     val result = MediatorLiveData<Z>()
     var sourceResult: Y? = null
 

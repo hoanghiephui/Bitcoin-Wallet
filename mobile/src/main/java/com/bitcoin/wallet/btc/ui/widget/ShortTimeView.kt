@@ -44,8 +44,11 @@ class ShortTimeView(
             val current = System.currentTimeMillis()
             if (Math.abs(current - time) > 60 * 1000) {
                 setTextIfChanged(
-                    DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(),
-                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL))
+                    DateUtils.getRelativeTimeSpanString(
+                        time, System.currentTimeMillis(),
+                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL
+                    )
+                )
             } else {
                 setTextIfChanged("Just now")
             }

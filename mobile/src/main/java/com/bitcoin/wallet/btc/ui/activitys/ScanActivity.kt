@@ -97,7 +97,11 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
         cameraThread?.start()
         cameraHandler = Handler(cameraThread?.looper)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 0)
         }
 
@@ -111,11 +115,19 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
                 val contentView = findViewById<View>(android.R.id.content)
                 contentView?.alpha = 0f
                 window
-                    .setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, android.R.color.transparent)))
+                    .setBackgroundDrawable(
+                        ColorDrawable(
+                            ContextCompat.getColor(
+                                this,
+                                android.R.color.transparent
+                            )
+                        )
+                    )
                 OnFirstPreDraw.listen(contentView) {
                     val finalRadius = Math.max(contentView.width, contentView.height).toFloat()
                     val duration = resources.getInteger(android.R.integer.config_mediumAnimTime)
-                    sceneTransition = ViewAnimationUtils.createCircularReveal(contentView, x, y, 0f, finalRadius)
+                    sceneTransition =
+                        ViewAnimationUtils.createCircularReveal(contentView, x, y, 0f, finalRadius)
                     sceneTransition?.duration = duration.toLong()
                     sceneTransition?.interpolator = AccelerateInterpolator()
                     false
@@ -132,7 +144,14 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
             sceneTransition?.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     window
-                        .setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@ScanActivity, android.R.color.black)))
+                        .setBackgroundDrawable(
+                            ColorDrawable(
+                                ContextCompat.getColor(
+                                    this@ScanActivity,
+                                    android.R.color.black
+                                )
+                            )
+                        )
                 }
             })
             sceneTransition?.start()
@@ -266,7 +285,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
                 }
                 cameraHandler?.post(fetchAndDecodeRunnable)
             } catch (x: Exception) {
-                viewModel?.showProblemWarnDialog?.postValue(Event.simple())
+                viewModel.showProblemWarnDialog.postValue(Event.simple())
             }
 
         }
@@ -337,7 +356,7 @@ class ScanActivity : BaseActivity(), TextureView.SurfaceTextureListener,
             val args = arguments
             val dialog = DialogBuilder.warn(requireContext(), args!!.getInt("title"))
             dialog.setMessage(args.getString("message"))
-            dialog.singleDismissButton (object : DialogInterface.OnClickListener {
+            dialog.singleDismissButton(object : DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
                     requireActivity().finish()
                 }

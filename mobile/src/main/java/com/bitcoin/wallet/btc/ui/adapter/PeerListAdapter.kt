@@ -15,7 +15,8 @@ import java.net.InetAddress
 import java.util.*
 
 class PeerListAdapter :
-    ListAdapter<PeerListAdapter.ListItem, PeerListAdapter.ViewHolder>(object : DiffUtil.ItemCallback<ListItem>() {
+    ListAdapter<PeerListAdapter.ListItem, PeerListAdapter.ViewHolder>(object :
+        DiffUtil.ItemCallback<ListItem>() {
         override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
             return oldItem.ip == newItem.ip
         }
@@ -47,7 +48,8 @@ class PeerListAdapter :
             val versionMessage = peer.peerVersionMessage
             this.version = versionMessage.subVer
             this.protocol = "protocol: " + versionMessage.clientVersion
-            this.services = peer.toStringServices(versionMessage.localServices).toLowerCase(Locale.US)
+            this.services =
+                peer.toStringServices(versionMessage.localServices).toLowerCase(Locale.US)
             val pingTime = peer.pingTime
             this.ping = if (pingTime < java.lang.Long.MAX_VALUE)
                 context.getString(R.string.ping_time, pingTime)
@@ -64,24 +66,34 @@ class PeerListAdapter :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listItem = getItem(position)
         holder.ipView.text = listItem.hostname ?: listItem.ip.hostAddress
-        holder.heightView.text = if (listItem.height > 0) listItem.height.toString() + " blocks" else null
-        holder.heightView.typeface = if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+        holder.heightView.text =
+            if (listItem.height > 0) listItem.height.toString() + " blocks" else null
+        holder.heightView.typeface =
+            if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         holder.versionView.text = listItem.version
-        holder.versionView.typeface = if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+        holder.versionView.typeface =
+            if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         holder.protocolView.text = listItem.protocol
-        holder.protocolView.typeface = if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+        holder.protocolView.typeface =
+            if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         holder.servicesView.text = listItem.services
-        holder.servicesView.typeface = if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+        holder.servicesView.typeface =
+            if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         holder.pingView.text = listItem.ping
-        holder.pingView.typeface = if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+        holder.pingView.typeface =
+            if (listItem.isDownloading) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
     }
 
     class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ipView: TextView = itemView.findViewById<View>(R.id.peer_list_row_ip) as TextView
-        val heightView: TextView = itemView.findViewById<View>(R.id.peer_list_row_height) as TextView
-        val versionView: TextView = itemView.findViewById<View>(R.id.peer_list_row_version) as TextView
-        val protocolView: TextView = itemView.findViewById<View>(R.id.peer_list_row_protocol) as TextView
-        val servicesView: TextView = itemView.findViewById<View>(R.id.peer_list_row_services) as TextView
+        val heightView: TextView =
+            itemView.findViewById<View>(R.id.peer_list_row_height) as TextView
+        val versionView: TextView =
+            itemView.findViewById<View>(R.id.peer_list_row_version) as TextView
+        val protocolView: TextView =
+            itemView.findViewById<View>(R.id.peer_list_row_protocol) as TextView
+        val servicesView: TextView =
+            itemView.findViewById<View>(R.id.peer_list_row_services) as TextView
         val pingView: TextView = itemView.findViewById<View>(R.id.peer_list_row_ping) as TextView
 
     }

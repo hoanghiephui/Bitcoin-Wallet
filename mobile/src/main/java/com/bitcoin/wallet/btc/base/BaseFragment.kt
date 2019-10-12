@@ -1,8 +1,6 @@
 package com.bitcoin.wallet.btc.base
 
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -10,10 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bitcoin.wallet.btc.R
-import com.bitcoin.wallet.btc.extension.getColorFromAttr
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -28,7 +24,11 @@ abstract class BaseFragment : DaggerFragment() {
 
     abstract fun onFragmentCreated(view: View, savedInstanceState: Bundle?)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(layoutRes(), container, false)
     }
@@ -53,7 +53,11 @@ abstract class BaseFragment : DaggerFragment() {
         }
     }
 
-    fun setupToolbar(title: String, menuId: Int? = null, onMenuItemClick: ((item: MenuItem) -> Unit)? = null) {
+    fun setupToolbar(
+        title: String,
+        menuId: Int? = null,
+        onMenuItemClick: ((item: MenuItem) -> Unit)? = null
+    ) {
         view?.findViewById<Toolbar?>(R.id.toolbar)?.apply {
             val titleText = findViewById<TextView?>(R.id.toolbarTitle)
             if (titleText != null) {
@@ -74,7 +78,11 @@ abstract class BaseFragment : DaggerFragment() {
         }
     }
 
-    fun setupToolbar(resId: Int, menuId: Int? = null, onMenuItemClick: ((item: MenuItem) -> Unit)? = null) {
+    fun setupToolbar(
+        resId: Int,
+        menuId: Int? = null,
+        onMenuItemClick: ((item: MenuItem) -> Unit)? = null
+    ) {
         setupToolbar(getString(resId), menuId, onMenuItemClick)
     }
 

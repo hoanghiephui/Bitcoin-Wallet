@@ -5,7 +5,8 @@ import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.Constants
 import org.bitcoinj.wallet.Wallet
 
-class WalletEncryptedLiveData(application: BitcoinApplication) : BaseWalletLiveData<Boolean>(application) {
+class WalletEncryptedLiveData(application: BitcoinApplication) :
+    BaseWalletLiveData<Boolean>(application) {
 
     override fun onWalletActive(wallet: Wallet?) {
         load()

@@ -47,17 +47,33 @@ class DiscoverAdapter : ListAdapter<DataItem, DiscoverAdapter.DiscoverViewHolder
                 txtPrice.text = nf.format(it.toDouble())
             }
             item.percentChange?.let {
-                if (Utils.isNegative(it)){
+                if (Utils.isNegative(it)) {
                     txtPercent.text = (number.format(it * 100).plus("%"))
-                    txtPercent.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.product_red_medium))
-                    txtPrice.chipBackgroundColor = ContextCompat.getColorStateList(holder.itemView.context, R.color.product_red_medium)
+                    txtPercent.setTextColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context,
+                            R.color.product_red_medium
+                        )
+                    )
+                    txtPrice.chipBackgroundColor = ContextCompat.getColorStateList(
+                        holder.itemView.context,
+                        R.color.product_red_medium
+                    )
                 } else {
                     txtPercent.text = "+".plus(number.format(it * 100).plus("%"))
-                    txtPercent.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.product_green_medium))
-                    txtPrice.chipBackgroundColor = ContextCompat.getColorStateList(holder.itemView.context, R.color.product_green_medium)
+                    txtPercent.setTextColor(
+                        ContextCompat.getColor(
+                            holder.itemView.context,
+                            R.color.product_green_medium
+                        )
+                    )
+                    txtPrice.chipBackgroundColor = ContextCompat.getColorStateList(
+                        holder.itemView.context,
+                        R.color.product_green_medium
+                    )
                 }
             }
-            itemView.setOnClickListener {  }
+            itemView.setOnClickListener { }
         }
     }
 

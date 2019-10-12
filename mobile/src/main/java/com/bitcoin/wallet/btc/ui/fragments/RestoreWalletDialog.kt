@@ -54,7 +54,10 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE_RESTORE_WALLET)
+            requestPermissions(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_CODE_RESTORE_WALLET
+            )
         }
     }
 
@@ -76,12 +79,14 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
                 if (views == null)
                     views = inflater.inflate(R.layout.restore_wallet_file_row, parent, false)
 
-                val filenameView = views?.findViewById<TextView>(R.id.wallet_import_keys_file_row_filename)
+                val filenameView =
+                    views?.findViewById<TextView>(R.id.wallet_import_keys_file_row_filename)
                 if (file != null) {
                     filenameView?.text = file.name
                 }
 
-                val securityView = views?.findViewById<TextView>(R.id.wallet_import_keys_file_row_security)
+                val securityView =
+                    views?.findViewById<TextView>(R.id.wallet_import_keys_file_row_security)
                 val encryptedStr = context
                     .getString(
                         if (isEncrypted)
@@ -98,7 +103,8 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
                     )
                 securityView?.text = "$encryptedStr, $storageStr"
 
-                val createdView = views?.findViewById<TextView>(R.id.wallet_import_keys_file_row_created)
+                val createdView =
+                    views?.findViewById<TextView>(R.id.wallet_import_keys_file_row_created)
                 if (file != null) {
                     createdView?.text = context.getString(
                         if (isExternal)
@@ -187,7 +193,11 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
             restoreWallet(WalletUtils.restoreWalletFromProtobuf(`is`, Constants.NETWORK_PARAMETERS))
         } catch (x: IOException) {
             dismissDialog()
-            (requireActivity() as MainActivity).viewModel.showFailureDialog.postValue(Event<String>(x.message))
+            (requireActivity() as MainActivity).viewModel.showFailureDialog.postValue(
+                Event<String>(
+                    x.message
+                )
+            )
         }
 
     }
@@ -195,11 +205,20 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
     private fun restoreWalletFromProtobuf(file: File) {
         try {
             FileInputStream(file).use { `is` ->
-                restoreWallet(WalletUtils.restoreWalletFromProtobuf(`is`, Constants.NETWORK_PARAMETERS))
+                restoreWallet(
+                    WalletUtils.restoreWalletFromProtobuf(
+                        `is`,
+                        Constants.NETWORK_PARAMETERS
+                    )
+                )
             }
         } catch (x: IOException) {
             dismissDialog()
-            (requireActivity() as MainActivity).viewModel.showFailureDialog.postValue(Event<String>(x.message))
+            (requireActivity() as MainActivity).viewModel.showFailureDialog.postValue(
+                Event<String>(
+                    x.message
+                )
+            )
         }
 
     }
@@ -208,7 +227,8 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
         (requireActivity().application as BitcoinApplication).replaceWallet(restoredWallet)
         config.disarmBackupReminder()
         dismissDialog()
-        (requireActivity() as MainActivity).viewModel.showSuccessDialog.value = Event(restoredWallet.isEncrypted)
+        (requireActivity() as MainActivity).viewModel.showSuccessDialog.value =
+            Event(restoredWallet.isEncrypted)
     }
 
     private fun updateView() {
@@ -259,7 +279,10 @@ class RestoreWalletDialog : BaseBottomSheetDialogFragment() {
         fun show(activity: AppCompatActivity) {
             val fragment = RestoreWalletDialog()
             fragment.isCancelable = false
-            fragment.show(activity.supportFragmentManager, RestoreWalletDialog::class.java.simpleName)
+            fragment.show(
+                activity.supportFragmentManager,
+                RestoreWalletDialog::class.java.simpleName
+            )
         }
 
         const val REQUEST_CODE_RESTORE_WALLET = 1
@@ -272,7 +295,7 @@ class PermissionDeniedDialogFragment : DialogFragment() {
         val dialog = DialogBuilder(requireContext())
         dialog.setTitle(R.string.restore_wallet_permission)
         dialog.setMessage(getString(R.string.restore_wallet_permission_detail))
-        dialog.singleDismissButton (object : DialogInterface.OnClickListener {
+        dialog.singleDismissButton(object : DialogInterface.OnClickListener {
             override fun onClick(dialog: DialogInterface?, which: Int) {
                 val fragment: DialogFragment?
                 if (fragmentManager != null) {

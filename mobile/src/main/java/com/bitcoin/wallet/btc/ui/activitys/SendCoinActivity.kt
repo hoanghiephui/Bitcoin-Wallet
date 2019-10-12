@@ -6,7 +6,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Resources
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.*
@@ -15,21 +14,20 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
-import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.data.*
-import com.bitcoin.wallet.btc.extension.*
+import com.bitcoin.wallet.btc.extension.gone
+import com.bitcoin.wallet.btc.extension.hideKeyboard
+import com.bitcoin.wallet.btc.extension.invisible
+import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.service.BlockchainService
 import com.bitcoin.wallet.btc.ui.activitys.ScanActivity.Companion.REQUEST_CODE_SCAN
 import com.bitcoin.wallet.btc.ui.adapter.ListItem
@@ -43,7 +41,6 @@ import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.SendViewModel
 import com.google.common.base.Joiner
 import kotlinx.android.synthetic.main.activity_send_coin.*
-import kotlinx.android.synthetic.main.init_ads.*
 import kotlinx.android.synthetic.main.item_transaction.*
 import kotlinx.android.synthetic.main.item_wallet_address.*
 import org.bitcoinj.core.*
@@ -89,10 +86,11 @@ class SendCoinActivity : BaseActivity() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar("Send Bitcoin")
-        backgroundThread = HandlerThread("backgroundThread", Process.THREAD_PRIORITY_BACKGROUND).also {
-            it.start()
-            backgroundHandler = Handler(it.looper)
-        }
+        backgroundThread =
+            HandlerThread("backgroundThread", Process.THREAD_PRIORITY_BACKGROUND).also {
+                it.start()
+                backgroundHandler = Handler(it.looper)
+            }
         if (savedInstanceState == null) {
             val action = intent.action
             val intentUri = intent.data
@@ -161,21 +159,33 @@ class SendCoinActivity : BaseActivity() {
         receivingAddressView.addTextChangedListener(receivingAddressListener)
         receivingAddressView.onItemClickListener = receivingAddressListener
         btcAmountView.setColor(
-            if (isDarkMode) ContextCompat.getColor(this, R.color.colorPrimaryDark) else ContextCompat.getColor(
+            if (isDarkMode) ContextCompat.getColor(
+                this,
+                R.color.colorPrimaryDark
+            ) else ContextCompat.getColor(
                 this,
                 R.color.colorPrimaryDarkTheme
             ),
-            if (isDarkMode) ContextCompat.getColor(this, R.color.colorPrimaryDark) else ContextCompat.getColor(
+            if (isDarkMode) ContextCompat.getColor(
+                this,
+                R.color.colorPrimaryDark
+            ) else ContextCompat.getColor(
                 this,
                 R.color.colorPrimaryDarkTheme
             )
         )
         localAmountView.setColor(
-            if (isDarkMode) ContextCompat.getColor(this, R.color.colorPrimaryDark) else ContextCompat.getColor(
+            if (isDarkMode) ContextCompat.getColor(
+                this,
+                R.color.colorPrimaryDark
+            ) else ContextCompat.getColor(
                 this,
                 R.color.colorPrimaryDarkTheme
             ),
-            if (isDarkMode) ContextCompat.getColor(this, R.color.colorPrimaryDark) else ContextCompat.getColor(
+            if (isDarkMode) ContextCompat.getColor(
+                this,
+                R.color.colorPrimaryDark
+            ) else ContextCompat.getColor(
                 this,
                 R.color.colorPrimaryDarkTheme
             )
@@ -189,7 +199,8 @@ class SendCoinActivity : BaseActivity() {
         amountCalculatorLink = CurrencyCalculatorLink(btcAmountView, localAmountView)
         amountCalculatorLink?.exchangeDirection = config.lastExchangeDirection
 
-        transaction_row.layoutAnimation = AnimationUtils.loadLayoutAnimation(this, R.anim.transaction_layout_anim)
+        transaction_row.layoutAnimation =
+            AnimationUtils.loadLayoutAnimation(this, R.anim.transaction_layout_anim)
         sentTransactionViewHolder = TransactionsWalletAdapter.TransactionViewHolder(container)
 
         viewGo.setOnClickListener {
@@ -432,7 +443,9 @@ class SendCoinActivity : BaseActivity() {
                 viewModel.sentTransaction = transaction
                 setState(SendViewModel.State.SENDING)
 
-                viewModel.sentTransaction?.confidence?.addEventListener(sentTransactionConfidenceListener)
+                viewModel.sentTransaction?.confidence?.addEventListener(
+                    sentTransactionConfidenceListener
+                )
                 viewModel.paymentIntent?.let {
                     val refundAddress = if (it.standard == PaymentIntent.Standard.BIP70)
                         wallet?.freshAddress(KeyChain.KeyPurpose.REFUND)
@@ -444,7 +457,10 @@ class SendCoinActivity : BaseActivity() {
                             null, it.payeeData
                         )
 
-                        BlockchainService.broadcastTransaction(this@SendCoinActivity, viewModel.sentTransaction)
+                        BlockchainService.broadcastTransaction(
+                            this@SendCoinActivity,
+                            viewModel.sentTransaction
+                        )
 
                         val callingActivity = callingActivity
                         if (callingActivity != null) {
@@ -546,7 +562,13 @@ class SendCoinActivity : BaseActivity() {
                     }
 
                     override fun error(messageResId: Int, vararg messageArgs: Any) {
-                        dialog(this@SendCoinActivity, null, R.string.btn_scan, messageResId, messageArgs)
+                        dialog(
+                            this@SendCoinActivity,
+                            null,
+                            R.string.btn_scan,
+                            messageResId,
+                            messageArgs
+                        )
                     }
                 }.parse()
             }
@@ -608,7 +630,13 @@ class SendCoinActivity : BaseActivity() {
                 }
 
                 override fun error(messageResId: Int, vararg messageArgs: Any) {
-                    dialog(this@SendCoinActivity, activityDismissListener, 0, messageResId, messageArgs)
+                    dialog(
+                        this@SendCoinActivity,
+                        activityDismissListener,
+                        0,
+                        messageResId,
+                        messageArgs
+                    )
                 }
             }.parse()
         } catch (x: FileNotFoundException) {
@@ -705,7 +733,11 @@ class SendCoinActivity : BaseActivity() {
                 }
             }
 
-            RequestPaymentTask.HttpRequestTask(backgroundHandler, callback, application.httpUserAgent())
+            RequestPaymentTask.HttpRequestTask(
+                backgroundHandler,
+                callback,
+                application.httpUserAgent()
+            )
                 .requestPaymentRequest(it.paymentRequestUrl)
         }
     }
@@ -721,7 +753,8 @@ class SendCoinActivity : BaseActivity() {
     private fun isAmountPlausible(): Boolean {
         return when {
             viewModel.dryrunTransaction != null -> viewModel.dryrunException == null
-            viewModel.paymentIntent?.mayEditAmount() == true -> amountCalculatorLink?.hasAmount() ?: false
+            viewModel.paymentIntent?.mayEditAmount() == true -> amountCalculatorLink?.hasAmount()
+                ?: false
             else -> viewModel.paymentIntent?.hasAmount() ?: false
         }
     }
@@ -946,7 +979,9 @@ class SendCoinActivity : BaseActivity() {
                 if (payment.hasAddress())
                     receivingStaticAddressView?.text = WalletUtils.formatAddress(
                         payment.address,
-                        Constants.ADDRESS_FORMAT_GROUP_SIZE, Constants.ADDRESS_FORMAT_LINE_SIZE, false
+                        Constants.ADDRESS_FORMAT_GROUP_SIZE,
+                        Constants.ADDRESS_FORMAT_LINE_SIZE,
+                        false
                     )
                 else
                     receivingStaticAddressView.setText(R.string.send_coins_address_complex)
@@ -1018,10 +1053,11 @@ class SendCoinActivity : BaseActivity() {
                         when {
                             viewModel.dryrunException is Wallet.DustySendRequested -> hintView.text =
                                 getString(R.string.dusty_send)
-                            viewModel.dryrunException is InsufficientMoneyException -> hintView.text = getString(
-                                R.string.insufficient_money,
-                                btcFormat.format((viewModel.dryrunException as InsufficientMoneyException).missing!!)
-                            )
+                            viewModel.dryrunException is InsufficientMoneyException -> hintView.text =
+                                getString(
+                                    R.string.insufficient_money,
+                                    btcFormat.format((viewModel.dryrunException as InsufficientMoneyException).missing!!)
+                                )
                             viewModel.dryrunException is Wallet.CouldNotAdjustDownwards -> hintView.text =
                                 getString(R.string.wallet_failed)
                             else -> hintView.text = viewModel.dryrunException.toString()
@@ -1045,11 +1081,17 @@ class SendCoinActivity : BaseActivity() {
                             }
                         }
                         hintView.setTextColor(ContextCompat.getColor(this, colorResId))
-                        hintView.text = getString(hintResId, btcFormat.format(viewModel.dryrunTransaction?.fee))
+                        hintView.text =
+                            getString(hintResId, btcFormat.format(viewModel.dryrunTransaction?.fee))
                     } else if (payment.mayEditAddress() && viewModel.validatedAddress != null
                         && wallet != null && wallet.isAddressMine(viewModel.validatedAddress!!.address)
                     ) {
-                        hintView.setTextColor(ContextCompat.getColor(this, R.color.fg_insignificant))
+                        hintView.setTextColor(
+                            ContextCompat.getColor(
+                                this,
+                                R.color.fg_insignificant
+                            )
+                        )
                         hintView.visibility = View.VISIBLE
                         hintView.setText(R.string.send_coins_address_own)
                     }
@@ -1072,8 +1114,9 @@ class SendCoinActivity : BaseActivity() {
             viewCancel.isEnabled = (viewModel.state != SendViewModel.State.REQUEST_PAYMENT_REQUEST
                     && viewModel.state != SendViewModel.State.DECRYPTING
                     && viewModel.state != SendViewModel.State.SIGNING)
-            viewGo.isEnabled = (everythingPlausible() && viewModel.dryrunTransaction != null && wallet != null
-                    && fees != null && (blockchainState == null || !blockchainState.replaying))
+            viewGo.isEnabled =
+                (everythingPlausible() && viewModel.dryrunTransaction != null && wallet != null
+                        && fees != null && (blockchainState == null || !blockchainState.replaying))
 
             if (viewModel.state == null || viewModel.state == SendViewModel.State.REQUEST_PAYMENT_REQUEST) {
                 viewCancel.setText(R.string.btn_cancel)
@@ -1106,7 +1149,8 @@ class SendCoinActivity : BaseActivity() {
             val privateKeyPasswordViewVisible =
                 ((viewModel.state == SendViewModel.State.INPUT || viewModel.state == SendViewModel.State.DECRYPTING) && wallet != null
                         && wallet.isEncrypted)
-            privateKeyPasswordViewGroup.visibility = if (privateKeyPasswordViewVisible) View.VISIBLE else View.GONE
+            privateKeyPasswordViewGroup.visibility =
+                if (privateKeyPasswordViewVisible) View.VISIBLE else View.GONE
             privateKeyPasswordView.isEnabled = viewModel.state == SendViewModel.State.INPUT
 
             // focus linking

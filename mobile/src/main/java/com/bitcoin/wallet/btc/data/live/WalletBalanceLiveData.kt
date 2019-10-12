@@ -1,12 +1,14 @@
 package com.bitcoin.wallet.btc.data.live
 
 import android.content.SharedPreferences
-import android.os.AsyncTask
 import androidx.annotation.WorkerThread
 import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.utils.Configuration
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bitcoinj.core.Coin
 import org.bitcoinj.core.Context
 import org.bitcoinj.core.Transaction
@@ -71,7 +73,8 @@ class WalletBalanceLiveData @JvmOverloads constructor(
             load()
     }
 
-    private inner class WalletListener : WalletCoinsReceivedEventListener, WalletCoinsSentEventListener,
+    private inner class WalletListener : WalletCoinsReceivedEventListener,
+        WalletCoinsSentEventListener,
         WalletReorganizeEventListener, WalletChangeEventListener {
         override fun onCoinsReceived(
             wallet: Wallet, tx: Transaction, prevBalance: Coin,

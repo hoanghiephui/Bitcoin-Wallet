@@ -200,7 +200,8 @@ class BitcoinApplication : DaggerApplication() {
                             }
                         } catch (x: IOException) {
                             //log.warn("problem loading wallet, auto-restoring: $walletFile", x) todo log
-                            wallet = WalletUtils.restoreWalletFromAutoBackup(this@BitcoinApplication)
+                            wallet =
+                                WalletUtils.restoreWalletFromAutoBackup(this@BitcoinApplication)
                             if (wallet != null)
                                 Toast.makeText(
                                     this@BitcoinApplication,
@@ -210,27 +211,45 @@ class BitcoinApplication : DaggerApplication() {
                         } catch (x: UnreadableWalletException) {
                             //log.warn("problem loading wallet, auto-restoring: $walletFile", x) todo log
                             try {
-                                wallet = WalletUtils.restoreWalletFromAutoBackup(this@BitcoinApplication)
-                            }catch (ex: Exception) {
-                                Toast.makeText(this@BitcoinApplication, "cannot read backup", Toast.LENGTH_SHORT).show()
+                                wallet =
+                                    WalletUtils.restoreWalletFromAutoBackup(this@BitcoinApplication)
+                            } catch (ex: Exception) {
+                                Toast.makeText(
+                                    this@BitcoinApplication,
+                                    "cannot read backup",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                             if (wallet != null)
-                                Toast.makeText(this@BitcoinApplication, R.string.reset, Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    this@BitcoinApplication,
+                                    R.string.reset,
+                                    Toast.LENGTH_LONG
+                                ).show()
                         }
                         wallet?.let {
                             if (!it.isConsistent) {
                                 //log.warn("inconsistent wallet, auto-restoring: $walletFile") todo log
-                                wallet = WalletUtils.restoreWalletFromAutoBackup(this@BitcoinApplication)
+                                wallet =
+                                    WalletUtils.restoreWalletFromAutoBackup(this@BitcoinApplication)
                                 if (wallet != null)
-                                    Toast.makeText(this@BitcoinApplication, R.string.reset, Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        this@BitcoinApplication,
+                                        R.string.reset,
+                                        Toast.LENGTH_LONG
+                                    ).show()
                             }
 
                             if (it.params != Constants.NETWORK_PARAMETERS)
                                 throw Error("bad wallet network parameters: " + it.params.id)
                             try {
                                 it.cleanup()
-                            }catch (ex: Exception) {
-                                Toast.makeText(this@BitcoinApplication, "Error: ${ex.message}", Toast.LENGTH_LONG).show()
+                            } catch (ex: Exception) {
+                                Toast.makeText(
+                                    this@BitcoinApplication,
+                                    "Error: ${ex.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                             walletFiles = wallet?.autosaveToFile(
                                 walletFile, FilesWallet.WALLET_AUTOSAVE_DELAY_MS,
@@ -249,7 +268,10 @@ class BitcoinApplication : DaggerApplication() {
                             TimeUnit.MILLISECONDS, null
                         )
                         autosaveWalletNow() // persist...
-                        WalletUtils.autoBackupWallet(this@BitcoinApplication, wallet) // ...and backup asap
+                        WalletUtils.autoBackupWallet(
+                            this@BitcoinApplication,
+                            wallet
+                        ) // ...and backup asap
                         watch.stop()
                         //log.info("fresh {} wallet created, took {}", Constants.DEFAULT_OUTPUT_SCRIPT_TYPE, watch) todo log
 
@@ -262,7 +284,8 @@ class BitcoinApplication : DaggerApplication() {
                 if (MnemonicCode.INSTANCE == null) {
                     try {
                         val watch = Stopwatch.createStarted()
-                        MnemonicCode.INSTANCE = MnemonicCode(assets.open(BIP39_WORDLIST_FILENAME), null)
+                        MnemonicCode.INSTANCE =
+                            MnemonicCode(assets.open(BIP39_WORDLIST_FILENAME), null)
                         watch.stop()
                         //log.info("BIP39 wordlist loaded from: '{}', took {}", BIP39_WORDLIST_FILENAME, watch) todo log
                     } catch (x: IOException) {
@@ -312,7 +335,8 @@ class BitcoinApplication : DaggerApplication() {
         WalletUtils.autoBackupWallet(this, newWallet)
 
         val broadcast = Intent(ACTION_WALLET_REFERENCE_CHANGED)
-        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast)
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+            .sendBroadcast(broadcast)
     }
 
     fun applicationPackageFlavor(): String? {

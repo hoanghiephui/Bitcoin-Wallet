@@ -42,7 +42,8 @@ import org.bitcoinj.uri.BitcoinURI
 import org.bitcoinj.uri.BitcoinURIParseException
 import java.util.*
 
-class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, AddressAdapter.AddressCallback,
+class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback,
+    AddressAdapter.AddressCallback,
     RadioGroup.OnCheckedChangeListener {
     private val viewModel: WalletAddressViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)[WalletAddressViewModel::class.java]
@@ -76,7 +77,12 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@AddressActivity)
             setHasFixedSize(true)
-            addItemDecoration(DividerItemDecoration(this@AddressActivity, DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@AddressActivity,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             adapter = addressAdapter
         }
         loadingProgressBar.gone()
@@ -141,12 +147,16 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
                                 viewModel.showEditAddressBookEntryDialog.setValue(Event(address))
                             else
                                 dialog(
-                                    this@AddressActivity, null, R.string.address_book_options_scan_title,
+                                    this@AddressActivity,
+                                    null,
+                                    R.string.address_book_options_scan_title,
                                     R.string.address_book_options_scan_own_address
                                 )
                         } else {
                             dialog(
-                                this@AddressActivity, null, R.string.address_book_options_scan_title,
+                                this@AddressActivity,
+                                null,
+                                R.string.address_book_options_scan_title,
                                 R.string.address_book_options_scan_invalid
                             )
                         }
@@ -159,7 +169,13 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
                 }
 
                 override fun error(messageResId: Int, vararg messageArgs: Any) {
-                    dialog(this@AddressActivity, null, R.string.address_book_options_scan_title, messageResId, messageArgs)
+                    dialog(
+                        this@AddressActivity,
+                        null,
+                        R.string.address_book_options_scan_title,
+                        messageResId,
+                        messageArgs
+                    )
                 }
             }.parse()
         }
@@ -277,7 +293,10 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
                     true
                 }
                 R.id.menu_send -> {
-                    SendCoinActivity.start(this, PaymentIntent.fromAddress(address?.address, address?.label))
+                    SendCoinActivity.start(
+                        this,
+                        PaymentIntent.fromAddress(address?.address, address?.label)
+                    )
                     true
                 }
                 R.id.menu_remove -> {
@@ -310,7 +329,9 @@ class AddressActivity : BaseActivity(), AddressSendAdapter.SendAddressCallback, 
                 val clipText = clip.getItemAt(0).text ?: return null
 
                 return try {
-                    Address.fromString(Constants.NETWORK_PARAMETERS, clipText.toString().trim { it <= ' ' })
+                    Address.fromString(
+                        Constants.NETWORK_PARAMETERS,
+                        clipText.toString().trim { it <= ' ' })
                 } catch (x: AddressFormatException) {
                     null
                 }

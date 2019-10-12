@@ -8,7 +8,10 @@ import org.bitcoinj.crypto.KeyCrypterScrypt
 import org.bitcoinj.wallet.Wallet
 import org.bouncycastle.crypto.params.KeyParameter
 
-abstract class DeriveKeyTask(private val backgroundHandler: Handler?, private val scryptIterationsTarget: Int) {
+abstract class DeriveKeyTask(
+    private val backgroundHandler: Handler?,
+    private val scryptIterationsTarget: Int
+) {
     private val callbackHandler: Handler = Handler(Looper.myLooper())
 
     fun deriveKey(wallet: Wallet, password: String) {

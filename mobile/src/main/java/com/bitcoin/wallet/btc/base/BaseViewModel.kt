@@ -3,7 +3,8 @@ package com.bitcoin.wallet.btc.base
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class BaseViewModel<out T : BaseRepository<*>> constructor(val repository: T) : ViewModel() {
+abstract class BaseViewModel<out T : BaseRepository<*>> constructor(val repository: T) :
+    ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
     init {

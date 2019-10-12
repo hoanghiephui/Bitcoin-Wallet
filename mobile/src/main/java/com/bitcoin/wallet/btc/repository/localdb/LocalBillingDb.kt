@@ -23,15 +23,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-        entities = [
-            AugmentedSkuDetails::class,
-            CachedPurchase::class,
-            GasTank::class,
-            GoldStatus::class,
-            PremiumCar::class
-        ],
-        version = 1,
-        exportSchema = false
+    entities = [
+        AugmentedSkuDetails::class,
+        CachedPurchase::class,
+        GasTank::class,
+        GoldStatus::class,
+        PremiumCar::class
+    ],
+    version = 1,
+    exportSchema = false
 )
 @TypeConverters(PurchaseTypeConverter::class)
 abstract class LocalBillingDb : RoomDatabase() {
@@ -45,16 +45,16 @@ abstract class LocalBillingDb : RoomDatabase() {
         private val DATABASE_NAME = "purchase_db"
 
         fun getInstance(context: Context): LocalBillingDb =
-                INSTANCE ?: synchronized(this) {
-                    INSTANCE ?: buildDatabase(context.applicationContext).also {
-                        INSTANCE = it
-                    }
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: buildDatabase(context.applicationContext).also {
+                    INSTANCE = it
                 }
+            }
 
-        private fun buildDatabase(appContext: Context): LocalBillingDb  {
+        private fun buildDatabase(appContext: Context): LocalBillingDb {
             return Room.databaseBuilder(appContext, LocalBillingDb::class.java, DATABASE_NAME)
-                    .fallbackToDestructiveMigration() // Data is cache, so it is OK to delete
-                    .build()
+                .fallbackToDestructiveMigration() // Data is cache, so it is OK to delete
+                .build()
         }
     }
 }

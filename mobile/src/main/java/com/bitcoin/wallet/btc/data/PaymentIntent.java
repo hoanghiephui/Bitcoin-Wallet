@@ -2,9 +2,11 @@ package com.bitcoin.wallet.btc.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.bitcoin.wallet.btc.Constants;
 import com.bitcoin.wallet.btc.utils.GenericUtils;
 import com.google.common.io.BaseEncoding;
+
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
@@ -18,8 +20,9 @@ import org.bitcoinj.script.ScriptPattern;
 import org.bitcoinj.uri.BitcoinURI;
 import org.bitcoinj.wallet.SendRequest;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
+
+import javax.annotation.Nullable;
 
 import static androidx.core.util.Preconditions.checkArgument;
 
@@ -293,18 +296,14 @@ public class PaymentIntent implements Parcelable {
         final boolean hasAmount = hasAmount();
         if (hasAmount != other.hasAmount())
             return false;
-        if (hasAmount && !getAmount().equals(other.getAmount()))
-            return false;
-        return true;
+        return !hasAmount || getAmount().equals(other.getAmount());
     }
 
     public boolean equalsAddress(final PaymentIntent other) {
         final boolean hasAddress = hasAddress();
         if (hasAddress != other.hasAddress())
             return false;
-        if (hasAddress && !getAddress().equals(other.getAddress()))
-            return false;
-        return true;
+        return !hasAddress || getAddress().equals(other.getAddress());
     }
 
     @Override

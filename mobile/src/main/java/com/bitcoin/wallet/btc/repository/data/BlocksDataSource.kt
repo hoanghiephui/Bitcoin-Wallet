@@ -15,7 +15,7 @@ class BlocksDataSource(
     private val api: BitcoinEndpoints,
     private val compositeDisposable: CompositeDisposable,
     private val currentDay: String
-): ItemKeyedDataSource<String, BlocksItem>() {
+) : ItemKeyedDataSource<String, BlocksItem>() {
     private var mCurrentDay = currentDay
     val networkState = MutableLiveData<NetworkState>()
     val initialLoad = MutableLiveData<NetworkState>()
@@ -25,7 +25,8 @@ class BlocksDataSource(
     private var retryCompletable: Completable? = null
 
     fun retryAllFailed() {
-        retryCompletable?.applySchedulers()?.subscribe({ }, { throwable -> throwable.printStackTrace() })
+        retryCompletable?.applySchedulers()
+            ?.subscribe({ }, { throwable -> throwable.printStackTrace() })
             ?.addTo(compositeDisposable)
     }
 
@@ -37,7 +38,10 @@ class BlocksDataSource(
         }
     }
 
-    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<BlocksItem>) {
+    override fun loadInitial(
+        params: LoadInitialParams<String>,
+        callback: LoadInitialCallback<BlocksItem>
+    ) {
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
         api.getLatestBlocksByDate(currentDay)

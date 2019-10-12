@@ -29,7 +29,8 @@ class StoryDataSource(
     private var retryCompletable: Completable? = null
 
     fun retryAllFailed() {
-        retryCompletable?.applySchedulers()?.subscribe({ }, { throwable -> throwable.printStackTrace() })
+        retryCompletable?.applySchedulers()
+            ?.subscribe({ }, { throwable -> throwable.printStackTrace() })
             ?.addTo(compositeDisposable)
     }
 
@@ -41,7 +42,10 @@ class StoryDataSource(
         }
     }
 
-    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<DataItem>) {
+    override fun loadInitial(
+        params: LoadInitialParams<String>,
+        callback: LoadInitialCallback<DataItem>
+    ) {
         // update network states.
         // we also provide an initial load state to the listeners so that the UI can know when the
         // very first list is loaded.

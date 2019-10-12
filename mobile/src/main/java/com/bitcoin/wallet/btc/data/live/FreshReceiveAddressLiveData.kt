@@ -7,7 +7,8 @@ import org.bitcoinj.core.Address
 import org.bitcoinj.script.Script
 import org.bitcoinj.wallet.Wallet
 
-class FreshReceiveAddressLiveData(application: BitcoinApplication) : BaseWalletLiveData<Address>(application) {
+class FreshReceiveAddressLiveData(application: BitcoinApplication) :
+    BaseWalletLiveData<Address>(application) {
     private var outputScriptType: Script.ScriptType? = null
 
     fun overrideOutputScriptType(outputScriptType: Script.ScriptType) {

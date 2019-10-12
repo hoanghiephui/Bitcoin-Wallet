@@ -96,7 +96,12 @@ class RequestCoinsViewModel @Inject constructor(application: Application) : View
         }
     }
 
-    private fun uri(address: Address?, amount: Coin?, label: String?, bluetoothMac: String?): String {
+    private fun uri(
+        address: Address?,
+        amount: Coin?,
+        label: String?,
+        bluetoothMac: String?
+    ): String {
         val uri = StringBuilder(BitcoinURI.convertToBitcoinURI(address!!, amount, label, null))
         return uri.toString()
     }

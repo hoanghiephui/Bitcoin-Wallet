@@ -1,6 +1,7 @@
 package com.bitcoin.wallet.btc.utils;
 
 import android.graphics.Bitmap;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;

@@ -21,9 +21,9 @@ class CurrencyTextView : AppCompatTextView {
     private var prefixColorSpan: ForegroundColorSpan? = null
     private var insignificantRelativeSizeSpan: RelativeSizeSpan? = null
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     fun setAmount(amount: Monetary) {
         this.amount = amount

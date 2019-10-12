@@ -25,7 +25,7 @@ class ExplorerViewModel @Inject constructor(repository: ExplorerRepository) :
      * @method retry get list latest blocks
      */
     fun retryLatestBlock() {
-        latestBlocksResult?.value?.retry?.invoke()
+        latestBlocksResult.value?.retry?.invoke()
     }
 
     //get list transaction
@@ -45,10 +45,10 @@ class ExplorerViewModel @Inject constructor(repository: ExplorerRepository) :
      * @method retry get list transaction
      */
     fun retryTransaction() {
-        transactionResult?.value?.retry?.invoke()
+        transactionResult.value?.retry?.invoke()
     }
 
     fun refreshTransactions() {
-        transactionResult?.value?.refresh?.invoke()
+        transactionResult.value?.refresh?.invoke()
     }
 }

@@ -10,7 +10,8 @@ import org.bitcoinj.core.StoredBlock
 
 class BlocksLiveData constructor(private val application: BitcoinApplication) :
     LiveData<List<StoredBlock>>(), ServiceConnection {
-    private val broadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(application)
+    private val broadcastManager: LocalBroadcastManager =
+        LocalBroadcastManager.getInstance(application)
     private var blockchainService: BlockchainService? = null
 
     private val broadcastReceiver = object : BroadcastReceiver() {
@@ -24,7 +25,11 @@ class BlocksLiveData constructor(private val application: BitcoinApplication) :
             broadcastReceiver,
             IntentFilter(BlockchainService.ACTION_BLOCKCHAIN_STATE)
         )
-        application.bindService(Intent(application, BlockchainService::class.java), this, Context.BIND_AUTO_CREATE)
+        application.bindService(
+            Intent(application, BlockchainService::class.java),
+            this,
+            Context.BIND_AUTO_CREATE
+        )
     }
 
     override fun onInactive() {

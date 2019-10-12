@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 67
-        versionName "1.6.7"
+        versionCode 68
+        versionName "1.6.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -125,7 +125,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation "androidx.room:room-runtime:2.1.0"
     implementation "androidx.room:room-rxjava2:2.1.0"
-    implementation "com.google.code.gson:gson:2.8.5"
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlin_version"
 
     implementation 'androidx.paging:paging-runtime-ktx:2.1.0'
@@ -135,7 +135,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
-    implementation('com.squareup.okhttp3:okhttp:4.2.0')
+    implementation('com.squareup.okhttp3:okhttp:4.2.2')
     //log api
     implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
         exclude group: 'org.json', module: 'json'

@@ -36,9 +36,10 @@ import kotlinx.android.synthetic.main.item_transaction_extra_top.tvTimestamp
 import java.text.NumberFormat
 import java.util.*
 
-class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
-                               private val showQrCode: (String?) -> Unit,
-                               private val clickTransactionId: (String?) -> Unit
+class TransactionsExtraAdapter(
+    private val retryCallback: () -> Unit,
+    private val showQrCode: (String?) -> Unit,
+    private val clickTransactionId: (String?) -> Unit
 ) :
     DataPagingListAdapter<Any, RecyclerView.ViewHolder>(
         diffCallback = object : DiffUtil.ItemCallback<Any>() {
@@ -119,8 +120,12 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                         tvBtcBalance.text = number.format(address.balance).plus(" BTC")
                         btnCopy.setOnClickListener {
                             address.addrStr?.let {
-                                WalletAddressBottomDialog.copyTextToClipboard(this.itemView.context, it)
-                                Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT).show()
+                                WalletAddressBottomDialog.copyTextToClipboard(
+                                    this.itemView.context,
+                                    it
+                                )
+                                Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                         btnQrCode.setOnClickListener {
@@ -136,8 +141,10 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                         val summary = getItem(position) as BlockDetailResponse
                         tvHashBlock.text = summary.hash
                         tvBlockH.text = summary.height?.toString()
-                        tvPreBlock.text = if (summary.previousblockhash != null) (summary.height?.minus(1)).toString() else ""
-                        txMining.text = if (summary.nextblockhash != null) (summary.height?.plus(1)).toString() else "Mining"
+                        tvPreBlock.text =
+                            if (summary.previousblockhash != null) (summary.height?.minus(1)).toString() else ""
+                        txMining.text =
+                            if (summary.nextblockhash != null) (summary.height?.plus(1)).toString() else "Mining"
                         imageView5.setImageResource(if (summary.nextblockhash != null) R.drawable.ic_block_selected else R.drawable.ic_block_mining)
                         tvAgeS.time = summary.time?.times(1000) ?: 0
                         tvTimestamp.text = summary.time?.toString()
@@ -155,8 +162,12 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                         tvChainwork.text = summary.chainwork
                         btnCopyHash.setOnClickListener {
                             summary.hash?.let {
-                                WalletAddressBottomDialog.copyTextToClipboard(this.itemView.context, it)
-                                Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT).show()
+                                WalletAddressBottomDialog.copyTextToClipboard(
+                                    this.itemView.context,
+                                    it
+                                )
+                                Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                     }
@@ -172,12 +183,18 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                             if (it > 6) {
                                 btnConfirm.text = "Confirmed"
                                 btnConfirm.background =
-                                    ContextCompat.getDrawable(itemView.context, R.drawable.bg_confirm)
+                                    ContextCompat.getDrawable(
+                                        itemView.context,
+                                        R.drawable.bg_confirm
+                                    )
                                 progressConfirm.invisible()
                             } else {
                                 btnConfirm.text = it.toString().plus("/6 Confirmations")
                                 btnConfirm.background =
-                                    ContextCompat.getDrawable(itemView.context, R.drawable.bg_pending)
+                                    ContextCompat.getDrawable(
+                                        itemView.context,
+                                        R.drawable.bg_pending
+                                    )
                                 progressConfirm.visible()
                                 progressConfirm.progress = it
                             }
@@ -201,8 +218,12 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                         tvSizes.text = item.size?.toString()
                         btnCopyHash.setOnClickListener {
                             item.txid?.let {
-                                WalletAddressBottomDialog.copyTextToClipboard(this.itemView.context, it)
-                                Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT).show()
+                                WalletAddressBottomDialog.copyTextToClipboard(
+                                    this.itemView.context,
+                                    it
+                                )
+                                Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                     }
@@ -218,8 +239,16 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                                 tvTypeS.text = "(Newly mined coins)"
                                 group.gone()
                             } else {
-                                itemView.setBackgroundColor(if (position %2 == 0) ContextCompat.getColor(itemView.context, R.color.colorInvertedAlternate) else
-                                    ContextCompat.getColor(itemView.context, R.color.colorInvertedAlpha))
+                                itemView.setBackgroundColor(
+                                    if (position % 2 == 0) ContextCompat.getColor(
+                                        itemView.context,
+                                        R.color.colorInvertedAlternate
+                                    ) else
+                                        ContextCompat.getColor(
+                                            itemView.context,
+                                            R.color.colorInvertedAlpha
+                                        )
+                                )
                                 group.visible()
                                 tvAddressT.text = item.addr
                                 tvTypeS.text = ""
@@ -229,8 +258,15 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                                 tvN.text = item.N?.toString()
                                 tvType.text = "Input"
                                 tvAddressT.setOnClickListener {
-                                    WalletAddressBottomDialog.copyTextToClipboard(this.itemView.context, tvAddressT.text.toString())
-                                    Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT).show()
+                                    WalletAddressBottomDialog.copyTextToClipboard(
+                                        this.itemView.context,
+                                        tvAddressT.text.toString()
+                                    )
+                                    Toast.makeText(
+                                        this.itemView.context,
+                                        "Copied",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
                         }
@@ -242,18 +278,31 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
                     binding.apply {
                         val item = getItem(position)
                         if (item is VoutItem) {
-                            itemView.setBackgroundColor(if (position %2 == 0) ContextCompat.getColor(itemView.context, R.color.colorInvertedAlternate) else
-                                ContextCompat.getColor(itemView.context, R.color.colorInvertedAlpha))
+                            itemView.setBackgroundColor(
+                                if (position % 2 == 0) ContextCompat.getColor(
+                                    itemView.context,
+                                    R.color.colorInvertedAlternate
+                                ) else
+                                    ContextCompat.getColor(
+                                        itemView.context,
+                                        R.color.colorInvertedAlpha
+                                    )
+                            )
                             tvType.text = "Output"
-                            tvAddressT.text = item.scriptPubKey?.addresses?.get(0) ?: "Unparsed address"
+                            tvAddressT.text =
+                                item.scriptPubKey?.addresses?.get(0) ?: "Unparsed address"
                             item.value?.let {
                                 tvAmount.text = it.plus(" BTC")
                             }
                             tvN.text = item.N?.toString()
                             tvTypeS.text = if (item.spentTxId != null) "Spent" else "Unspent"
                             tvAddressT.setOnClickListener {
-                                WalletAddressBottomDialog.copyTextToClipboard(this.itemView.context, tvAddressT.text.toString())
-                                Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT).show()
+                                WalletAddressBottomDialog.copyTextToClipboard(
+                                    this.itemView.context,
+                                    tvAddressT.text.toString()
+                                )
+                                Toast.makeText(this.itemView.context, "Copied", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                     }
@@ -301,17 +350,20 @@ class TransactionsExtraAdapter(private val retryCallback: () -> Unit,
             get() = itemView
     }
 
-    class TransactionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class TransactionsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
     }
 
-    class TransactionDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class TransactionDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
     }
 
-    class TopTransactionDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class TopTransactionDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
     }

@@ -34,7 +34,8 @@ class TransactionsDataSource(
     private var retryCompletable: Completable? = null
 
     fun retryAllFailed() {
-        retryCompletable?.applySchedulers()?.subscribe({ }, { throwable -> throwable.printStackTrace() })
+        retryCompletable?.applySchedulers()
+            ?.subscribe({ }, { throwable -> throwable.printStackTrace() })
             ?.addTo(compositeDisposable)
     }
 
@@ -65,9 +66,11 @@ class TransactionsDataSource(
                     pageNumber++
                     list.add(it.blockResponse)
                     list.add(
-                        Response.Title("Transactions",
-                        it.blockResponse.tx?.size?.toString() ?: "0"
-                    ))
+                        Response.Title(
+                            "Transactions",
+                            it.blockResponse.tx?.size?.toString() ?: "0"
+                        )
+                    )
                     it.transactionResponse.txs?.let { it1 -> list.addAll(it1) }
                     pageSize = it.transactionResponse.pagesTotal ?: pageSize
                     isBlock = true

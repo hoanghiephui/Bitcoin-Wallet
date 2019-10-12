@@ -20,7 +20,8 @@ open class SkuDetailsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var skuDetailsList = emptyList<AugmentedSkuDetails>()
 
-    override fun getItemCount() = if (skuDetailsList.isNotEmpty()) skuDetailsList.size + 1 else skuDetailsList.size
+    override fun getItemCount() =
+        if (skuDetailsList.isNotEmpty()) skuDetailsList.size + 1 else skuDetailsList.size
 
     override fun getItemViewType(position: Int): Int {
         return if (position == itemCount - 1) {
@@ -84,9 +85,11 @@ open class SkuDetailsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         //clients to implement for callback if needed
     }
 
-    inner class SkuRestoreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    inner class SkuRestoreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
+
         init {
             itemView.setOnClickListener {
                 onSkuRestoreClicked()
@@ -95,7 +98,8 @@ open class SkuDetailsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
 
-    inner class SkuDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    inner class SkuDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
 

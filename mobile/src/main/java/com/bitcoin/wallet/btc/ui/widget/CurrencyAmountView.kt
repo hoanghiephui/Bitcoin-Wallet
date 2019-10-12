@@ -125,7 +125,9 @@ class CurrencyAmountView : FrameLayout {
     fun setCurrencySymbol(currencyCode: String?) {
         val bitcoinSymbol = Character.toString(Constants.CHAR_BITCOIN)
         val hasBitcoinSymbol =
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && textView?.paint?.hasGlyph(bitcoinSymbol)!!
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && textView?.paint?.hasGlyph(
+                bitcoinSymbol
+            )!!
         val textSize = textView!!.textSize
         val smallerTextSize = textSize * (20f / 24f)
         val offset = textSize * 0.37f
@@ -136,7 +138,8 @@ class CurrencyAmountView : FrameLayout {
                     lessSignificantColor, offset
                 )
             else
-                currencySymbolDrawable = ContextCompat.getDrawable(context, R.drawable.currency_symbol_btc)
+                currencySymbolDrawable =
+                    ContextCompat.getDrawable(context, R.drawable.currency_symbol_btc)
             localCurrencyCode = null
         } else if (MonetaryFormat.CODE_MBTC == currencyCode) {
             if (hasBitcoinSymbol)
@@ -145,7 +148,8 @@ class CurrencyAmountView : FrameLayout {
                     lessSignificantColor, offset
                 )
             else
-                currencySymbolDrawable = ContextCompat.getDrawable(context, R.drawable.currency_symbol_mbtc)
+                currencySymbolDrawable =
+                    ContextCompat.getDrawable(context, R.drawable.currency_symbol_mbtc)
             localCurrencyCode = null
         } else if (MonetaryFormat.CODE_UBTC == currencyCode) {
             if (hasBitcoinSymbol)
@@ -154,7 +158,8 @@ class CurrencyAmountView : FrameLayout {
                     lessSignificantColor, offset
                 )
             else
-                currencySymbolDrawable = ContextCompat.getDrawable(context, R.drawable.currency_symbol_ubtc)
+                currencySymbolDrawable =
+                    ContextCompat.getDrawable(context, R.drawable.currency_symbol_ubtc)
             localCurrencyCode = null
         } else if (currencyCode != null) {
             currencySymbolDrawable = CurrencySymbolDrawable(
@@ -192,7 +197,10 @@ class CurrencyAmountView : FrameLayout {
         this.validateAmount = validateAmount
     }
 
-    fun setContextButton(contextButtonResId: Int, contextButtonClickListener: View.OnClickListener) {
+    fun setContextButton(
+        contextButtonResId: Int,
+        contextButtonClickListener: View.OnClickListener
+    ) {
         this.contextButtonDrawable = context.resources.getDrawable(contextButtonResId)
         this.contextButtonClickListener = contextButtonClickListener
 
@@ -273,7 +281,12 @@ class CurrencyAmountView : FrameLayout {
         val amount = textView?.text.toString().trim { it <= ' ' }
 
         if (enabled && !amount.isEmpty()) {
-            textView?.setCompoundDrawablesWithIntrinsicBounds(currencySymbolDrawable, null, deleteButtonDrawable, null)
+            textView?.setCompoundDrawablesWithIntrinsicBounds(
+                currencySymbolDrawable,
+                null,
+                deleteButtonDrawable,
+                null
+            )
             contextButton?.setOnClickListener(deleteClickListener)
         } else if (enabled && contextButtonDrawable != null) {
             textView?.setCompoundDrawablesWithIntrinsicBounds(
@@ -284,7 +297,12 @@ class CurrencyAmountView : FrameLayout {
             )
             contextButton?.setOnClickListener(contextButtonClickListener)
         } else {
-            textView?.setCompoundDrawablesWithIntrinsicBounds(currencySymbolDrawable, null, null, null)
+            textView?.setCompoundDrawablesWithIntrinsicBounds(
+                currencySymbolDrawable,
+                null,
+                null,
+                null
+            )
             contextButton?.setOnClickListener(null)
         }
 
@@ -309,7 +327,7 @@ class CurrencyAmountView : FrameLayout {
         if (state is Bundle) {
             super.onRestoreInstanceState(state.getParcelable("super_state"))
             textView?.onRestoreInstanceState(state.getParcelable("child_textview"))
-            if (state?.getSerializable("amount") != null) {
+            if (state.getSerializable("amount") != null) {
                 setAmount(state.getSerializable("amount") as Monetary, false)
             }
         } else {

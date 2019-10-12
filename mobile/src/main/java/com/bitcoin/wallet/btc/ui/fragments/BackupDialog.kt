@@ -60,7 +60,8 @@ class BackupDialog : BaseBottomSheetDialogFragment() {
             passwordMismatchView.visibility = View.INVISIBLE
 
             val passwordLength = it.length
-            passwordStrengthView.visibility = if (passwordLength > 0) View.VISIBLE else View.INVISIBLE
+            passwordStrengthView.visibility =
+                if (passwordLength > 0) View.VISIBLE else View.INVISIBLE
             when {
                 passwordLength < 6 -> {
                     passwordStrengthView.setText(R.string.encrypt_strength_weak)
@@ -94,11 +95,14 @@ class BackupDialog : BaseBottomSheetDialogFragment() {
             }
 
             val hasPassword = it.isNotEmpty()
-            val hasPasswordAgain = passwordAgainView?.text.toString().trim { it <= ' ' }.isNotEmpty()
+            val hasPasswordAgain =
+                passwordAgainView?.text.toString().trim { it <= ' ' }.isNotEmpty()
             viewGo.isEnabled = viewModel.wallet.value != null && hasPassword && hasPasswordAgain
         }
         if (requireActivity() is MainActivity) {
-            (requireActivity() as MainActivity).viewModel.backupStatus.observeNotNull(viewLifecycleOwner) {
+            (requireActivity() as MainActivity).viewModel.backupStatus.observeNotNull(
+                viewLifecycleOwner
+            ) {
                 onBackup(it.contentOrThrow)
             }
         }

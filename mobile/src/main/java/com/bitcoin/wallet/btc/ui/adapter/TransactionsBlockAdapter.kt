@@ -24,17 +24,18 @@ import kotlinx.android.synthetic.main.item_transaction_block.*
 import java.text.NumberFormat
 import java.util.*
 
-class TransactionsBlockAdapter(private val retryCallback: () -> Unit) : ListAdapter<Any, RecyclerView.ViewHolder>(
-    object : DiffUtil.ItemCallback<Any>() {
-        override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
-            return oldItem == newItem
-        }
+class TransactionsBlockAdapter(private val retryCallback: () -> Unit) :
+    ListAdapter<Any, RecyclerView.ViewHolder>(
+        object : DiffUtil.ItemCallback<Any>() {
+            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
+                return oldItem == newItem
+            }
 
-        override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
-            return oldItem != newItem
+            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
+                return oldItem != newItem
+            }
         }
-    }
-) {
+    ) {
 
     private val loc = Locale.US
     val number: NumberFormat = NumberFormat.getInstance(loc).apply {
@@ -59,26 +60,29 @@ class TransactionsBlockAdapter(private val retryCallback: () -> Unit) : ListAdap
                     if (holder is TransactionViewHolder) {
                         holder.apply {
                             val item = getItem(position) as TxItem
-                            item?.let {
+                            item.let {
                                 tvBlock.text = it.hash
                                 if (it.fee != null) {
                                     tvFee.text = "FEE: ".plus(number.format(it.fee).plus(" BTC"))
                                 }
                                 viewFrom.removeAllViews()
                                 val layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
                                 )
                                 layoutParams.setMargins(0, 15, 0, 0)
                                 it.inputs?.map { vinItem ->
                                     val viewF =
-                                        LayoutInflater.from(itemView.context).inflate(R.layout.item_address, null)
+                                        LayoutInflater.from(itemView.context)
+                                            .inflate(R.layout.item_address, null)
                                     val tvAddress = viewF.findViewById<TextView>(R.id.tvAddress)
                                     val tvValue = viewF.findViewById<TextView>(R.id.tvValue)
                                     if (vinItem.prevOut == null) {
                                         tvAddress.text = "No Inputs (Newly Generated Coins)"
                                     } else {
                                         tvAddress.text = vinItem.prevOut.addr
-                                        tvValue.text = number.format(vinItem.prevOut.value)?.plus(" BTC")
+                                        tvValue.text =
+                                            number.format(vinItem.prevOut.value)?.plus(" BTC")
                                     }
                                     viewFrom.addView(viewF, layoutParams)
                                 }
@@ -86,7 +90,8 @@ class TransactionsBlockAdapter(private val retryCallback: () -> Unit) : ListAdap
                                 //var value: Long ? = null
                                 it.out?.map { voutItem ->
                                     val viewT =
-                                        LayoutInflater.from(itemView.context).inflate(R.layout.item_address, null)
+                                        LayoutInflater.from(itemView.context)
+                                            .inflate(R.layout.item_address, null)
                                     val tvAddress = viewT.findViewById<TextView>(R.id.tvAddress)
                                     val tvValue = viewT.findViewById<TextView>(R.id.tvValue)
                                     if (voutItem.addr == null) {
@@ -128,7 +133,12 @@ class TransactionsBlockAdapter(private val retryCallback: () -> Unit) : ListAdap
                     holder.apply {
                         tvTitle.text = item.title
                         if (position == 9 || position == 15) {
-                            tvDesc.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorAccent))
+                            tvDesc.setTextColor(
+                                ContextCompat.getColor(
+                                    itemView.context,
+                                    R.color.colorAccent
+                                )
+                            )
                         }
                         if (position == 6) {
                             var times: String
@@ -154,7 +164,10 @@ class TransactionsBlockAdapter(private val retryCallback: () -> Unit) : ListAdap
                     holder.apply {
                         if (position == 1) {
                             tvBlockTop.background =
-                                ContextCompat.getDrawable(itemView.context, R.drawable.radius_line_small)
+                                ContextCompat.getDrawable(
+                                    itemView.context,
+                                    R.drawable.radius_line_small
+                                )
                             tvBlockTop.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
                         } else {
                             tvBlockTop.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
@@ -163,7 +176,11 @@ class TransactionsBlockAdapter(private val retryCallback: () -> Unit) : ListAdap
                     }
                 }
             }
-            R.layout.item_network_state -> (holder as NetworkViewHolder).bindTo(networkState, position, true)
+            R.layout.item_network_state -> (holder as NetworkViewHolder).bindTo(
+                networkState,
+                position,
+                true
+            )
         }
     }
 
@@ -183,7 +200,8 @@ class TransactionsBlockAdapter(private val retryCallback: () -> Unit) : ListAdap
         }
     }
 
-    class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
     }

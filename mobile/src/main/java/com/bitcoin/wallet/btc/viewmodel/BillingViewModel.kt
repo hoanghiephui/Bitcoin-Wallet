@@ -18,7 +18,6 @@ package com.bitcoin.wallet.btc.viewmodel
 import android.app.Activity
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.bitcoin.wallet.btc.repository.BillingRepository
@@ -26,11 +25,7 @@ import com.bitcoin.wallet.btc.repository.localdb.AugmentedSkuDetails
 import com.bitcoin.wallet.btc.repository.localdb.GasTank
 import com.bitcoin.wallet.btc.repository.localdb.GoldStatus
 import com.bitcoin.wallet.btc.repository.localdb.PremiumCar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 /**

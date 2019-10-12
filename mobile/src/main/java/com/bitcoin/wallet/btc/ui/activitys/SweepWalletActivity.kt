@@ -87,7 +87,8 @@ class SweepWalletActivity : BaseActivity() {
                 handler.post(maybeDecodeKeyRunnable)
             }
         }
-        transaction_row.layoutAnimation = AnimationUtils.loadLayoutAnimation(this, R.anim.transaction_layout_anim)
+        transaction_row.layoutAnimation =
+            AnimationUtils.loadLayoutAnimation(this, R.anim.transaction_layout_anim)
         sweepTransactionViewHolder = TransactionsWalletAdapter.TransactionViewHolder(container)
 
         viewGo.setOnClickListener {
@@ -103,7 +104,9 @@ class SweepWalletActivity : BaseActivity() {
         backgroundThread?.looper?.quit()
 
         if (viewModel.sentTransaction != null)
-            viewModel.sentTransaction?.confidence?.removeEventListener(sentTransactionConfidenceListener)
+            viewModel.sentTransaction?.confidence?.removeEventListener(
+                sentTransactionConfidenceListener
+            )
 
         super.onDestroy()
     }
@@ -130,7 +133,13 @@ class SweepWalletActivity : BaseActivity() {
                     }
 
                     override fun error(messageResId: Int, vararg messageArgs: Any) {
-                        dialog(this@SweepWalletActivity, null, R.string.btn_scan, messageResId, messageArgs)
+                        dialog(
+                            this@SweepWalletActivity,
+                            null,
+                            R.string.btn_scan,
+                            messageResId,
+                            messageArgs
+                        )
                     }
                 }.parse()
             }
@@ -284,7 +293,8 @@ class SweepWalletActivity : BaseActivity() {
                     var fakeTx: Transaction? = fakeTxns[utxo.hash]
                     if (fakeTx == null) {
                         fakeTx = FakeTransaction(Constants.NETWORK_PARAMETERS, utxo.hash, utxo.hash)
-                        fakeTx.confidence.confidenceType = TransactionConfidence.ConfidenceType.BUILDING
+                        fakeTx.confidence.confidenceType =
+                            TransactionConfidence.ConfidenceType.BUILDING
                         fakeTxns[fakeTx.txId] = fakeTx
                     }
                     val fakeOutput = TransactionOutput(
@@ -306,7 +316,12 @@ class SweepWalletActivity : BaseActivity() {
                 viewModel.walletToSweep?.clearTransactions(0)
                 for (tx in fakeTxns.values)
                     viewModel.walletToSweep
-                        ?.addWalletTransaction(WalletTransaction(WalletTransaction.Pool.UNSPENT, tx))
+                        ?.addWalletTransaction(
+                            WalletTransaction(
+                                WalletTransaction.Pool.UNSPENT,
+                                tx
+                            )
+                        )
 
                 updateView()
             }
@@ -387,8 +402,13 @@ class SweepWalletActivity : BaseActivity() {
             sweepTransactionViewHolder
                 ?.bind(
                     ListItem.TransactionItem(
-                        this, viewModel.sentTransaction!!,
-                        application.getWallet(), null, btcFormat, application.maxConnectedPeers(), false
+                        this,
+                        viewModel.sentTransaction!!,
+                        application.getWallet(),
+                        null,
+                        btcFormat,
+                        application.maxConnectedPeers(),
+                        false
                     )
                 )
         } else {
@@ -449,7 +469,9 @@ class SweepWalletActivity : BaseActivity() {
 
                 setState(SweepWalletViewModel.State.SENDING)
 
-                viewModel.sentTransaction?.confidence?.addEventListener(sentTransactionConfidenceListener)
+                viewModel.sentTransaction?.confidence?.addEventListener(
+                    sentTransactionConfidenceListener
+                )
 
                 viewModel.sentTransaction?.let { application.processDirectTransaction(it) }
             }

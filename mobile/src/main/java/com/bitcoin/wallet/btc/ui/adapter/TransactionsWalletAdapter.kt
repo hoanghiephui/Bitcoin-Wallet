@@ -24,6 +24,7 @@ import com.bitcoin.wallet.btc.extension.gone
 import com.bitcoin.wallet.btc.extension.inflate
 import com.bitcoin.wallet.btc.extension.visible
 import com.bitcoin.wallet.btc.ui.adapter.ListItem.TransactionItem
+import com.bitcoin.wallet.btc.ui.adapter.ListItem.WarningItem
 import com.bitcoin.wallet.btc.ui.adapter.TransactionsWalletAdapter.Companion.CONFIDENCE_SYMBOL_DEAD
 import com.bitcoin.wallet.btc.ui.adapter.TransactionsWalletAdapter.Companion.CONFIDENCE_SYMBOL_IN_CONFLICT
 import com.bitcoin.wallet.btc.ui.adapter.TransactionsWalletAdapter.Companion.CONFIDENCE_SYMBOL_UNKNOWN
@@ -55,7 +56,7 @@ class TransactionsWalletAdapter constructor(
                 return if (oldItem is TransactionItem) {
                     if (newItem !is TransactionItem) false else oldItem.transactionHash == newItem.transactionHash
                 } else {
-                    if (newItem !is ListItem.WarningItem) false else (oldItem as ListItem.WarningItem).type == newItem.type
+                    if (newItem !is WarningItem) false else (oldItem as WarningItem).type == newItem.type
                 }
             }
 
@@ -97,11 +98,17 @@ class TransactionsWalletAdapter constructor(
                         return false
                     if (oldItem.fee != newTransactionItem.fee)
                         return false
-                    if (oldItem.feeFormat.format(Coin.COIN).toString() != newTransactionItem.feeFormat.format(Coin.COIN).toString())
+                    if (oldItem.feeFormat.format(Coin.COIN).toString() != newTransactionItem.feeFormat.format(
+                            Coin.COIN
+                        ).toString()
+                    )
                         return false
                     if (oldItem.value != newTransactionItem.value)
                         return false
-                    if (oldItem.valueFormat.format(Coin.COIN).toString() != newTransactionItem.valueFormat.format(Coin.COIN).toString())
+                    if (oldItem.valueFormat.format(Coin.COIN).toString() != newTransactionItem.valueFormat.format(
+                            Coin.COIN
+                        ).toString()
+                    )
                         return false
                     if (oldItem.valueColor != newTransactionItem.valueColor)
                         return false
@@ -122,7 +129,9 @@ class TransactionsWalletAdapter constructor(
                         return false
                     if (oldItem.messageColor != newTransactionItem.messageColor)
                         return false
-                    return if (oldItem.messageSingleLine != newTransactionItem.messageSingleLine) false else oldItem.isSelected == newTransactionItem.isSelected
+                    if (oldItem.messageSingleLine != newTransactionItem.messageSingleLine)
+                        return false
+                    return oldItem.isSelected == newTransactionItem.isSelected
                 } else {
                     return true
                 }
@@ -144,7 +153,6 @@ class TransactionsWalletAdapter constructor(
                                 && oldItem.confidenceTextual == newTransactionItem.confidenceTextual
                                 && oldItem.confidenceTextualColor == newTransactionItem.confidenceTextualColor
                                 && oldItem.confidenceMessage == newTransactionItem.confidenceMessage)
-
                     )
                         changes.add(ChangeType.CONFIDENCE)
                     if (!(oldItem.time == newTransactionItem.time && oldItem.timeColor == newTransactionItem.timeColor))
@@ -192,22 +200,18 @@ class TransactionsWalletAdapter constructor(
     ) {
 
     override fun getItemViewType(position: Int): Int {
-        val listItem = getItem(position)
-        return if (listItem is ListItem.WarningItem)
-            VIEW_TYPE_WARNING
-        else if (listItem is TransactionItem)
-            VIEW_TYPE_TRANSACTION
-        else
-            throw IllegalStateException()
+        return when (getItem(position)) {
+            is WarningItem -> VIEW_TYPE_WARNING
+            is TransactionItem -> VIEW_TYPE_TRANSACTION
+            else -> throw IllegalStateException()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == VIEW_TYPE_TRANSACTION) {
-            TransactionViewHolder(parent.inflate(R.layout.item_transaction))
-        } else if (viewType == VIEW_TYPE_WARNING) {
-            WarningViewHolder(parent.inflate(R.layout.transaction_row_warning))
-        } else {
-            throw IllegalStateException("unknown type: $viewType")
+        return when (viewType) {
+            VIEW_TYPE_TRANSACTION -> TransactionViewHolder(parent.inflate(R.layout.item_transaction))
+            VIEW_TYPE_WARNING -> WarningViewHolder(parent.inflate(R.layout.transaction_row_warning))
+            else -> throw IllegalStateException("unknown type: $viewType")
         }
     }
 
@@ -234,7 +238,7 @@ class TransactionsWalletAdapter constructor(
                 }
             }
         } else if (holder is WarningViewHolder) {
-            val warningItem = listItem as ListItem.WarningItem
+            val warningItem = listItem as WarningItem
             if (warningItem.type == WarningType.BACKUP) {
                 if (itemCount == 2 /* 1 transaction, 1 warning */) {
                     holder.messageView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
@@ -244,7 +248,12 @@ class TransactionsWalletAdapter constructor(
                     )
                 } else {
                     holder.messageView
-                        .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_warning_grey_600_24dp, 0, 0, 0)
+                        .setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_warning_grey_600_24dp,
+                            0,
+                            0,
+                            0
+                        )
                     holder.messageView.text = HtmlCompat.fromHtml(
                         context.getString(R.string.disclaimer_remind_backup),
                         HtmlCompat.FROM_HTML_MODE_COMPACT
@@ -271,7 +280,11 @@ class TransactionsWalletAdapter constructor(
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
         if (payloads.isEmpty()) { // Full bind
             onBindViewHolder(holder, position)
         } else { // Partial bind
@@ -281,28 +294,23 @@ class TransactionsWalletAdapter constructor(
             for (payload in payloads) {
                 val changes = payload as EnumSet<ChangeType>
                 for (change in changes) {
-                    if (change == ChangeType.CONFIDENCE)
-                        transactionHolder.bindConfidence(transactionItem)
-                    else if (change == ChangeType.TIME)
-                        transactionHolder.bindTime(transactionItem)
-                    else if (change == ChangeType.ADDRESS)
-                        transactionHolder.bindAddress(transactionItem)
-                    else if (change == ChangeType.FEE)
-                        transactionHolder.bindFee(transactionItem)
-                    else if (change == ChangeType.VALUE)
-                        transactionHolder.bindValue(transactionItem)
-                    else if (change == ChangeType.FIAT)
-                        transactionHolder.bindFiat(transactionItem)
-                    else if (change == ChangeType.MESSAGE)
-                        transactionHolder.bindMessage(transactionItem)
-                    else if (change == ChangeType.IS_SELECTED)
-                        transactionHolder.bindIsSelected(transactionItem)
+                    when (change) {
+                        ChangeType.CONFIDENCE -> transactionHolder.bindConfidence(transactionItem)
+                        ChangeType.TIME -> transactionHolder.bindTime(transactionItem)
+                        ChangeType.ADDRESS -> transactionHolder.bindAddress(transactionItem)
+                        ChangeType.FEE -> transactionHolder.bindFee(transactionItem)
+                        ChangeType.VALUE -> transactionHolder.bindValue(transactionItem)
+                        ChangeType.FIAT -> transactionHolder.bindFiat(transactionItem)
+                        ChangeType.MESSAGE -> transactionHolder.bindMessage(transactionItem)
+                        ChangeType.IS_SELECTED -> transactionHolder.bindIsSelected(transactionItem)
+                    }
                 }
             }
         }
     }
 
-    class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
         val menuView: AppCompatImageButton = transaction_row_menu
@@ -326,13 +334,15 @@ class TransactionsWalletAdapter constructor(
             }
             when (item.transaction.confidence.confidenceType) {
                 TransactionConfidence.ConfidenceType.PENDING -> {
-                    btnConfirm.background = ContextCompat.getDrawable(itemView.context, R.drawable.bg_pending)
+                    btnConfirm.background =
+                        ContextCompat.getDrawable(itemView.context, R.drawable.bg_pending)
                     btnConfirm.text = "PENDING"
                     btnConfirm.visible()
                 }
 
                 TransactionConfidence.ConfidenceType.BUILDING -> {
-                    btnConfirm.background = ContextCompat.getDrawable(itemView.context, R.drawable.bg_confirm)
+                    btnConfirm.background =
+                        ContextCompat.getDrawable(itemView.context, R.drawable.bg_confirm)
                     btnConfirm.text = "CONFIRMATIONS"
                     btnConfirm.visible()
                 }
@@ -350,7 +360,7 @@ class TransactionsWalletAdapter constructor(
             addressView.text = item.address
             addressView.setTextColor(item.addressColor)
             addressView.typeface = item.addressTypeface
-            addressView.setSingleLine(item.addressSingleLine)
+            addressView.isSingleLine = item.addressSingleLine
         }
 
         fun bindFee(item: TransactionItem) {
@@ -387,30 +397,28 @@ class TransactionsWalletAdapter constructor(
             messageView.visibility = if (item.message != null) View.VISIBLE else View.GONE
             messageView.text = item.message
             messageView.setTextColor(item.messageColor)
-            messageView.setSingleLine(item.messageSingleLine)
+            messageView.isSingleLine = item.messageSingleLine
         }
 
         fun bindIsSelected(item: TransactionItem) {
-            /*itemView.setBackgroundColor(
-                if (item.isSelected) ContextCompat.getColor(
-                    itemView.context,
-                    R.color.bg_panel
-                ) else ContextCompat.getColor(itemView.context, android.R.color.co)
-            )*/
             bindConfidence(item)
             bindTime(item)
             bindAddress(item)
         }
     }
 
-    class WarningViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class WarningViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         override val containerView: View?
             get() = itemView
         val messageView: TextView = transaction_row_warning_message
     }
 
     class ItemAnimator : DefaultItemAnimator() {
-        override fun canReuseUpdatedViewHolder(viewHolder: RecyclerView.ViewHolder, payloads: List<Any>): Boolean {
+        override fun canReuseUpdatedViewHolder(
+            viewHolder: RecyclerView.ViewHolder,
+            payloads: List<Any>
+        ): Boolean {
             for (payload in payloads) {
                 val changes = payload as EnumSet<ChangeType>
                 if (changes.contains(ChangeType.IS_SELECTED))
@@ -430,7 +438,7 @@ class TransactionsWalletAdapter constructor(
             val noCodeFormat = format.noCode()
             val items = ArrayList<ListItem>(transactions.size + 1)
             if (warning != null)
-                items.add(ListItem.WarningItem(warning))
+                items.add(WarningItem(warning))
             for (tx in transactions)
                 items.add(
                     TransactionItem(
@@ -522,100 +530,108 @@ open class ListItem {
             val textColor: Int
             val lessSignificantColor: Int
             val valueColor: Int
-            if (confidenceType == TransactionConfidence.ConfidenceType.DEAD) {
-                textColor = colorError
-                lessSignificantColor = colorError
-                valueColor = colorError
-            } else if (DefaultCoinSelector.isSelectable(tx)) {
-                textColor = colorSignificant
-                lessSignificantColor = colorLessSignificant
-                valueColor = if (sent) colorValueNegative else colorValuePositve
-            } else {
-                textColor = colorInsignificant
-                lessSignificantColor = colorInsignificant
-                valueColor = colorInsignificant
+            when {
+                confidenceType == TransactionConfidence.ConfidenceType.DEAD -> {
+                    textColor = colorError
+                    lessSignificantColor = colorError
+                    valueColor = colorError
+                }
+                DefaultCoinSelector.isSelectable(tx) -> {
+                    textColor = colorSignificant
+                    lessSignificantColor = colorLessSignificant
+                    valueColor = if (sent) colorValueNegative else colorValuePositve
+                }
+                else -> {
+                    textColor = colorInsignificant
+                    lessSignificantColor = colorInsignificant
+                    valueColor = colorInsignificant
+                }
             }
 
             // confidence
-            if (confidenceType == TransactionConfidence.ConfidenceType.PENDING) {
-                this.confidenceCircularMaxProgress = 1
-                this.confidenceCircularProgress = 1
-                this.confidenceCircularMaxSize = maxConnectedPeers / 2 // magic value
-                this.confidenceCircularSize = confidence.numBroadcastPeers()
-                this.confidenceCircularFillColor = colorInsignificant
-                this.confidenceCircularStrokeColor = Color.TRANSPARENT
-                this.confidenceTextual = null
-                this.confidenceTextualColor = 0
-                this.confidenceMessage = if (sent && confidence.numBroadcastPeers() == 0)
-                    SpannedString.valueOf(
-                        context.getString(R.string.transaction_row_confidence_message_sent_unbroadcasted)
-                    )
-                else
-                    null
-            } else if (confidenceType == TransactionConfidence.ConfidenceType.IN_CONFLICT) {
-                this.confidenceTextual = CONFIDENCE_SYMBOL_IN_CONFLICT
-                this.confidenceTextualColor = colorError
-                this.confidenceCircularMaxProgress = 0
-                this.confidenceCircularProgress = 0
-                this.confidenceCircularMaxSize = 0
-                this.confidenceCircularSize = 0
-                this.confidenceCircularFillColor = 0
-                this.confidenceCircularStrokeColor = 0
-                this.confidenceMessage = null
-            } else if (confidenceType == TransactionConfidence.ConfidenceType.BUILDING) {
-                this.confidenceCircularMaxProgress = if (tx.isCoinBase)
-                    Constants.NETWORK_PARAMETERS.spendableCoinbaseDepth
-                else
-                    Constants.MAX_NUM_CONFIRMATIONS
-                this.confidenceCircularProgress = Math.min(
-                    confidence.depthInBlocks,
-                    this.confidenceCircularMaxProgress
-                )
-                this.confidenceCircularMaxSize = 1
-                this.confidenceCircularSize = 1
-                this.confidenceCircularFillColor = valueColor
-                this.confidenceCircularStrokeColor = Color.TRANSPARENT
-                this.confidenceTextual = null
-                this.confidenceTextualColor = 0
-                this.confidenceMessage = if (isSelected)
-                    SpannedString.valueOf(
-                        context.getString(
-                            if (sent)
-                                R.string.transaction_row_confidence_message_sent_successful
-                            else
-                                R.string.transaction_row_confidence_message_received_successful
+            when (confidenceType) {
+                TransactionConfidence.ConfidenceType.PENDING -> {
+                    this.confidenceCircularMaxProgress = 1
+                    this.confidenceCircularProgress = 1
+                    this.confidenceCircularMaxSize = maxConnectedPeers / 2 // magic value
+                    this.confidenceCircularSize = confidence.numBroadcastPeers()
+                    this.confidenceCircularFillColor = colorInsignificant
+                    this.confidenceCircularStrokeColor = Color.TRANSPARENT
+                    this.confidenceTextual = null
+                    this.confidenceTextualColor = 0
+                    this.confidenceMessage = if (sent && confidence.numBroadcastPeers() == 0)
+                        SpannedString.valueOf(
+                            context.getString(R.string.transaction_row_confidence_message_sent_unbroadcasted)
                         )
-                    )
-                else
-                    null
-            } else if (confidenceType == TransactionConfidence.ConfidenceType.DEAD) {
-                this.confidenceTextual = CONFIDENCE_SYMBOL_DEAD
-                this.confidenceTextualColor = colorError
-                this.confidenceCircularMaxProgress = 0
-                this.confidenceCircularProgress = 0
-                this.confidenceCircularMaxSize = 0
-                this.confidenceCircularSize = 0
-                this.confidenceCircularFillColor = 0
-                this.confidenceCircularStrokeColor = 0
-                this.confidenceMessage = SpannedString
-                    .valueOf(
-                        context.getString(
-                            if (sent)
-                                R.string.transaction_row_confidence_message_sent_failed
-                            else
-                                R.string.transaction_row_confidence_message_received_failed
+                    else
+                        null
+                }
+                TransactionConfidence.ConfidenceType.IN_CONFLICT -> {
+                    this.confidenceTextual = CONFIDENCE_SYMBOL_IN_CONFLICT
+                    this.confidenceTextualColor = colorError
+                    this.confidenceCircularMaxProgress = 0
+                    this.confidenceCircularProgress = 0
+                    this.confidenceCircularMaxSize = 0
+                    this.confidenceCircularSize = 0
+                    this.confidenceCircularFillColor = 0
+                    this.confidenceCircularStrokeColor = 0
+                    this.confidenceMessage = null
+                }
+                TransactionConfidence.ConfidenceType.BUILDING -> {
+                    this.confidenceCircularMaxProgress = if (tx.isCoinBase)
+                        Constants.NETWORK_PARAMETERS.spendableCoinbaseDepth
+                    else
+                        Constants.MAX_NUM_CONFIRMATIONS
+                    this.confidenceCircularProgress =
+                        confidence.depthInBlocks.coerceAtMost(this.confidenceCircularMaxProgress)
+                    this.confidenceCircularMaxSize = 1
+                    this.confidenceCircularSize = 1
+                    this.confidenceCircularFillColor = valueColor
+                    this.confidenceCircularStrokeColor = Color.TRANSPARENT
+                    this.confidenceTextual = null
+                    this.confidenceTextualColor = 0
+                    this.confidenceMessage = if (isSelected)
+                        SpannedString.valueOf(
+                            context.getString(
+                                if (sent)
+                                    R.string.transaction_row_confidence_message_sent_successful
+                                else
+                                    R.string.transaction_row_confidence_message_received_successful
+                            )
                         )
-                    )
-            } else {
-                this.confidenceTextual = CONFIDENCE_SYMBOL_UNKNOWN
-                this.confidenceTextualColor = colorInsignificant
-                this.confidenceCircularMaxProgress = 0
-                this.confidenceCircularProgress = 0
-                this.confidenceCircularMaxSize = 0
-                this.confidenceCircularSize = 0
-                this.confidenceCircularFillColor = 0
-                this.confidenceCircularStrokeColor = 0
-                this.confidenceMessage = null
+                    else
+                        null
+                }
+                TransactionConfidence.ConfidenceType.DEAD -> {
+                    this.confidenceTextual = CONFIDENCE_SYMBOL_DEAD
+                    this.confidenceTextualColor = colorError
+                    this.confidenceCircularMaxProgress = 0
+                    this.confidenceCircularProgress = 0
+                    this.confidenceCircularMaxSize = 0
+                    this.confidenceCircularSize = 0
+                    this.confidenceCircularFillColor = 0
+                    this.confidenceCircularStrokeColor = 0
+                    this.confidenceMessage = SpannedString
+                        .valueOf(
+                            context.getString(
+                                if (sent)
+                                    R.string.transaction_row_confidence_message_sent_failed
+                                else
+                                    R.string.transaction_row_confidence_message_received_failed
+                            )
+                        )
+                }
+                else -> {
+                    this.confidenceTextual = CONFIDENCE_SYMBOL_UNKNOWN
+                    this.confidenceTextualColor = colorInsignificant
+                    this.confidenceCircularMaxProgress = 0
+                    this.confidenceCircularProgress = 0
+                    this.confidenceCircularMaxSize = 0
+                    this.confidenceCircularSize = 0
+                    this.confidenceCircularFillColor = 0
+                    this.confidenceCircularStrokeColor = 0
+                    this.confidenceMessage = null
+                }
             }
 
             // time
@@ -635,14 +651,10 @@ open class ListItem {
             else
                 WalletUtils.getWalletAddressOfReceived(tx, wallet)
             val addressLabel: String?
-            if (addressBook == null || address == null) {
-                addressLabel = null
+            addressLabel = if (addressBook == null || address == null) {
+                null
             } else {
-                val entry = addressBook[address.toString()]
-                if (entry != null)
-                    addressLabel = entry.label
-                else
-                    addressLabel = null
+                addressBook[address.toString()]?.label
             }
             if (tx.isCoinBase) {
                 this.address = SpannedString
@@ -689,15 +701,19 @@ open class ListItem {
 
             // value
             this.valueFormat = feeFormat
-            if (purpose == Transaction.Purpose.RAISE_FEE) {
-                this.valueColor = colorInsignificant
-                this.value = fee!!.negate()
-            } else if (value.isZero) {
-                this.valueColor = 0
-                this.value = null
-            } else {
-                this.valueColor = valueColor
-                this.value = if (showFee) value.add(fee!!) else value
+            when {
+                purpose == Transaction.Purpose.RAISE_FEE -> {
+                    this.valueColor = colorInsignificant
+                    this.value = fee!!.negate()
+                }
+                value.isZero -> {
+                    this.valueColor = 0
+                    this.value = null
+                }
+                else -> {
+                    this.valueColor = valueColor
+                    this.value = if (showFee) value.add(fee!!) else value
+                }
             }
 
             // fiat value
@@ -718,7 +734,10 @@ open class ListItem {
             // message
             if (purpose == Transaction.Purpose.KEY_ROTATION) {
                 this.message = HtmlCompat
-                    .fromHtml(context.getString(R.string.transaction_purpose), HtmlCompat.FROM_HTML_MODE_COMPACT)
+                    .fromHtml(
+                        context.getString(R.string.transaction_purpose),
+                        HtmlCompat.FROM_HTML_MODE_COMPACT
+                    )
                 this.messageColor = colorSignificant
                 this.messageSingleLine = false
             } else if (purpose == Transaction.Purpose.RAISE_FEE) {

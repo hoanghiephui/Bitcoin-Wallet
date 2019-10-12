@@ -15,11 +15,7 @@
  */
 package com.bitcoin.wallet.btc.repository.localdb
 
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
+import androidx.room.*
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.bitcoin.wallet.btc.repository.BillingRepository

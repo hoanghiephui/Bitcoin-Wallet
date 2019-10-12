@@ -2,9 +2,10 @@ package com.bitcoin.wallet.btc.utils;
 
 import com.bitcoin.wallet.btc.Constants;
 
-import javax.annotation.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
 
 public class Formats {
     public static final Pattern PATTERN_MONETARY_SPANNABLE = Pattern.compile("(?:([\\p{Alpha}\\p{Sc}]++)\\s?+)?" // prefix

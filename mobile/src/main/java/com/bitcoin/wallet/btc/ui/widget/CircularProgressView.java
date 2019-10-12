@@ -1,20 +1,24 @@
 package com.bitcoin.wallet.btc.ui.widget;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class CircularProgressView extends View {
+    private final Path path = new Path();
+    private final Paint fillPaint = new Paint();
+    private final Paint strokePaint = new Paint();
     private int width;
     private int height;
     private int progress = 1;
     private int maxProgress = 1;
     private int size = 1;
     private int maxSize = 1;
-    private final Path path = new Path();
-    private final Paint fillPaint = new Paint();
-    private final Paint strokePaint = new Paint();
 
     public CircularProgressView(final Context context, final AttributeSet attrs) {
         super(context, attrs);

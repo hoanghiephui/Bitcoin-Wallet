@@ -8,14 +8,16 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.format.DateUtils;
+
 import androidx.annotation.Nullable;
+
 import com.bitcoin.wallet.btc.BitcoinApplication;
 import com.bitcoin.wallet.btc.BuildConfig;
 import com.bitcoin.wallet.btc.Constants;
 import com.bitcoin.wallet.btc.utils.Configuration;
 import com.bitcoin.wallet.btc.utils.GenericUtils;
 import com.google.common.base.Stopwatch;
-import okhttp3.*;
+
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.utils.Fiat;
 import org.bitcoinj.utils.MonetaryFormat;
@@ -23,30 +25,61 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.Currency;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
+
+import okhttp3.Call;
+import okhttp3.ConnectionSpec;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ExchangeRatesProvider extends ContentProvider {
 
     public static final String KEY_CURRENCY_CODE = "currency_code";
+    public static final String QUERY_PARAM_Q = "q";
     private static final String KEY_RATE_COIN = "rate_coin";
     private static final String KEY_RATE_FIAT = "rate_fiat";
     private static final String KEY_SOURCE = "source";
-
-    public static final String QUERY_PARAM_Q = "q";
     private static final String QUERY_PARAM_OFFLINE = "offline";
-
+    private static final HttpUrl BITCOINAVERAGE_URL = HttpUrl
+            .parse("https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC");
+    private static final String BITCOINAVERAGE_SOURCE = "BitcoinAverage.com";
+    private static final long UPDATE_FREQ_MS = 10 * DateUtils.MINUTE_IN_MILLIS;
     private Configuration config;
     private String userAgent;
-
     @Nullable
     private Map<String, ExchangeRate> exchangeRates = null;
     private long lastUpdated = 0;
 
-    private static final HttpUrl BITCOINAVERAGE_URL = HttpUrl
-            .parse("https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC");
-    private static final String BITCOINAVERAGE_SOURCE = "BitcoinAverage.com";
+    public static Uri contentUri(final String packageName, final boolean offline) {
+        final Uri.Builder uri = Uri.parse("content://" + packageName + '.' + "exchange_rates").buildUpon();
+        if (offline)
+            uri.appendQueryParameter(QUERY_PARAM_OFFLINE, "1");
+        return uri.build();
+    }
 
-    private static final long UPDATE_FREQ_MS = 10 * DateUtils.MINUTE_IN_MILLIS;
+    public static ExchangeRate getExchangeRate(final Cursor cursor) {
+        final String currencyCode = cursor
+                .getString(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_CURRENCY_CODE));
+        final Coin rateCoin = Coin
+                .valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_RATE_COIN)));
+        final Fiat rateFiat = Fiat.valueOf(currencyCode,
+                cursor.getLong(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_RATE_FIAT)));
+        final String source = cursor.getString(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_SOURCE));
+
+        return new ExchangeRate(new org.bitcoinj.utils.ExchangeRate(rateCoin, rateFiat), source);
+    }
+
+    private static Fiat parseFiatInexact(final String currencyCode, final String str) {
+        final long val = new BigDecimal(str).movePointRight(Fiat.SMALLEST_UNIT_EXPONENT).longValue();
+        return Fiat.valueOf(currencyCode, val);
+    }
 
     @Override
     public boolean onCreate() {
@@ -71,13 +104,6 @@ public class ExchangeRatesProvider extends ContentProvider {
 
         watch.stop();
         return true;
-    }
-
-    public static Uri contentUri(final String packageName, final boolean offline) {
-        final Uri.Builder uri = Uri.parse("content://" + packageName + '.' + "exchange_rates").buildUpon();
-        if (offline)
-            uri.appendQueryParameter(QUERY_PARAM_OFFLINE, "1");
-        return uri.build();
     }
 
     @Override
@@ -171,18 +197,6 @@ public class ExchangeRatesProvider extends ContentProvider {
         }
     }
 
-    public static ExchangeRate getExchangeRate(final Cursor cursor) {
-        final String currencyCode = cursor
-                .getString(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_CURRENCY_CODE));
-        final Coin rateCoin = Coin
-                .valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_RATE_COIN)));
-        final Fiat rateFiat = Fiat.valueOf(currencyCode,
-                cursor.getLong(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_RATE_FIAT)));
-        final String source = cursor.getString(cursor.getColumnIndexOrThrow(ExchangeRatesProvider.KEY_SOURCE));
-
-        return new ExchangeRate(new org.bitcoinj.utils.ExchangeRate(rateCoin, rateFiat), source);
-    }
-
     @Override
     public Uri insert(@NotNull final Uri uri, final ContentValues values) {
         throw new UnsupportedOperationException();
@@ -250,10 +264,5 @@ public class ExchangeRatesProvider extends ContentProvider {
         }
 
         return null;
-    }
-
-    private static Fiat parseFiatInexact(final String currencyCode, final String str) {
-        final long val = new BigDecimal(str).movePointRight(Fiat.SMALLEST_UNIT_EXPONENT).longValue();
-        return Fiat.valueOf(currencyCode, val);
     }
 }

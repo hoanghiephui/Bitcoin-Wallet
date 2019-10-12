@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.observeNotNull

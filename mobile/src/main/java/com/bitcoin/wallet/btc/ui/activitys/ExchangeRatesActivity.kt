@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.data.ExchangeRatesProvider
@@ -42,7 +41,12 @@ class ExchangeRatesActivity : BaseActivity(), ExchangeRatesAdapter.OnClickListen
         exchange_rates_list.apply {
             layoutManager = LinearLayoutManager(this@ExchangeRatesActivity)
             setHasFixedSize(false)
-            addItemDecoration(DividerItemDecoration(this@ExchangeRatesActivity, DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@ExchangeRatesActivity,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             adapter = exAdapter
         }
 

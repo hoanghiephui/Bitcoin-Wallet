@@ -11,17 +11,18 @@ import com.bitcoin.wallet.btc.model.blocks.BlocksItem
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_last_block.*
 
-class BlocksAdapter(private val callback: MainAdapter.MainCallback) : ListAdapter<BlocksItem, RecyclerView.ViewHolder>(
-    object : DiffUtil.ItemCallback<BlocksItem>() {
-        override fun areItemsTheSame(oldItem: BlocksItem, newItem: BlocksItem): Boolean {
-            return oldItem.hash == newItem.hash
-        }
+class BlocksAdapter(private val callback: MainAdapter.MainCallback) :
+    ListAdapter<BlocksItem, RecyclerView.ViewHolder>(
+        object : DiffUtil.ItemCallback<BlocksItem>() {
+            override fun areItemsTheSame(oldItem: BlocksItem, newItem: BlocksItem): Boolean {
+                return oldItem.hash == newItem.hash
+            }
 
-        override fun areContentsTheSame(oldItem: BlocksItem, newItem: BlocksItem): Boolean {
-            return oldItem == newItem
+            override fun areContentsTheSame(oldItem: BlocksItem, newItem: BlocksItem): Boolean {
+                return oldItem == newItem
+            }
         }
-    }
-) {
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -66,7 +67,8 @@ class BlocksAdapter(private val callback: MainAdapter.MainCallback) : ListAdapte
             get() = itemView
     }
 
-    class HeaderBlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    class HeaderBlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        LayoutContainer {
         /** Returns the root holder view. */
         override val containerView: View?
             get() = itemView

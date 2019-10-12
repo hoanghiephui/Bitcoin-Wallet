@@ -36,7 +36,7 @@ class TransactionsBlockActivity : BaseActivity() {
             adapter = transactionsBlockAdapter
         }
         val weight = intent.getLongExtra("weight", 0L).toString()
-        val totalSend = intent.getLongExtra("totalSend",0L).toString()
+        val totalSend = intent.getLongExtra("totalSend", 0L).toString()
         viewModel.transactionData.observeNotNull(this) {
             val listItem: MutableList<Any> = mutableListOf()
             val listSummary: MutableList<SummaryModel> = mutableListOf()
@@ -61,7 +61,12 @@ class TransactionsBlockActivity : BaseActivity() {
                 add(SummaryModel("Size (bytes)", it.size?.toString()))
                 add(SummaryModel("Version", it.ver?.toString()))
                 add(SummaryModel("Nonce", it.nonce?.toString()))
-                add(SummaryModel("Next Block", if (it.nextBlock != null) it.height?.plus(1)?.toString() else "N/A"))
+                add(
+                    SummaryModel(
+                        "Next Block",
+                        if (it.nextBlock != null) it.height?.plus(1)?.toString() else "N/A"
+                    )
+                )
                 listItem.addAll(listSummary)
                 listItem.add(getString(R.string.transactions))
                 it.tx?.let { it1 -> listItem.addAll(it1) }

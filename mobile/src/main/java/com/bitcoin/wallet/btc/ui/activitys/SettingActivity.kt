@@ -5,8 +5,6 @@ import android.os.Bundle
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.base.BaseActivity
 import com.bitcoin.wallet.btc.extension.replace
-import com.bitcoin.wallet.btc.ui.fragments.AboutFragment
-import com.bitcoin.wallet.btc.ui.fragments.MainFragment
 import com.bitcoin.wallet.btc.ui.fragments.SettingFragment
 
 class SettingActivity : BaseActivity() {

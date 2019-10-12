@@ -29,6 +29,7 @@ class SendViewModel @Inject constructor(
         super.onCleared()
         viewModelScope.coroutineContext.cancel()
     }
+
     //get list price
     private val priceRequestData = MutableLiveData<String>()
     private val zipResult = Transformations.map(priceRequestData) {
@@ -37,8 +38,10 @@ class SendViewModel @Inject constructor(
             apiKey = ""
         )
     }
-    val priceList: LiveData<Map<String, PriceDatum>> = Transformations.switchMap(zipResult) { it.data }
-    val priceNetworkState: LiveData<NetworkState> = Transformations.switchMap(zipResult) { it.networkState }
+    val priceList: LiveData<Map<String, PriceDatum>> =
+        Transformations.switchMap(zipResult) { it.data }
+    val priceNetworkState: LiveData<NetworkState> =
+        Transformations.switchMap(zipResult) { it.networkState }
 
     fun onGetPrice(request: String) {
         priceRequestData.postValue(request)
@@ -50,6 +53,7 @@ class SendViewModel @Inject constructor(
         INPUT, // asks for confirmation
         DECRYPTING, SIGNING, SENDING, SENT, FAILED // sending states
     }
+
     val wallet: WalletLiveData by lazy {
         WalletLiveData(application as BitcoinApplication)
     }
@@ -66,7 +70,11 @@ class SendViewModel @Inject constructor(
         BlockchainStateLiveData(application as BitcoinApplication)
     }
     val balance: WalletBalanceLiveData by lazy {
-        WalletBalanceLiveData(application as BitcoinApplication, viewModelScope, Wallet.BalanceType.AVAILABLE)
+        WalletBalanceLiveData(
+            application as BitcoinApplication,
+            viewModelScope,
+            Wallet.BalanceType.AVAILABLE
+        )
     }
     val progress = MutableLiveData<String>()
 

@@ -26,7 +26,7 @@ class TransactionViewModel @Inject constructor(repository: TransactionsBlockRepo
      * @method retry get list transaction
      */
     fun retryTransactions() {
-        transactionResult?.value?.retry?.invoke()
+        transactionResult.value?.retry?.invoke()
     }
 
     fun refreshTransaction() {

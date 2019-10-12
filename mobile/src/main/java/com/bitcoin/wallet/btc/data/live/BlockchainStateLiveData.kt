@@ -8,9 +8,11 @@ import com.bitcoin.wallet.btc.BitcoinApplication
 import com.bitcoin.wallet.btc.service.BlockchainService
 import com.bitcoin.wallet.btc.service.BlockchainState
 
-class BlockchainStateLiveData(private val application: BitcoinApplication) : LiveData<BlockchainState>(),
+class BlockchainStateLiveData(private val application: BitcoinApplication) :
+    LiveData<BlockchainState>(),
     ServiceConnection {
-    private val broadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(application)
+    private val broadcastManager: LocalBroadcastManager =
+        LocalBroadcastManager.getInstance(application)
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, broadcast: Intent) {
@@ -19,9 +21,16 @@ class BlockchainStateLiveData(private val application: BitcoinApplication) : Liv
     }
 
     override fun onActive() {
-        broadcastManager.registerReceiver(receiver, IntentFilter(BlockchainService.ACTION_BLOCKCHAIN_STATE))
+        broadcastManager.registerReceiver(
+            receiver,
+            IntentFilter(BlockchainService.ACTION_BLOCKCHAIN_STATE)
+        )
         if (application != null) {
-            application.bindService(Intent(application, BlockchainService::class.java), this, Context.BIND_AUTO_CREATE)
+            application.bindService(
+                Intent(application, BlockchainService::class.java),
+                this,
+                Context.BIND_AUTO_CREATE
+            )
         }
     }
 

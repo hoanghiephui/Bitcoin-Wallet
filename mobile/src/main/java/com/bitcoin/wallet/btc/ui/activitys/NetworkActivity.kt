@@ -24,7 +24,8 @@ import kotlinx.android.synthetic.main.activity_network.*
 import kotlinx.android.synthetic.main.item_network_state.*
 import org.bitcoinj.core.Sha256Hash
 
-class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioGroup.OnCheckedChangeListener {
+class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener,
+    RadioGroup.OnCheckedChangeListener {
     private val viewModel: NetworkViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)[NetworkViewModel::class.java]
     }
@@ -41,6 +42,7 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
     override fun layoutRes(): Int {
         return R.layout.activity_network
     }
+
     private var isPeer = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -51,7 +53,12 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
         recyclerView.apply {
             layoutManager = TopLinearLayoutManager(this@NetworkActivity)
             setHasFixedSize(true)
-            addItemDecoration(DividerItemDecoration(this@NetworkActivity, DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@NetworkActivity,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             adapter = blockAdapter
         }
         viewModel.transactions.observe(this, Observer {
@@ -110,7 +117,10 @@ class NetworkActivity : BaseActivity(), BlockListAdapter.OnClickListener, RadioG
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.withAppendedPath(Uri.parse("https://www.blockchain.com/btc/"), "block/$blockHash")
+                    Uri.withAppendedPath(
+                        Uri.parse("https://www.blockchain.com/btc/"),
+                        "block/$blockHash"
+                    )
                 )
             )
         }

@@ -11,16 +11,10 @@ public class BlockchainState {
     private static final String EXTRA_BEST_CHAIN_HEIGHT = "best_chain_height";
     private static final String EXTRA_REPLAYING = "replaying";
     private static final String EXTRA_IMPEDIMENTS = "impediment";
-
-    public enum Impediment {
-        STORAGE, NETWORK
-    }
-
     public final Date bestChainDate;
     public final int bestChainHeight;
     public final boolean replaying;
     public final EnumSet<Impediment> impediments;
-
     public BlockchainState(final Date bestChainDate, final int bestChainHeight, final boolean replaying,
                            final Set<Impediment> impediments) {
         this.bestChainDate = bestChainDate;
@@ -33,8 +27,7 @@ public class BlockchainState {
         final Date bestChainDate = (Date) intent.getSerializableExtra(EXTRA_BEST_CHAIN_DATE);
         final int bestChainHeight = intent.getIntExtra(EXTRA_BEST_CHAIN_HEIGHT, -1);
         final boolean replaying = intent.getBooleanExtra(EXTRA_REPLAYING, false);
-        @SuppressWarnings("unchecked")
-        final Set<Impediment> impediments = (Set<Impediment>) intent.getSerializableExtra(EXTRA_IMPEDIMENTS);
+        @SuppressWarnings("unchecked") final Set<Impediment> impediments = (Set<Impediment>) intent.getSerializableExtra(EXTRA_IMPEDIMENTS);
         if (bestChainDate != null && bestChainHeight != -1 && impediments != null)
             return new BlockchainState(bestChainDate, bestChainHeight, replaying, impediments);
         else
@@ -46,6 +39,10 @@ public class BlockchainState {
         intent.putExtra(EXTRA_BEST_CHAIN_HEIGHT, bestChainHeight);
         intent.putExtra(EXTRA_REPLAYING, replaying);
         intent.putExtra(EXTRA_IMPEDIMENTS, impediments);
+    }
+
+    public enum Impediment {
+        STORAGE, NETWORK
     }
 }
 

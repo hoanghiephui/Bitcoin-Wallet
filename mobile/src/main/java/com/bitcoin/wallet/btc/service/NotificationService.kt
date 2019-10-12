@@ -118,7 +118,10 @@ class NotificationService : IntentService(NotificationService::class.java.name) 
 
     companion object {
         fun startMaybeShowNotification(context: Context) {
-            ContextCompat.startForegroundService(context, Intent(context, NotificationService::class.java))
+            ContextCompat.startForegroundService(
+                context,
+                Intent(context, NotificationService::class.java)
+            )
         }
 
         private val ACTION_DISMISS = NotificationService::class.java.getPackage()?.name + ".dismiss"

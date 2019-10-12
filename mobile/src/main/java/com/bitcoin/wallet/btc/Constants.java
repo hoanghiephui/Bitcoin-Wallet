@@ -3,8 +3,9 @@ package com.bitcoin.wallet.btc;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.google.common.io.BaseEncoding;
-import okhttp3.OkHttpClient;
+
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
@@ -14,6 +15,8 @@ import org.bitcoinj.script.Script;
 import org.bitcoinj.utils.MonetaryFormat;
 
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 
 public class Constants {
     public static final boolean TEST = BuildConfig.TEST_NET;
@@ -80,14 +83,14 @@ public class Constants {
 
     public static void setMargin(View v, int margin) {
         ViewGroup.MarginLayoutParams params =
-                (ViewGroup.MarginLayoutParams)v.getLayoutParams();
+                (ViewGroup.MarginLayoutParams) v.getLayoutParams();
         params.setMargins(margin, margin,
                 margin, margin);
     }
 
     public static void setMarginStartEnd(View v, int margin) {
         ViewGroup.MarginLayoutParams params =
-                (ViewGroup.MarginLayoutParams)v.getLayoutParams();
+                (ViewGroup.MarginLayoutParams) v.getLayoutParams();
         params.setMargins(margin, params.topMargin,
                 margin, params.bottomMargin);
     }

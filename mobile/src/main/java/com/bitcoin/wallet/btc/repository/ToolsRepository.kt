@@ -12,7 +12,8 @@ import io.reactivex.functions.Action
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ToolsRepository @Inject constructor(private val api: BitcoinEndpoints) : BaseRepository<Any>() {
+class ToolsRepository @Inject constructor(private val api: BitcoinEndpoints) :
+    BaseRepository<Any>() {
 
     override fun insertResultIntoDb(body: Any) {
     }
@@ -49,8 +50,10 @@ class ToolsRepository @Inject constructor(private val api: BitcoinEndpoints) : B
 
     private val dataLookup = MutableLiveData<LookupResponse>()
     private val networkStateLookup = MutableLiveData<NetworkState>()
-    fun getLookupCoin(type: String,
-                      time: String): ListingData<LookupResponse> {
+    fun getLookupCoin(
+        type: String,
+        time: String
+    ): ListingData<LookupResponse> {
         networkStateLookup.postValue(NetworkState.LOADING)
         api.getLookupCoin("https://index-api.bitcoin.com/api/v0/$type/lookup?time=$time")
             .distinctUntilChanged()

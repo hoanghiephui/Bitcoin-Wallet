@@ -18,9 +18,12 @@ import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bitcoin.wallet.btc.*
+import com.bitcoin.wallet.btc.Constants
 import com.bitcoin.wallet.btc.Constants.setMargin
+import com.bitcoin.wallet.btc.CryptoCurrency
 import com.bitcoin.wallet.btc.CryptoCurrency.Companion.getTextColor
+import com.bitcoin.wallet.btc.R
+import com.bitcoin.wallet.btc.TimeSpan
 import com.bitcoin.wallet.btc.api.ZipHomeData
 import com.bitcoin.wallet.btc.data.ExchangeRate
 import com.bitcoin.wallet.btc.extension.*
@@ -53,7 +56,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainAdapter(private val callback: MainCallback) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var zipHomeData: ZipHomeData? = null
     private var format: MonetaryFormat? = null
     private var exchangeRate: ExchangeRate? = null
@@ -96,7 +100,10 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.item_top_wallet -> TopWalletViewHolder(parent.inflate(R.layout.item_top_wallet), callback)
+            R.layout.item_top_wallet -> TopWalletViewHolder(
+                parent.inflate(R.layout.item_top_wallet),
+                callback
+            )
             R.layout.item_top -> TopViewHolder(parent.inflate(R.layout.item_top), callback)
             R.layout.item_news -> TopStoriesViewHolder(parent.inflate(R.layout.item_top), callback)
             R.layout.item_last_block -> BlockViewHolder(parent.inflate(R.layout.item_top), callback)
@@ -115,7 +122,8 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                 if (holder is TopWalletViewHolder) {
                     var showProgress = false
                     if (blockchainState != null && blockchainState?.bestChainDate != null) {
-                        val blockchainLag = System.currentTimeMillis() - blockchainState?.bestChainDate?.time!!
+                        val blockchainLag =
+                            System.currentTimeMillis() - blockchainState?.bestChainDate?.time!!
                         val blockchainUptodate = blockchainLag < BLOCKCHAIN_UPTODATE_THRESHOLD_MS
                         val noImpediments = blockchainState?.impediments?.isEmpty()
                         blockchainState?.let {
@@ -137,11 +145,13 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                             }
                             blockchainLag < 2 * DateUtils.WEEK_IN_MILLIS -> {
                                 val days = blockchainLag / DateUtils.DAY_IN_MILLIS
-                                holder.viewProgress.text = context.getString(R.string.progress_days, downloading, days)
+                                holder.viewProgress.text =
+                                    context.getString(R.string.progress_days, downloading, days)
                             }
                             blockchainLag < 90 * DateUtils.DAY_IN_MILLIS -> {
                                 val weeks = blockchainLag / DateUtils.WEEK_IN_MILLIS
-                                holder.viewProgress.text = context.getString(R.string.progress_week, downloading, weeks)
+                                holder.viewProgress.text =
+                                    context.getString(R.string.progress_week, downloading, weeks)
                             }
                             else -> {
                                 val months = blockchainLag / (30 * DateUtils.DAY_IN_MILLIS)
@@ -224,8 +234,14 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             R.layout.item_top -> {
                 if (holder is TopViewHolder) {
                     holder.apply {
-                        discoverAdapter.list = zipHomeData?.infoResponse?.data?.subList(0, 10) ?: mutableListOf()
-                        discoverAdapter.submitList(zipHomeData?.summaryResponse?.data?.subList(0, 10))
+                        discoverAdapter.list =
+                            zipHomeData?.infoResponse?.data?.subList(0, 10) ?: mutableListOf()
+                        discoverAdapter.submitList(
+                            zipHomeData?.summaryResponse?.data?.subList(
+                                0,
+                                10
+                            )
+                        )
                         if (zipHomeData?.infoResponse?.data != null) {
                             cardViewMore.visible()
                         } else {
@@ -320,7 +336,13 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     }
 
     private fun ChartViewHolder.setMinMaxMarkers() {
-        mHighlightedValues = Array(2) { Highlight(chart.data.xMin, chart.data.yMin, 0); Highlight(chart.data.xMax, chart.data.yMax, 0) }
+        mHighlightedValues = Array(2) {
+            Highlight(chart.data.xMin, chart.data.yMin, 0); Highlight(
+            chart.data.xMax,
+            chart.data.yMax,
+            0
+        )
+        }
     }
 
     private fun ChartViewHolder.onSetSummary() {
@@ -410,7 +432,10 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     private fun styleStepLine(limitLine: LimitLine, alpha: Int, context: Context) {
         styleLimitLine(
             limitLine,
-            ColorUtils.setAlphaComponent(ContextCompat.getColor(context, R.color.colorAccent), alpha)
+            ColorUtils.setAlphaComponent(
+                ContextCompat.getColor(context, R.color.colorAccent),
+                alpha
+            )
         )
     }
 
@@ -421,7 +446,11 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
     }
 
 
-    private fun updateArrow(arrow: ImageView, percentage: TextView, rotation: Float, @ColorRes color: Int) {
+    private fun updateArrow(
+        arrow: ImageView,
+        percentage: TextView,
+        rotation: Float, @ColorRes color: Int
+    ) {
         arrow.visible()
         arrow.rotation = rotation
         arrow.setColorFilter(
@@ -509,7 +538,13 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             recyClear.apply {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, false))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        context,
+                        DividerItemDecoration.VERTICAL,
+                        false
+                    )
+                )
                 adapter = discoverAdapter
             }
             txtViewMore.gone()
@@ -680,7 +715,12 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
                     with(it) {
                         paintFlags = paintFlags and android.graphics.Paint.UNDERLINE_TEXT_FLAG.inv()
                     }
-                    it.setTextColor(getTextColor(context = it.context, attrId = R.attr.colorNavigationActive))
+                    it.setTextColor(
+                        getTextColor(
+                            context = it.context,
+                            attrId = R.attr.colorNavigationActive
+                        )
+                    )
                 }
         }
 
@@ -764,7 +804,13 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             recyClear.apply {
                 layoutManager = LinearLayoutManager(itemView.context)
                 setHasFixedSize(true)
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, true))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        context,
+                        DividerItemDecoration.VERTICAL,
+                        true
+                    )
+                )
                 adapter = storiesAdapter
             }
             txtViewMore.visible()
@@ -802,7 +848,13 @@ class MainAdapter(private val callback: MainCallback) : RecyclerView.Adapter<Rec
             recyClear.apply {
                 layoutManager = LinearLayoutManager(itemView.context)
                 setHasFixedSize(true)
-                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL, true))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        context,
+                        DividerItemDecoration.VERTICAL,
+                        true
+                    )
+                )
                 adapter = blocksAdapter
             }
             txtViewMore.text = "View all"

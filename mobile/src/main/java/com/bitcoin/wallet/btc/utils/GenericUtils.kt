@@ -1,6 +1,6 @@
 package com.bitcoin.wallet.btc.utils
 
-import java.util.Currency
+import java.util.*
 
 object GenericUtils {
     @JvmStatic

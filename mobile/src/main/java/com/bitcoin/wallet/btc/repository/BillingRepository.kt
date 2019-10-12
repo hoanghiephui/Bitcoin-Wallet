@@ -22,33 +22,14 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.android.billingclient.api.AcknowledgePurchaseParams
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.ConsumeParams
-import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.SkuDetails
-import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.*
 import com.bitcoin.wallet.btc.Security
 import com.bitcoin.wallet.btc.repository.BillingRepository.GameSku.CONSUMABLE_SKUS
 import com.bitcoin.wallet.btc.repository.BillingRepository.GameSku.INAPP_SKUS
 import com.bitcoin.wallet.btc.repository.BillingRepository.GameSku.SUBS_SKUS
-import com.bitcoin.wallet.btc.repository.localdb.AugmentedSkuDetails
-import com.bitcoin.wallet.btc.repository.localdb.Entitlement
-import com.bitcoin.wallet.btc.repository.localdb.GAS_PURCHASE
-import com.bitcoin.wallet.btc.repository.localdb.GasTank
-import com.bitcoin.wallet.btc.repository.localdb.GoldStatus
-import com.bitcoin.wallet.btc.repository.localdb.LocalBillingDb
-import com.bitcoin.wallet.btc.repository.localdb.PremiumCar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.HashSet
+import com.bitcoin.wallet.btc.repository.localdb.*
+import kotlinx.coroutines.*
+import java.util.*
 
 /**
  *
@@ -332,7 +313,7 @@ import java.util.HashSet
  *  @param application the [Application] context
  */
 class BillingRepository private constructor(private val application: Application) :
-        PurchasesUpdatedListener, BillingClientStateListener {
+    PurchasesUpdatedListener, BillingClientStateListener {
 
     /**
      * The [BillingClient] is the most reliable and primary source of truth for all purchases
@@ -350,7 +331,7 @@ class BillingRepository private constructor(private val application: Application
      * (re)created for each [Activity] or [Fragment] or is kept open for the life of the application
      * is a matter of choice.
      */
-    lateinit private var playStoreBillingClient: BillingClient
+    private lateinit var playStoreBillingClient: BillingClient
     val networkState = MutableLiveData<NetworkState>()
 
     /**
@@ -367,7 +348,7 @@ class BillingRepository private constructor(private val application: Application
      * The data that lives here should be refreshed at regular intervals so that it reflects what's
      * in the Google Play Store.
      */
-    lateinit private var localCacheBillingClient: LocalBillingDb
+    private lateinit var localCacheBillingClient: LocalBillingDb
 
     /**
      * This list tells clients what subscriptions are available for sale
@@ -495,8 +476,8 @@ class BillingRepository private constructor(private val application: Application
 
     private fun instantiateAndConnectToPlayBillingService() {
         playStoreBillingClient = BillingClient.newBuilder(application.applicationContext)
-                .enablePendingPurchases() // required or app will crash
-                .setListener(this).build()
+            .enablePendingPurchases() // required or app will crash
+            .setListener(this).build()
         connectToPlayBillingService()
     }
 
@@ -589,41 +570,41 @@ class BillingRepository private constructor(private val application: Application
     }
 
     private fun processPurchases(purchasesResult: Set<Purchase>) =
-            CoroutineScope(Job() + Dispatchers.IO).launch {
-                Log.d(LOG_TAG, "processPurchases called")
-                val validPurchases = HashSet<Purchase>(purchasesResult.size)
-                Log.d(LOG_TAG, "processPurchases newBatch content $purchasesResult")
-                purchasesResult.forEach { purchase ->
-                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                        if (isSignatureValid(purchase)) {
-                            validPurchases.add(purchase)
-                            networkState.postValue(NetworkState.LOADED)
-                        }
-                    } else if (purchase.purchaseState == Purchase.PurchaseState.PENDING) {
-                        Log.d(LOG_TAG, "Received a pending purchase of SKU: ${purchase.sku}")
-                        // handle pending purchases, e.g. confirm with users about the pending
-                        // purchases, prompt them to complete it, etc.
+        CoroutineScope(Job() + Dispatchers.IO).launch {
+            Log.d(LOG_TAG, "processPurchases called")
+            val validPurchases = HashSet<Purchase>(purchasesResult.size)
+            Log.d(LOG_TAG, "processPurchases newBatch content $purchasesResult")
+            purchasesResult.forEach { purchase ->
+                if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                    if (isSignatureValid(purchase)) {
+                        validPurchases.add(purchase)
+                        networkState.postValue(NetworkState.LOADED)
                     }
+                } else if (purchase.purchaseState == Purchase.PurchaseState.PENDING) {
+                    Log.d(LOG_TAG, "Received a pending purchase of SKU: ${purchase.sku}")
+                    // handle pending purchases, e.g. confirm with users about the pending
+                    // purchases, prompt them to complete it, etc.
                 }
-                val (consumables, nonConsumables) = validPurchases.partition {
-                    GameSku.CONSUMABLE_SKUS.contains(it.sku)
-                }
-                Log.d(LOG_TAG, "processPurchases consumables content $consumables")
-                Log.d(LOG_TAG, "processPurchases non-consumables content $nonConsumables")
-                /*
-                  As is being done in this sample, for extra reliability you may store the
-                  receipts/purchases to a your own remote/local database for until after you
-                  disburse entitlements. That way if the Google Play Billing library fails at any
-                  given point, you can independently verify whether entitlements were accurately
-                  disbursed. In this sample, the receipts are then removed upon entitlement
-                  disbursement.
-                 */
-                val testing = localCacheBillingClient.purchaseDao().getPurchases()
-                Log.d(LOG_TAG, "processPurchases purchases in the lcl db ${testing?.size}")
-                localCacheBillingClient.purchaseDao().insert(*validPurchases.toTypedArray())
-                handleConsumablePurchasesAsync(consumables)
-                acknowledgeNonConsumablePurchasesAsync(nonConsumables)
             }
+            val (consumables, nonConsumables) = validPurchases.partition {
+                GameSku.CONSUMABLE_SKUS.contains(it.sku)
+            }
+            Log.d(LOG_TAG, "processPurchases consumables content $consumables")
+            Log.d(LOG_TAG, "processPurchases non-consumables content $nonConsumables")
+            /*
+              As is being done in this sample, for extra reliability you may store the
+              receipts/purchases to a your own remote/local database for until after you
+              disburse entitlements. That way if the Google Play Billing library fails at any
+              given point, you can independently verify whether entitlements were accurately
+              disbursed. In this sample, the receipts are then removed upon entitlement
+              disbursement.
+             */
+            val testing = localCacheBillingClient.purchaseDao().getPurchases()
+            Log.d(LOG_TAG, "processPurchases purchases in the lcl db ${testing.size}")
+            localCacheBillingClient.purchaseDao().insert(*validPurchases.toTypedArray())
+            handleConsumablePurchasesAsync(consumables)
+            acknowledgeNonConsumablePurchasesAsync(nonConsumables)
+        }
 
     /**
      * Recall that Google Play Billing only supports two SKU types:
@@ -648,7 +629,7 @@ class BillingRepository private constructor(private val application: Application
         consumables.forEach {
             Log.d(LOG_TAG, "handleConsumablePurchasesAsync foreach it is $it")
             val params =
-                    ConsumeParams.newBuilder().setPurchaseToken(it.purchaseToken).build()
+                ConsumeParams.newBuilder().setPurchaseToken(it.purchaseToken).build()
             playStoreBillingClient.consumeAsync(params) { billingResult, purchaseToken ->
                 when (billingResult.responseCode) {
                     BillingClient.BillingResponseCode.OK -> {
@@ -670,14 +651,19 @@ class BillingRepository private constructor(private val application: Application
      */
     private fun acknowledgeNonConsumablePurchasesAsync(nonConsumables: List<Purchase>) {
         nonConsumables.forEach { purchase ->
-            val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase
-                    .purchaseToken).build()
+            val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(
+                purchase
+                    .purchaseToken
+            ).build()
             playStoreBillingClient.acknowledgePurchase(params) { billingResult ->
                 when (billingResult.responseCode) {
                     BillingClient.BillingResponseCode.OK -> {
                         disburseNonConsumableEntitlement(purchase)
                     }
-                    else -> Log.d(LOG_TAG, "acknowledgeNonConsumablePurchasesAsync response is ${billingResult.debugMessage}")
+                    else -> Log.d(
+                        LOG_TAG,
+                        "acknowledgeNonConsumablePurchasesAsync response is ${billingResult.debugMessage}"
+                    )
                 }
             }
 
@@ -689,31 +675,31 @@ class BillingRepository private constructor(private val application: Application
      * In this sample, once the entitlement is disbursed the receipt is thrown out.
      */
     private fun disburseNonConsumableEntitlement(purchase: Purchase) =
-            CoroutineScope(Job() + Dispatchers.IO).launch {
-                when (purchase.sku) {
-                    GameSku.PREMIUM_CAR -> {
-                        val premiumCar = PremiumCar(true)
-                        insert(premiumCar)
-                        localCacheBillingClient.skuDetailsDao()
-                                .insertOrUpdate(purchase.sku, premiumCar.mayPurchase())
-                    }
-                    GameSku.GOLD_MONTHLY, GameSku.GOLD_YEARLY -> {
-                        val goldStatus = GoldStatus(true)
-                        insert(goldStatus)
-                        localCacheBillingClient.skuDetailsDao()
-                                .insertOrUpdate(purchase.sku, goldStatus.mayPurchase())
-                        /* there is more than one way to buy gold status. After disabling the
-                        one the user just purchased, re-enble the others */
-                        GameSku.GOLD_STATUS_SKUS.forEach { otherSku ->
-                            if (otherSku != purchase.sku) {
-                                localCacheBillingClient.skuDetailsDao()
-                                        .insertOrUpdate(otherSku, !goldStatus.mayPurchase())
-                            }
+        CoroutineScope(Job() + Dispatchers.IO).launch {
+            when (purchase.sku) {
+                GameSku.PREMIUM_CAR -> {
+                    val premiumCar = PremiumCar(true)
+                    insert(premiumCar)
+                    localCacheBillingClient.skuDetailsDao()
+                        .insertOrUpdate(purchase.sku, premiumCar.mayPurchase())
+                }
+                GameSku.GOLD_MONTHLY, GameSku.GOLD_YEARLY -> {
+                    val goldStatus = GoldStatus(true)
+                    insert(goldStatus)
+                    localCacheBillingClient.skuDetailsDao()
+                        .insertOrUpdate(purchase.sku, goldStatus.mayPurchase())
+                    /* there is more than one way to buy gold status. After disabling the
+                    one the user just purchased, re-enble the others */
+                    GameSku.GOLD_STATUS_SKUS.forEach { otherSku ->
+                        if (otherSku != purchase.sku) {
+                            localCacheBillingClient.skuDetailsDao()
+                                .insertOrUpdate(otherSku, !goldStatus.mayPurchase())
                         }
                     }
                 }
-                localCacheBillingClient.purchaseDao().delete(purchase)
             }
+            localCacheBillingClient.purchaseDao().delete(purchase)
+        }
 
     /**
      * Ideally your implementation will comprise a secure server, rendering this check
@@ -721,7 +707,7 @@ class BillingRepository private constructor(private val application: Application
      */
     private fun isSignatureValid(purchase: Purchase): Boolean {
         return Security.verifyPurchase(
-                Security.BASE_64_ENCODED_PUBLIC_KEY, purchase.originalJson, purchase.signature
+            Security.BASE_64_ENCODED_PUBLIC_KEY, purchase.originalJson, purchase.signature
         )
     }
 
@@ -730,13 +716,15 @@ class BillingRepository private constructor(private val application: Application
      */
     private fun isSubscriptionSupported(): Boolean {
         val billingResult =
-                playStoreBillingClient.isFeatureSupported(BillingClient.FeatureType.SUBSCRIPTIONS)
+            playStoreBillingClient.isFeatureSupported(BillingClient.FeatureType.SUBSCRIPTIONS)
         var succeeded = false
         when (billingResult.responseCode) {
             BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> connectToPlayBillingService()
             BillingClient.BillingResponseCode.OK -> succeeded = true
-            else -> Log.w(LOG_TAG,
-                    "isSubscriptionSupported() error: ${billingResult.debugMessage}")
+            else -> Log.w(
+                LOG_TAG,
+                "isSubscriptionSupported() error: ${billingResult.debugMessage}"
+            )
         }
         return succeeded
     }
@@ -749,8 +737,9 @@ class BillingRepository private constructor(private val application: Application
      * The result is passed to [onSkuDetailsResponse]
      */
     private fun querySkuDetailsAsync(
-            @BillingClient.SkuType skuType: String,
-            skuList: List<String>) {
+        @BillingClient.SkuType skuType: String,
+        skuList: List<String>
+    ) {
         val params = SkuDetailsParams.newBuilder().setSkusList(skuList).setType(skuType).build()
         Log.d(LOG_TAG, "querySkuDetailsAsync for $skuType")
         playStoreBillingClient.querySkuDetailsAsync(params) { billingResult, skuDetailsList ->
@@ -777,12 +766,12 @@ class BillingRepository private constructor(private val application: Application
      * [onPurchasesUpdated]
      */
     fun launchBillingFlow(activity: Activity, augmentedSkuDetails: AugmentedSkuDetails) =
-            launchBillingFlow(activity, SkuDetails(augmentedSkuDetails.originalJson))
+        launchBillingFlow(activity, SkuDetails(augmentedSkuDetails.originalJson))
 
     fun launchBillingFlow(activity: Activity, skuDetails: SkuDetails) {
         val oldSku: String? = getOldSku(skuDetails.sku)
         val purchaseParams = BillingFlowParams.newBuilder().setSkuDetails(skuDetails)
-                .setOldSku(oldSku).build()
+            .setOldSku(oldSku).build()
         playStoreBillingClient.launchBillingFlow(activity, purchaseParams)
     }
 
@@ -818,8 +807,8 @@ class BillingRepository private constructor(private val application: Application
      * [queryPurchasesAsync].
      */
     override fun onPurchasesUpdated(
-            billingResult: BillingResult,
-            purchases: MutableList<Purchase>?
+        billingResult: BillingResult,
+        purchases: MutableList<Purchase>?
     ) {
         when (billingResult.responseCode) {
             BillingClient.BillingResponseCode.OK -> {
@@ -841,17 +830,17 @@ class BillingRepository private constructor(private val application: Application
     }
 
     private fun disburseConsumableEntitlements(purchase: Purchase) =
-            CoroutineScope(Job() + Dispatchers.IO).launch {
-                if (purchase.sku == GameSku.GAS) {
-                    updateGasTank(GasTank(GAS_PURCHASE))
-                    /**
-                     * This disburseConsumableEntitlements method was called because Play called onConsumeResponse.
-                     * So if you think of a Purchase as a receipt, you no longer need to keep a copy of
-                     * the receipt in the local cache since the user has just consumed the product.
-                     */
-                    localCacheBillingClient.purchaseDao().delete(purchase)
-                }
+        CoroutineScope(Job() + Dispatchers.IO).launch {
+            if (purchase.sku == GameSku.GAS) {
+                updateGasTank(GasTank(GAS_PURCHASE))
+                /**
+                 * This disburseConsumableEntitlements method was called because Play called onConsumeResponse.
+                 * So if you think of a Purchase as a receipt, you no longer need to keep a copy of
+                 * the receipt in the local cache since the user has just consumed the product.
+                 */
+                localCacheBillingClient.purchaseDao().delete(purchase)
             }
+        }
 
     /**
      * The gas level can be updated from the client when the user drives or from a data source
@@ -868,8 +857,8 @@ class BillingRepository private constructor(private val application: Application
                     update = GasTank(getLevel() + gas.getLevel())
                 }
                 Log.d(
-                        LOG_TAG,
-                        "New purchase level is ${gas.getLevel()}; existing level is ${getLevel()}; so the final result is ${update.getLevel()}"
+                    LOG_TAG,
+                    "New purchase level is ${gas.getLevel()}; existing level is ${getLevel()}; so the final result is ${update.getLevel()}"
                 )
                 localCacheBillingClient.entitlementsDao().update(update)
             }
@@ -883,7 +872,7 @@ class BillingRepository private constructor(private val application: Application
     }
 
     @WorkerThread
-    suspend private fun insert(entitlement: Entitlement) = withContext(Dispatchers.IO) {
+    private suspend fun insert(entitlement: Entitlement) = withContext(Dispatchers.IO) {
         localCacheBillingClient.entitlementsDao().insert(entitlement)
     }
 
@@ -894,11 +883,11 @@ class BillingRepository private constructor(private val application: Application
         private var INSTANCE: BillingRepository? = null
 
         fun getInstance(application: Application): BillingRepository =
-                INSTANCE ?: synchronized(this) {
-                    INSTANCE
-                            ?: BillingRepository(application)
-                                    .also { INSTANCE = it }
-                }
+            INSTANCE ?: synchronized(this) {
+                INSTANCE
+                    ?: BillingRepository(application)
+                        .also { INSTANCE = it }
+            }
     }
 
     /**

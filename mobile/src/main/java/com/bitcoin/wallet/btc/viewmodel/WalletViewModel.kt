@@ -3,7 +3,6 @@ package com.bitcoin.wallet.btc.viewmodel
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.AsyncTask
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -51,15 +50,18 @@ class WalletViewModel @Inject constructor(
         )
     }
     val zipHomeResult: LiveData<ZipHomeData> = Transformations.switchMap(zipHomeData) { it.data }
-    val zipHomeNetworkState: LiveData<NetworkState> = Transformations.switchMap(zipHomeData) { it.networkState }
+    val zipHomeNetworkState: LiveData<NetworkState> =
+        Transformations.switchMap(zipHomeData) { it.networkState }
+
     fun onShowDataHome(requestHome: RequestHome) {
         zipHomeRequest.postValue(requestHome)
     }
+
     /**
      * @method retry get zip data chart
      */
     fun retryZipChart() {
-        zipHomeData?.value?.retry?.invoke()
+        zipHomeData.value?.retry?.invoke()
     }
 
     //get latest blocks
@@ -68,14 +70,16 @@ class WalletViewModel @Inject constructor(
         repository.getLatestBlocks()
     }
     val blockResult: LiveData<BlocksResponse> = Transformations.switchMap(blocksData) { it.data }
-    val blockNetworkState: LiveData<NetworkState> = Transformations.switchMap(blocksData) { it.networkState }
+    val blockNetworkState: LiveData<NetworkState> =
+        Transformations.switchMap(blocksData) { it.networkState }
+
     fun onGetLatestBlocks() {
         blocksRequest.postValue(Event.simple())
     }
 
     //retry latest blocks
     fun retryLatestBlocks() {
-        blocksData?.value?.retry?.invoke()
+        blocksData.value?.retry?.invoke()
     }
 
     ////////////////////////////WALLET////////////////////////////

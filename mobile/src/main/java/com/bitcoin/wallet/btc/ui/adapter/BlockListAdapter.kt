@@ -23,7 +23,8 @@ import org.bitcoinj.wallet.Wallet
 import java.util.*
 
 class BlockListAdapter(context: Context, private val onClickListener: OnClickListener?) :
-    ListAdapter<BlockListAdapter.ListItem, BlockListAdapter.ViewHolder>(object : DiffUtil.ItemCallback<ListItem>() {
+    ListAdapter<BlockListAdapter.ListItem, BlockListAdapter.ViewHolder>(object :
+        DiffUtil.ItemCallback<ListItem>() {
         override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
             return oldItem.blockHash == newItem.blockHash
         }
@@ -134,7 +135,8 @@ class BlockListAdapter(context: Context, private val onClickListener: OnClickLis
             if (listItem.isMiningRewardHalvingPoint) View.VISIBLE else View.GONE
         holder.miningDifficultyAdjustmentView.visibility =
             if (listItem.isDifficultyTransitionPoint) View.VISIBLE else View.GONE
-        holder.hashView.text = WalletUtils.formatHash(null, listItem.blockHash.toString(), 8, 0, ' ', true)
+        holder.hashView.text =
+            WalletUtils.formatHash(null, listItem.blockHash.toString(), 8, 0, ' ', true)
 
         val transactionChildCount = holder.transactionsViewGroup.childCount - ROW_BASE_CHILD_COUNT
         var iTransactionView = 0
@@ -143,7 +145,11 @@ class BlockListAdapter(context: Context, private val onClickListener: OnClickLis
             if (iTransactionView < transactionChildCount) {
                 view = holder.transactionsViewGroup.getChildAt(ROW_INSERT_INDEX + iTransactionView)
             } else {
-                view = inflater.inflate(R.layout.item_wallet_block_transaction, holder.transactionsViewGroup, false)
+                view = inflater.inflate(
+                    R.layout.item_wallet_block_transaction,
+                    holder.transactionsViewGroup,
+                    false
+                )
                 holder.transactionsViewGroup.addView(view, ROW_INSERT_INDEX + iTransactionView)
             }
             bindTransactionView(view, listItem.format, tx)
@@ -151,15 +157,27 @@ class BlockListAdapter(context: Context, private val onClickListener: OnClickLis
         }
         val leftoverTransactionViews = transactionChildCount - iTransactionView
         if (leftoverTransactionViews > 0)
-            holder.transactionsViewGroup.removeViews(ROW_INSERT_INDEX + iTransactionView, leftoverTransactionViews)
+            holder.transactionsViewGroup.removeViews(
+                ROW_INSERT_INDEX + iTransactionView,
+                leftoverTransactionViews
+            )
 
         val onClickListener = this.onClickListener
         if (onClickListener != null) {
-            holder.menuView.setOnClickListener { v -> onClickListener.onBlockMenuClick(v, listItem.blockHash) }
+            holder.menuView.setOnClickListener { v ->
+                onClickListener.onBlockMenuClick(
+                    v,
+                    listItem.blockHash
+                )
+            }
         }
     }
 
-    private fun bindTransactionView(row: View, format: MonetaryFormat, tx: ListItem.ListTransaction) {
+    private fun bindTransactionView(
+        row: View,
+        format: MonetaryFormat,
+        tx: ListItem.ListTransaction
+    ) {
         // receiving or sending
         val rowFromTo = row.findViewById<View>(R.id.block_row_transaction_fromto) as TextView
         rowFromTo.text = tx.fromTo
@@ -183,13 +201,16 @@ class BlockListAdapter(context: Context, private val onClickListener: OnClickLis
     class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val transactionsViewGroup: ViewGroup =
             itemView.findViewById<View>(R.id.block_list_row_transactions_group) as ViewGroup
-        val miningRewardAdjustmentView: View = itemView.findViewById(R.id.block_list_row_mining_reward_adjustment)
+        val miningRewardAdjustmentView: View =
+            itemView.findViewById(R.id.block_list_row_mining_reward_adjustment)
         val miningDifficultyAdjustmentView: View =
             itemView.findViewById(R.id.block_list_row_mining_difficulty_adjustment)
-        val heightView: TextView = itemView.findViewById<View>(R.id.block_list_row_height) as TextView
+        val heightView: TextView =
+            itemView.findViewById<View>(R.id.block_list_row_height) as TextView
         val timeView: TextView = itemView.findViewById<View>(R.id.block_list_row_time) as TextView
         val hashView: TextView = itemView.findViewById<View>(R.id.block_list_row_hash) as TextView
-        val menuView: ImageButton = itemView.findViewById<View>(R.id.block_list_row_menu) as ImageButton
+        val menuView: ImageButton =
+            itemView.findViewById<View>(R.id.block_list_row_menu) as ImageButton
 
     }
 

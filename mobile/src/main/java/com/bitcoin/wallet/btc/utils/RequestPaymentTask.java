@@ -2,18 +2,22 @@ package com.bitcoin.wallet.btc.utils;
 
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.Nullable;
+
 import com.bitcoin.wallet.btc.Constants;
 import com.bitcoin.wallet.btc.R;
 import com.bitcoin.wallet.btc.data.PaymentIntent;
-import okhttp3.CacheControl;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.bitcoinj.protocols.payments.PaymentProtocol;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import okhttp3.CacheControl;
+import okhttp3.Call;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public abstract class RequestPaymentTask {
     private final Handler backgroundHandler;
@@ -22,16 +26,31 @@ public abstract class RequestPaymentTask {
 
     //private static final Logger log = LoggerFactory.getLogger(RequestPaymentTask.class);todo log
 
-    public interface ResultCallback {
-        void onPaymentIntent(PaymentIntent paymentIntent);
-
-        void onFail(int messageResId, Object... messageArgs);
-    }
-
     public RequestPaymentTask(final Handler backgroundHandler, final ResultCallback resultCallback) {
         this.backgroundHandler = backgroundHandler;
         this.callbackHandler = new Handler(Looper.myLooper());
         this.resultCallback = resultCallback;
+    }
+
+    public abstract void requestPaymentRequest(String url);
+
+    protected void onPaymentIntent(final PaymentIntent paymentIntent) {
+        callbackHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                resultCallback.onPaymentIntent(paymentIntent);
+            }
+        });
+    }
+
+    protected void onFail(final int messageResId, final Object... messageArgs) {
+        callbackHandler.post(() -> resultCallback.onFail(messageResId, messageArgs));
+    }
+
+    public interface ResultCallback {
+        void onPaymentIntent(PaymentIntent paymentIntent);
+
+        void onFail(int messageResId, Object... messageArgs);
     }
 
     public final static class HttpRequestTask extends RequestPaymentTask {
@@ -94,20 +113,5 @@ public abstract class RequestPaymentTask {
                 }
             });
         }
-    }
-
-    public abstract void requestPaymentRequest(String url);
-
-    protected void onPaymentIntent(final PaymentIntent paymentIntent) {
-        callbackHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                resultCallback.onPaymentIntent(paymentIntent);
-            }
-        });
-    }
-
-    protected void onFail(final int messageResId, final Object... messageArgs) {
-        callbackHandler.post(() -> resultCallback.onFail(messageResId, messageArgs));
     }
 }
