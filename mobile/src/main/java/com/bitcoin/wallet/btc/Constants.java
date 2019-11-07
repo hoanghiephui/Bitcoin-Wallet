@@ -36,7 +36,8 @@ public class Constants {
     public static final int ADDRESS_FORMAT_GROUP_SIZE = 4;
     public static final int ADDRESS_FORMAT_LINE_SIZE = 12;
     public static final long LAST_USAGE_THRESHOLD_JUST_MS = DateUtils.HOUR_IN_MILLIS;
-    public static final long LAST_USAGE_THRESHOLD_RECENTLY_MS = 2 * DateUtils.DAY_IN_MILLIS;
+    public static final long LAST_USAGE_THRESHOLD_TODAY_MS = DateUtils.DAY_IN_MILLIS;
+    public static final long LAST_USAGE_THRESHOLD_RECENTLY_MS = DateUtils.WEEK_IN_MILLIS;
     public static final int NOTIFICATION_ID_CONNECTED = 1;
     public static final int NOTIFICATION_ID_COINS_RECEIVED = 2;
     public static final int NOTIFICATION_ID_MAINTENANCE = 3;
