@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -20,6 +21,7 @@ import android.text.format.DateUtils;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -148,10 +150,10 @@ public class BlockchainService extends LifecycleService {
 
     public static void start(final Context context, final boolean cancelCoinsReceived) {
         if (cancelCoinsReceived)
-            context.startService(
+            ContextCompat.startForegroundService(context,
                     new Intent(BlockchainService.ACTION_CANCEL_COINS_RECEIVED, null, context, BlockchainService.class));
         else
-            context.startService(new Intent(context, BlockchainService.class));
+            ContextCompat.startForegroundService(context, new Intent(context, BlockchainService.class));
     }
 
     public static void stop(final Context context) {
@@ -172,8 +174,13 @@ public class BlockchainService extends LifecycleService {
             alarmInterval = AlarmManager.INTERVAL_DAY;
 
         final AlarmManager alarmManager = (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
-        final PendingIntent alarmIntent = PendingIntent.getService(application, 0,
-                new Intent(application, BlockchainService.class), 0);
+        final PendingIntent alarmIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            alarmIntent = PendingIntent.getForegroundService(application, 0,
+                    new Intent(application, BlockchainService.class), 0);
+        else
+            alarmIntent = PendingIntent.getService(application, 0,
+                    new Intent(application, BlockchainService.class), 0);
         alarmManager.cancel(alarmIntent);
 
         // workaround for no inexact set() before KitKat
@@ -183,7 +190,7 @@ public class BlockchainService extends LifecycleService {
     }
 
     public static void resetBlockchain(final Context context) {
-        context.startService(
+        ContextCompat.startForegroundService(context,
                 new Intent(BlockchainService.ACTION_RESET_BLOCKCHAIN, null, context, BlockchainService.class));
     }
 
@@ -191,7 +198,7 @@ public class BlockchainService extends LifecycleService {
         final Intent intent = new Intent(BlockchainService.ACTION_BROADCAST_TRANSACTION, null, context,
                 BlockchainService.class);
         intent.putExtra(BlockchainService.ACTION_BROADCAST_TRANSACTION_HASH, tx.getTxId().getBytes());
-        context.startService(intent);
+        ContextCompat.startForegroundService(context, intent);
     }
 
     private void notifyCoinsReceived(@Nullable final Address address, final Coin amount,
@@ -339,20 +346,17 @@ public class BlockchainService extends LifecycleService {
 
     private void observeLiveDatasThatAreDependentOnWalletAndBlockchain() {
         final NewTransactionLiveData newTransaction = new NewTransactionLiveData(wallet.getValue());
-        newTransaction.observe(this, new Observer<Transaction>() {
-            @Override
-            public void onChanged(final Transaction tx) {
-                final Wallet wallet = BlockchainService.this.wallet.getValue();
-                transactionsReceived.incrementAndGet();
-                final Coin amount = tx.getValue(wallet);
-                if (amount.isPositive()) {
-                    final Address address = WalletUtils.getWalletAddressOfReceived(tx, wallet);
-                    final TransactionConfidence.ConfidenceType confidenceType = tx.getConfidence().getConfidenceType();
-                    final boolean replaying = blockChain.getBestChainHeight() < config.getBestChainHeightEver();
-                    final boolean isReplayedTx = confidenceType == TransactionConfidence.ConfidenceType.BUILDING && replaying;
-                    if (!isReplayedTx)
-                        notifyCoinsReceived(address, amount, tx.getTxId());
-                }
+        newTransaction.observe(this, tx -> {
+            final Wallet wallet = BlockchainService.this.wallet.getValue();
+            transactionsReceived.incrementAndGet();
+            final Coin amount = tx.getValue(wallet);
+            if (amount.isPositive()) {
+                final Address address = WalletUtils.getWalletAddressOfReceived(tx, wallet);
+                final TransactionConfidence.ConfidenceType confidenceType = tx.getConfidence().getConfidenceType();
+                final boolean replaying = blockChain.getBestChainHeight() < config.getBestChainHeightEver();
+                final boolean isReplayedTx = confidenceType == TransactionConfidence.ConfidenceType.BUILDING && replaying;
+                if (!isReplayedTx)
+                    notifyCoinsReceived(address, amount, tx.getTxId());
             }
         });
         final TimeLiveData time = new TimeLiveData(application);
@@ -791,30 +795,20 @@ public class BlockchainService extends LifecycleService {
             if (stopped.get())
                 return;
 
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    final boolean connectivityNotificationEnabled = config.getConnectivityNotificationEnabled();
+            handler.post(() -> {
+                final NotificationCompat.Builder notification = new NotificationCompat.Builder(
+                        BlockchainService.this, Constants.NOTIFICATION_CHANNEL_ID_ONGOING);
+                notification.setSmallIcon(R.drawable.stat_notify_peers, Math.min(numPeers, 4));
+                notification.setContentTitle(getString(R.string.app_name));
+                notification.setContentText(getString(R.string.connected_msg, numPeers));
+                notification.setContentIntent(PendingIntent.getActivity(BlockchainService.this, 0,
+                        new Intent(BlockchainService.this, MainActivity.class), 0));
+                notification.setWhen(System.currentTimeMillis());
+                notification.setOngoing(true);
+                startForeground(Constants.NOTIFICATION_ID_CONNECTED, notification.build());
 
-                    if (!connectivityNotificationEnabled || numPeers == 0) {
-                        stopForeground(true);
-                    } else {
-                        final NotificationCompat.Builder notification = new NotificationCompat.Builder(
-                                BlockchainService.this, Constants.NOTIFICATION_CHANNEL_ID_ONGOING);
-                        notification.setSmallIcon(R.drawable.stat_notify_peers, Math.min(numPeers, 4));
-                        notification.setContentTitle(getString(R.string.app_name));
-                        notification.setContentText(getString(R.string.connected_msg, numPeers));
-                        notification.setContentIntent(PendingIntent.getActivity(BlockchainService.this, 0,
-                                new Intent(BlockchainService.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK), 0));
-                        notification.setWhen(System.currentTimeMillis());
-                        notification.setOngoing(true);
-                        startForeground(Constants.NOTIFICATION_ID_CONNECTED, notification.build());
-                    }
-
-                    // send broadcast
-                    broadcastPeerState(numPeers);
-                }
+                // send broadcast
+                broadcastPeerState(numPeers);
             });
         }
     }
