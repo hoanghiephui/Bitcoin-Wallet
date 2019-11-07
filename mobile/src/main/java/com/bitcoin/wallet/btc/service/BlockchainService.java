@@ -343,6 +343,7 @@ public class BlockchainService extends LifecycleService {
                 observeLiveDatasThatAreDependentOnWalletAndBlockchain();
             }
         });
+        startForeground(0);
     }
 
     private void observeLiveDatasThatAreDependentOnWalletAndBlockchain() {
@@ -655,6 +656,19 @@ public class BlockchainService extends LifecycleService {
         }
     }
 
+    private void startForeground(final int numPeers) {
+        final NotificationCompat.Builder notification = new NotificationCompat.Builder(BlockchainService.this,
+                Constants.NOTIFICATION_CHANNEL_ID_ONGOING);
+        notification.setSmallIcon(R.drawable.stat_notify_peers, Math.min(numPeers, 4));
+        notification.setContentTitle(getString(R.string.app_name));
+        notification.setContentText(getString(R.string.connected_msg, numPeers));
+        notification.setContentIntent(PendingIntent.getActivity(BlockchainService.this, 0,
+                new Intent(BlockchainService.this, MainActivity.class), 0));
+        notification.setWhen(System.currentTimeMillis());
+        notification.setOngoing(true);
+        startForeground(Constants.NOTIFICATION_ID_CONNECTED, notification.build());
+    }
+
     private void broadcastPeerState(final int numPeers) {
         final Intent broadcast = new Intent(ACTION_PEER_STATE);
         broadcast.putExtra(ACTION_PEER_STATE_NUM_PEERS, numPeers);
@@ -797,18 +811,7 @@ public class BlockchainService extends LifecycleService {
                 return;
 
             handler.post(() -> {
-                final NotificationCompat.Builder notification = new NotificationCompat.Builder(
-                        BlockchainService.this, Constants.NOTIFICATION_CHANNEL_ID_ONGOING);
-                notification.setSmallIcon(R.drawable.stat_notify_peers, Math.min(numPeers, 4));
-                notification.setContentTitle(getString(R.string.app_name));
-                notification.setContentText(getString(R.string.connected_msg, numPeers));
-                notification.setContentIntent(PendingIntent.getActivity(BlockchainService.this, 0,
-                        new Intent(BlockchainService.this, MainActivity.class), 0));
-                notification.setWhen(System.currentTimeMillis());
-                notification.setOngoing(true);
-                startForeground(Constants.NOTIFICATION_ID_CONNECTED, notification.build());
-
-                // send broadcast
+                startForeground(numPeers);
                 broadcastPeerState(numPeers);
             });
         }
