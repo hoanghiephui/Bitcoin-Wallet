@@ -237,9 +237,12 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             R.id.menu_sub -> {
                 MakePurchaseDialogFragment.show(baseActivity())
             }
-            R.id.menu_explorer, R.id.menu_tools -> {
-                openNewApp()
-                //ExplorerActivity.open(baseActivity())
+            R.id.menu_explorer -> {
+                //openNewApp()
+                ExplorerActivity.open(baseActivity())
+            }
+            R.id.menu_tools -> {
+                ToolsActivity.open(baseActivity())
             }
         }
         return true
@@ -503,7 +506,8 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                     startActivity(Intent(requireActivity(), ExchangeRatesActivity::class.java))
                 }
                 R.id.menu_tools -> {
-                    openNewApp()
+                    //openNewApp()
+                    ToolsActivity.open(baseActivity())
                 }
             }
             return@setNavigationItemSelectedListener true

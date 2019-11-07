@@ -2,6 +2,9 @@
 <level-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+            android:drawable="@drawable/ic_signal_cellular_0_bar_black_24dp"
+            android:maxLevel="0"/>
+    <item
             android:drawable="@drawable/ic_signal_cellular_1_bar_white_24dp"
             android:maxLevel="1"/>
     <item
