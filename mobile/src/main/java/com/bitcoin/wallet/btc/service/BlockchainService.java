@@ -187,8 +187,7 @@ public class BlockchainService extends LifecycleService {
 
         // workaround for no inexact set() before KitKat
         final long now = System.currentTimeMillis();
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, now + alarmInterval, AlarmManager.INTERVAL_DAY,
-                alarmIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, now + alarmInterval, alarmIntent);
     }
 
     public static void resetBlockchain(final Context context) {
