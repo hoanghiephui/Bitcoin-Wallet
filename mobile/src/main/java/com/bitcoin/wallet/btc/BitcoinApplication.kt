@@ -17,6 +17,7 @@ import com.bitcoin.wallet.btc.di.components.AppComponent
 import com.bitcoin.wallet.btc.service.BlockchainService
 import com.bitcoin.wallet.btc.utils.Configuration
 import com.bitcoin.wallet.btc.utils.WalletUtils
+import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.google.common.base.Splitter
 import com.google.common.base.Stopwatch
 import com.google.common.collect.ImmutableList
@@ -59,6 +60,10 @@ class BitcoinApplication : DaggerApplication() {
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> = appComponent
 
     override fun onCreate() {
+        if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
+            // Skip app initialization.
+            return
+        }
         super.onCreate()
         initConfigs()
     }

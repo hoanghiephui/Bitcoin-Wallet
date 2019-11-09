@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
 
-    <base-config cleartextTrafficPermitted="false">
+    <!-- We need to allow cleartext because the BIP70 payment protocol doesn't
+         mandate encryption. It has its own authentication via embedded signatures. -->
+    <base-config cleartextTrafficPermitted="true">
         <trust-anchors>
-            <certificates src="system"/>
+            <certificates src="system" />
         </trust-anchors>
     </base-config>
 
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">127.0.0.1</domain>
+    <!-- Our own domain. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">wallet.schildbach.de</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
     </domain-config>
 
 </network-security-config>
