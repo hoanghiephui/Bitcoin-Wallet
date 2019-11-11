@@ -53,7 +53,7 @@ public class Constants {
     public static final String URL_COINBASE = "https://api.coinbase.com/";
     public static final String URL_BITCOIN = "https://explorer.bitcoin.com/api/btc/";
     public static final String DEFAULT_EXCHANGE_CURRENCY = "USD";
-    public static final int PEER_DISCOVERY_TIMEOUT_MS = 10 * (int) DateUtils.SECOND_IN_MILLIS;
+    public static final int PEER_DISCOVERY_TIMEOUT_MS = 5 * (int) DateUtils.SECOND_IN_MILLIS;
     public static final int PEER_TIMEOUT_MS = 15 * (int) DateUtils.SECOND_IN_MILLIS;
     public static final MonetaryFormat LOCAL_FORMAT = new MonetaryFormat().noCode().minDecimals(2).optionalDecimals();
     public static final String PREFIX_ALMOST_EQUAL_TO = Character.toString(CHAR_ALMOST_EQUAL_TO) + CHAR_THIN_SPACE;

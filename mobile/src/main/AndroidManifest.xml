@@ -159,6 +159,9 @@
                 android:name="com.bitcoin.wallet.btc.service.UpgradeWalletService"
                 android:exported="false"/>
 
+        <service android:name=".service.StartBlockchainService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
         <receiver android:name="com.bitcoin.wallet.btc.service.BitcoinReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

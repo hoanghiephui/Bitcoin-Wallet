@@ -92,8 +92,8 @@ public class BlockchainService extends LifecycleService {
             + ".blockchain_state";
     public static final int NOTYFY_RECEP = 1;
     private static final int MIN_COLLECT_HISTORY = 2;
-    private static final int IDLE_BLOCK_TIMEOUT_MIN = 2;
-    private static final int IDLE_TRANSACTION_TIMEOUT_MIN = 9;
+    private static final int IDLE_BLOCK_TIMEOUT_MIN = 1;
+    private static final int IDLE_TRANSACTION_TIMEOUT_MIN = 5;
     private static final int MAX_HISTORY_SIZE = Math.max(IDLE_TRANSACTION_TIMEOUT_MIN, IDLE_BLOCK_TIMEOUT_MIN);
     private static final long BLOCKCHAIN_STATE_BROADCAST_THROTTLE_MS = DateUtils.SECOND_IN_MILLIS;
     private static final String ACTION_CANCEL_COINS_RECEIVED = BlockchainService.class.getPackage().getName()
@@ -105,7 +105,7 @@ public class BlockchainService extends LifecycleService {
     private static final String ACTION_BROADCAST_TRANSACTION_HASH = "hash";
     private final Handler handler = new Handler();
     private final Handler delayHandler = new Handler();
-    private final List<Address> notificationAddresses = new LinkedList<Address>();
+    private final List<Address> notificationAddresses = new LinkedList<>();
     private final IBinder mBinder = new LocalBinder();
     private BitcoinApplication application;
     private Configuration config;
@@ -158,36 +158,6 @@ public class BlockchainService extends LifecycleService {
 
     public static void stop(final Context context) {
         context.stopService(new Intent(context, BlockchainService.class));
-    }
-
-    public static void scheduleStart(final BitcoinApplication application) {
-        final Configuration config = application.getConfig();
-        final long lastUsedAgo = config.getLastUsedAgo();
-
-        // apply some backoff
-        final long alarmInterval;
-        if (lastUsedAgo < Constants.LAST_USAGE_THRESHOLD_JUST_MS)
-            alarmInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-        else if (lastUsedAgo < Constants.LAST_USAGE_THRESHOLD_TODAY_MS)
-            alarmInterval = AlarmManager.INTERVAL_HOUR;
-        else if (lastUsedAgo < Constants.LAST_USAGE_THRESHOLD_RECENTLY_MS)
-            alarmInterval = AlarmManager.INTERVAL_HALF_DAY;
-        else
-            alarmInterval = AlarmManager.INTERVAL_DAY;
-
-        final AlarmManager alarmManager = (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
-        final PendingIntent alarmIntent;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            alarmIntent = PendingIntent.getForegroundService(application, 0,
-                    new Intent(application, BlockchainService.class), 0);
-        else
-            alarmIntent = PendingIntent.getService(application, 0,
-                    new Intent(application, BlockchainService.class), 0);
-        alarmManager.cancel(alarmIntent);
-
-        // workaround for no inexact set() before KitKat
-        final long now = System.currentTimeMillis();
-        alarmManager.set(AlarmManager.RTC_WAKEUP, now + alarmInterval, alarmIntent);
     }
 
     public static void resetBlockchain(final Context context) {
@@ -268,6 +238,7 @@ public class BlockchainService extends LifecycleService {
 
     @Override
     public IBinder onBind(final Intent intent) {
+        super.onBind(intent);
         return mBinder;
     }
 
@@ -600,7 +571,7 @@ public class BlockchainService extends LifecycleService {
             blockChainFile.delete();
         }
 
-        scheduleStart(application);
+        StartBlockchainService.schedule(application);
 
         stopForeground(true);
 
