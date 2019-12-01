@@ -571,7 +571,7 @@ public class BlockchainService extends LifecycleService {
             blockChainFile.delete();
         }
 
-        StartBlockchainService.schedule(application);
+        StartBlockchainService.schedule(application, false);
 
         stopForeground(true);
 

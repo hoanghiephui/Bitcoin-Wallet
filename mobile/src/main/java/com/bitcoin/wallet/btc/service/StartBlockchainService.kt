@@ -31,7 +31,7 @@ class StartBlockchainService : JobService() {
 
     companion object {
         @JvmStatic
-        fun schedule(application: BitcoinApplication) {
+        fun schedule(application: BitcoinApplication, expectLargeData: Boolean) {
             val config = application.config
             val lastUsedAgo = config.lastUsedAgo
 
@@ -54,7 +54,7 @@ class StartBlockchainService : JobService() {
             )
             jobInfo.setMinimumLatency(interval)
             jobInfo.setOverrideDeadline(WEEK_IN_MILLIS)
-            jobInfo.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            jobInfo.setRequiredNetworkType(if (expectLargeData) JobInfo.NETWORK_TYPE_UNMETERED else JobInfo.NETWORK_TYPE_ANY)
             jobInfo.setRequiresDeviceIdle(true)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 jobInfo.setRequiresBatteryNotLow(true)

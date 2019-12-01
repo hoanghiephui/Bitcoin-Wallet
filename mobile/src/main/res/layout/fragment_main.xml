@@ -103,10 +103,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <include
-            layout="@layout/init_ads_two"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"/>
+            layout="@layout/init_ads_two"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

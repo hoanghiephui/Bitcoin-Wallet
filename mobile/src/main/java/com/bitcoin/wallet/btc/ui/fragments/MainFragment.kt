@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,6 +17,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bitcoin.wallet.btc.BuildConfig
 import com.bitcoin.wallet.btc.CryptoCurrency
 import com.bitcoin.wallet.btc.R
 import com.bitcoin.wallet.btc.TimeSpan
@@ -32,18 +34,33 @@ import com.bitcoin.wallet.btc.ui.adapter.MainAdapter
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.WalletViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.unity3d.ads.IUnityAdsListener
+import com.unity3d.ads.UnityAds
+import com.unity3d.ads.metadata.MediationMetaData
+import com.unity3d.services.banners.BannerErrorInfo
+import com.unity3d.services.banners.BannerView
+import com.unity3d.services.banners.BannerView.IListener
+import com.unity3d.services.banners.IUnityBannerListener
+import com.unity3d.services.banners.UnityBannerSize
+import com.unity3d.services.core.misc.Utilities
+import com.unity3d.services.core.misc.ViewUtilities
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.init_ads_two.*
 import org.bitcoinj.core.PrefixedChecksummedBytes
 import org.bitcoinj.core.Transaction
 import org.bitcoinj.core.VerificationException
 import org.bitcoinj.script.Script
+import kotlin.math.roundToInt
 
-class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallback {
+class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallback,
+    IUnityAdsListener, IUnityBannerListener {
     private val viewModel: WalletViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory).get(WalletViewModel::class.java)
     }
     private var timeSpan = TimeSpan.DAY
     private var cryptoCurrency = CryptoCurrency.BTC
+    private var topBannerView: BannerView? = null
+
 
     private val mainAdapter by lazy {
         MainAdapter(this)
@@ -129,6 +146,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 content?.let { HelpDialogFragment.show(baseActivity(), it) }
             }
         })
+        initAds()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -513,6 +531,112 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             }
             return@setNavigationItemSelectedListener true
         }
+    }
+
+    private fun initAds() {
+        UnityAds.initialize(activity, "3379734", this, BuildConfig.DEBUG, true)
+    }
+
+    private fun onShowAds() {
+        if (topBannerView != null) {
+            adViewContainers.removeView(topBannerView)
+            topBannerView?.destroy()
+            topBannerView = null
+        } else {
+            val widthInDp = ViewUtilities.dpFromPx(
+                context,
+                adViewContainers.width.toFloat()
+            ).roundToInt()
+            val heightInDp = ViewUtilities.dpFromPx(
+                context,
+                adViewContainers.height.toFloat()
+            ).roundToInt()
+            val unityBannerSize = UnityBannerSize(widthInDp, heightInDp)
+            topBannerView = BannerView(activity, "bitc_home_android", unityBannerSize)
+            topBannerView?.listener = createBannerListener()
+            topBannerView?.load()
+            adViewContainers.addView(topBannerView)
+        }
+    }
+
+    override fun onUnityAdsStart(p0: String?) {
+
+    }
+
+    override fun onUnityAdsFinish(p0: String?, p1: UnityAds.FinishState?) {
+
+    }
+
+    override fun onUnityAdsError(p0: UnityAds.UnityAdsError?, p1: String?) {
+        adViewContainers.gone()
+    }
+
+    override fun onUnityAdsReady(p0: String?) {
+        if ("bitc_home_android" == p0) {
+            onShowAds()
+        }
+    }
+
+    private fun createBannerListener(): IListener? {
+        return object : BannerView.Listener() {
+            override fun onBannerFailedToLoad(
+                bannerAdView: BannerView,
+                errorInfo: BannerErrorInfo
+            ) {
+                if (topBannerView != null && topBannerView == bannerAdView) {
+                    adViewContainers.removeView(topBannerView)
+                    topBannerView?.destroy()
+                    topBannerView = null
+                    adViewContainers.gone()
+                }
+            }
+
+            override fun onBannerLoaded(bannerAdView: BannerView) {
+                Log.d(
+                    "UnityAdsExample",
+                    "onBannerLoded is called for: " + bannerAdView.placementId
+                )
+            }
+
+            override fun onBannerClick(bannerAdView: BannerView) {
+                Log.d(
+                    "UnityAdsExample",
+                    "onBannerClick is called for: " + bannerAdView.placementId
+                )
+            }
+
+            override fun onBannerLeftApplication(bannerAdView: BannerView) {
+                Log.d(
+                    "UnityAdsExample",
+                    "onBannerLeftApplication is called for: " + bannerAdView.placementId
+                )
+            }
+        }
+    }
+
+    override fun onUnityBannerLoaded(
+        placementId: String?,
+        view: View
+    ) {
+        Utilities.runOnUiThread {
+            if (view.parent == null) {
+                activity?.addContentView(view, view.layoutParams)
+                adViewContainers.visible()
+            }
+        }
+    }
+
+    override fun onUnityBannerUnloaded(placementId: String?) {}
+
+    override fun onUnityBannerShow(placementId: String?) {}
+
+    override fun onUnityBannerClick(placementId: String?) {}
+
+    override fun onUnityBannerHide(placementId: String?) {}
+
+    override fun onUnityBannerError(message: String?) {
+        Log.e("BANNER ERROR", message)
+        adViewContainers.gone()
     }
 
     companion object {
