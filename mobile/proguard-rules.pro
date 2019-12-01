@@ -444,6 +444,7 @@
 
 # ALSO REMEMBER KEEPING YOUR MODEL CLASSES
 -keep class com.bitcoin.wallet.btc.model.** { *; }
+-keep class com.google.common.base.** { *; }
 
 -keep class com.android.vending.billing.**
 -keep class com.bitcoin.wallet.btc.FilesWallet { *; }

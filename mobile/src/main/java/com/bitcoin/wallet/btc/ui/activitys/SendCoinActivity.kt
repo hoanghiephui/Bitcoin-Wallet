@@ -238,7 +238,6 @@ class SendCoinActivity : BaseActivity() {
             viewAddress.visible()
         }
 
-        initAds()
     }
 
     private fun viewFee() {

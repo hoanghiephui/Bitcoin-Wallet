@@ -555,7 +555,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             topBannerView = BannerView(activity, "bitc_home_android", unityBannerSize)
             topBannerView?.listener = createBannerListener()
             topBannerView?.load()
-            adViewContainers.addView(topBannerView)
+            adViewContainers?.addView(topBannerView)
         }
     }
 
@@ -584,10 +584,10 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
                 errorInfo: BannerErrorInfo
             ) {
                 if (topBannerView != null && topBannerView == bannerAdView) {
-                    adViewContainers.removeView(topBannerView)
+                    adViewContainers?.removeView(topBannerView)
                     topBannerView?.destroy()
                     topBannerView = null
-                    adViewContainers.gone()
+                    adViewContainers?.gone()
                 }
             }
 
