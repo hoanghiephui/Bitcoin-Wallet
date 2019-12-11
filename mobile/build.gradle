@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 73
-        versionName "1.8.3"
+        versionCode 75
+        versionName "1.8.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -134,9 +134,9 @@ dependencies {
     implementation 'androidx.paging:paging-runtime:2.1.0'
     implementation 'androidx.paging:paging-rxjava2:2.1.0'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.7.0'
     implementation('com.squareup.okhttp3:okhttp:4.2.2')
     //log api
     implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
@@ -156,9 +156,9 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     //wallet
-    implementation 'org.bitcoinj:bitcoinj-core:0.15.5'
+    implementation 'org.bitcoinj:bitcoinj-core:0.15.6'
     implementation 'com.google.protobuf:protobuf-java:3.9.1'
-    implementation 'com.google.guava:guava:28.1-jre'
+    implementation 'com.google.guava:guava:28.1-android'
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'com.squareup.moshi:moshi:1.9.2'
     //implementation 'org.slf4j:slf4j-api:1.7.25'

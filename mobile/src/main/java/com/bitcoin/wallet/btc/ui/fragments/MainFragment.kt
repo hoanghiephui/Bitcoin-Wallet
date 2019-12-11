@@ -539,23 +539,25 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
 
     private fun onShowAds() {
         if (topBannerView != null) {
-            adViewContainers.removeView(topBannerView)
+            adViewContainers?.removeView(topBannerView)
             topBannerView?.destroy()
             topBannerView = null
         } else {
-            val widthInDp = ViewUtilities.dpFromPx(
-                context,
-                adViewContainers.width.toFloat()
-            ).roundToInt()
-            val heightInDp = ViewUtilities.dpFromPx(
-                context,
-                adViewContainers.height.toFloat()
-            ).roundToInt()
-            val unityBannerSize = UnityBannerSize(widthInDp, heightInDp)
-            topBannerView = BannerView(activity, "bitc_home_android", unityBannerSize)
-            topBannerView?.listener = createBannerListener()
-            topBannerView?.load()
-            adViewContainers?.addView(topBannerView)
+            if (adViewContainers != null) {
+                val widthInDp = ViewUtilities.dpFromPx(
+                    context,
+                    adViewContainers.width.toFloat()
+                ).roundToInt()
+                val heightInDp = ViewUtilities.dpFromPx(
+                    context,
+                    adViewContainers.height.toFloat()
+                ).roundToInt()
+                val unityBannerSize = UnityBannerSize(widthInDp, heightInDp)
+                topBannerView = BannerView(activity, "bitc_home_android", unityBannerSize)
+                topBannerView?.listener = createBannerListener()
+                topBannerView?.load()
+                adViewContainers?.addView(topBannerView)
+            }
         }
     }
 
@@ -568,7 +570,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     }
 
     override fun onUnityAdsError(p0: UnityAds.UnityAdsError?, p1: String?) {
-        adViewContainers.gone()
+        adViewContainers?.gone()
     }
 
     override fun onUnityAdsReady(p0: String?) {
