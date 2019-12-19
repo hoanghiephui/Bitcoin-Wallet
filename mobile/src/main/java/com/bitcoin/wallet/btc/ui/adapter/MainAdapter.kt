@@ -112,7 +112,8 @@ class MainAdapter(private val callback: MainCallback) :
     }
 
     override fun getItemCount(): Int {
-        return 4 + if (blocksItem != null) 1 else 0
+        //return 4 + if (blocksItem != null) 1 else 0
+        return 3
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -423,7 +424,7 @@ class MainAdapter(private val callback: MainCallback) :
             return when (position) {
                 0 -> R.layout.item_top_wallet
                 1 -> R.layout.item_top_chart
-                2 -> R.layout.init_ads
+                //2 -> R.layout.init_ads
                 else -> R.layout.item_news
             }
         }

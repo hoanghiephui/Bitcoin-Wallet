@@ -180,11 +180,11 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
     }
 
     override fun onBackPressed(): Boolean {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        return if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
-            return false
+            false
         } else {
-            return true
+            true
 
         }
     }
@@ -473,7 +473,7 @@ class MainFragment : BaseFragment(), View.OnClickListener, MainAdapter.MainCallb
             mainAdapter.timeSpan = timeSpan
             mainAdapter.cryptoCurrency = cryptoCurrency
             mainAdapter.notifyItemRangeChanged(1, mainAdapter.itemCount)
-            viewModel.onGetLatestBlocks()
+            //viewModel.onGetLatestBlocks()
         }
         viewModel.zipHomeNetworkState.observeNotNull(viewLifecycleOwner) {
             mainAdapter.networkState = it
