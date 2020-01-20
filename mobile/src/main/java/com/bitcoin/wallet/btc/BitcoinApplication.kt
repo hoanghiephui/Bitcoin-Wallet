@@ -22,8 +22,6 @@ import com.google.common.base.Splitter
 import com.google.common.base.Stopwatch
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.SettableFuture
-import com.unity3d.ads.IUnityAdsListener
-import com.unity3d.ads.UnityAds
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import org.bitcoinj.core.Transaction
@@ -43,7 +41,7 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class BitcoinApplication : DaggerApplication(), IUnityAdsListener {
+class BitcoinApplication : DaggerApplication() {
     private val appComponent by lazy { AppComponent.getComponent(this) }
     private val activityManager: ActivityManager by lazy {
         getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -100,8 +98,6 @@ class BitcoinApplication : DaggerApplication(), IUnityAdsListener {
                 .setWorkerFactory(appComponent.daggerWorkerFactory())
                 .build()
         )
-        UnityAds.addListener(this)
-        UnityAds.setDebugMode(BuildConfig.DEBUG)
     }
 
     private fun cleanupFiles() {
@@ -406,18 +402,5 @@ class BitcoinApplication : DaggerApplication(), IUnityAdsListener {
             return (ImmutableList.copyOf(Splitter.on('.').splitToList(packageInfo.packageName)).reverse()[0] + ' '.toString()
                     + packageInfo.versionName + if (BuildConfig.DEBUG) " (debuggable)" else "")
         }
-    }
-
-    override fun onUnityAdsStart(p0: String?) {
-
-    }
-
-    override fun onUnityAdsFinish(p0: String?, p1: UnityAds.FinishState?) {
-    }
-
-    override fun onUnityAdsError(p0: UnityAds.UnityAdsError?, p1: String?) {
-    }
-
-    override fun onUnityAdsReady(p0: String?) {
     }
 }

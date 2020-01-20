@@ -25,9 +25,6 @@ import com.bitcoin.wallet.btc.ui.widget.CurrencyCalculatorLink
 import com.bitcoin.wallet.btc.utils.Configuration
 import com.bitcoin.wallet.btc.utils.Event
 import com.bitcoin.wallet.btc.viewmodel.RequestCoinsViewModel
-import com.unity3d.ads.UnityAds
-import com.unity3d.ads.metadata.MediationMetaData
-import com.unity3d.ads.metadata.PlayerMetaData
 import kotlinx.android.synthetic.main.activity_request_coin.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.bitcoinj.core.Address
@@ -59,7 +56,6 @@ class RequestCoinActivity : BaseActivity() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar(getString(R.string.request_coins))
         toolbar.setNavigationOnClickListener {
-            initAds()
             finish()
         }
         savedInstanceState?.let {
@@ -173,11 +169,6 @@ class RequestCoinActivity : BaseActivity() {
         super.onDestroy()
     }
 
-    override fun onBackPressed() {
-        initAds()
-        super.onBackPressed()
-    }
-
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val hasBitcoinUri = viewModel.bitcoinUri.value != null
         menu?.findItem(R.id.menu_copy)?.isEnabled = hasBitcoinUri
@@ -242,20 +233,6 @@ class RequestCoinActivity : BaseActivity() {
         builder.setText(request.toString())
         builder.setChooserTitle(R.string.request_coins_share)
         builder.startChooser()
-    }
-
-    private fun initAds() {
-        if (UnityAds.isInitialized() && UnityAds.isReady()) {
-            val playerMetaData = PlayerMetaData(this)
-            playerMetaData.setServerId("rikshot")
-            playerMetaData.commit()
-
-            val ordinalMetaData = MediationMetaData(this)
-            ordinalMetaData.setOrdinal(ordinal++)
-            ordinalMetaData.commit()
-
-            UnityAds.show(this, "video")
-        }
     }
 
     companion object {

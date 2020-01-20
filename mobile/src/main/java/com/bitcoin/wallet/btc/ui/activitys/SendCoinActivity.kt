@@ -40,9 +40,6 @@ import com.bitcoin.wallet.btc.ui.widget.DialogBuilder
 import com.bitcoin.wallet.btc.utils.*
 import com.bitcoin.wallet.btc.viewmodel.SendViewModel
 import com.google.common.base.Joiner
-import com.unity3d.ads.UnityAds
-import com.unity3d.ads.metadata.MediationMetaData
-import com.unity3d.ads.metadata.PlayerMetaData
 import kotlinx.android.synthetic.main.activity_send_coin.*
 import kotlinx.android.synthetic.main.item_transaction.*
 import kotlinx.android.synthetic.main.item_wallet_address.*
@@ -92,7 +89,6 @@ class SendCoinActivity : BaseActivity() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setupToolbar("Send Bitcoin")
         toolbar.setNavigationOnClickListener {
-            initAds()
             finish()
         }
         backgroundThread =
@@ -223,7 +219,6 @@ class SendCoinActivity : BaseActivity() {
             updateView()
         }
         viewCancel.setOnClickListener {
-            initAds()
             handleCancel()
         }
 
@@ -310,11 +305,6 @@ class SendCoinActivity : BaseActivity() {
         super.onDestroy()
     }
 
-    override fun onBackPressed() {
-        initAds()
-        super.onBackPressed()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         handler.post { onActivityResultResumed(requestCode, resultCode, data) }
         super.onActivityResult(requestCode, resultCode, data)
@@ -364,9 +354,6 @@ class SendCoinActivity : BaseActivity() {
             R.id.send_coins_options_empty -> {
                 handleEmpty()
                 return true
-            }
-            android.R.id.home -> {
-                initAds()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -1236,20 +1223,6 @@ class SendCoinActivity : BaseActivity() {
                 }
 
             }
-        }
-    }
-
-    private fun initAds() {
-        if (UnityAds.isInitialized() && UnityAds.isReady()) {
-            val playerMetaData = PlayerMetaData(this)
-            playerMetaData.setServerId("rikshot")
-            playerMetaData.commit()
-
-            val ordinalMetaData = MediationMetaData(this)
-            ordinalMetaData.setOrdinal(ordinal++)
-            ordinalMetaData.commit()
-
-            UnityAds.show(this, "video")
         }
     }
 
